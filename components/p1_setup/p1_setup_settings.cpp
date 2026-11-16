@@ -82,6 +82,8 @@ void P1Setup::send_settings_(AsyncWebServerRequest *request) {
   append_json_string(json, this->settings_.mqtt_broker);
   json += F(",\"mqtt_enabled\":");
   json += this->mqtt_enabled_ ? "true" : "false";
+  json += F(",\"homewizard_enabled\":");
+  json += this->homewizard_enabled_ ? "true" : "false";
   json += F(",\"mqtt_port\":");
   json += String(this->settings_.mqtt_port == 0 ? 1883 : this->settings_.mqtt_port);
   json += F(",\"mqtt_username\":");
@@ -178,6 +180,7 @@ void P1Setup::save_settings_(AsyncWebServerRequest *request) {
   const String username = request_arg(request, "mqtt_username");
   const String mqtt_password = request_arg(request, "mqtt_password");
   const bool mqtt_enabled = request_arg(request, "mqtt_enabled") == "on";
+  const bool homewizard_enabled = request_arg(request, "homewizard_enabled") == "on";
   if (ssid.isEmpty()) {
     send_field_error(request, "wifi_ssid", "Enter a Wi-Fi network name.");
     return;
@@ -257,6 +260,7 @@ void P1Setup::save_settings_(AsyncWebServerRequest *request) {
   }
 
   this->settings_ = next;
+  this->homewizard_enabled_ = homewizard_enabled;
   if (!this->save_config_storage_()) {
     request->send(500, "text/plain", "Could not save settings to flash");
     return;

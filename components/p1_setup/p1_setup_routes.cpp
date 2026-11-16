@@ -30,6 +30,8 @@ void P1Setup::send_html_(AsyncWebServerRequest *request, const String &page) {
 
 bool P1Setup::canHandle(AsyncWebServerRequest *request) const {
   const String url = request_url(request);
+  if (this->homewizard_enabled_ && this->is_homewizard_route_(url))
+    return true;
   if (request->method() == HTTP_GET) {
       return url == "/" || url == "/dashboard" || url == "/configure" || url == "/ota" || url == "/factory-reset" || url == "/reboot" ||
         url == "/setup-password" || url == "/api/dashboard" || url == "/api/settings" || url == "/api/scan";
@@ -41,6 +43,10 @@ bool P1Setup::canHandle(AsyncWebServerRequest *request) const {
 
 void P1Setup::handleRequest(AsyncWebServerRequest *request) {
   const String url = request_url(request);
+  if (this->homewizard_enabled_ && this->is_homewizard_route_(url)) {
+    this->handle_homewizard_request_(request);
+    return;
+  }
   if (this->setup_password_.empty()) {
     this->handle_unset_password_request_(request);
     return;
