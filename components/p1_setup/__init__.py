@@ -18,6 +18,7 @@ P1Setup = p1_setup_ns.class_("P1Setup", cg.Component)
 
 CONF_MQTT_ID = "mqtt_id"
 CONF_DEVICE_NAME = "device_name"
+CONF_DEVICE_MODEL = "device_model"
 CONF_LOGIN_USERNAME = "login_username"
 CONF_LOGIN_PASSWORD = "login_password"
 
@@ -39,6 +40,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_LOGIN_USERNAME): cv.All(cv.string, cv.Length(min=1, max=32)),
         cv.Optional(CONF_LOGIN_PASSWORD, default=""): validate_optional_setup_password,
         cv.Optional(CONF_DEVICE_NAME, default="ESPHome Device"): cv.All(cv.string, cv.Length(min=1, max=64)),
+        cv.Optional(CONF_DEVICE_MODEL, default="Unknown device"): cv.All(cv.string, cv.Length(min=1, max=48)),
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -47,7 +49,10 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     cg.add(var.set_mqtt_client(await cg.get_variable(config[CONF_MQTT_ID])))
     cg.add(var.set_device_name(config[CONF_DEVICE_NAME]))
+    cg.add(var.set_device_model(config[CONF_DEVICE_MODEL]))
     cg.add(var.set_login_credentials(config[CONF_LOGIN_USERNAME], config[CONF_LOGIN_PASSWORD]))
     cg.add_define("USE_WIFI_MANUAL_IP")
     cg.add_library("DNSServer", None)
+    if CORE.is_esp8266 or CORE.is_esp32:
+        cg.add_library("LittleFS", None)
     await cg.register_component(var, config)

@@ -10,6 +10,8 @@ esphome:
 
 esp32:
   board: esp32-s3-devkitc-1
+  flash_size: 8MB
+  partitions: ../../partitions/esp32-8mb.csv
   framework:
     type: arduino
     version: 3.3.7
@@ -22,6 +24,9 @@ light:
     chipset: ws2812
     rgb_order: grb
     internal: true
+
+p1_setup:
+  device_model: "ESP32-S3 DevKitC-1"
 
 packages:
   common: !include ../../p1meter_common.yaml

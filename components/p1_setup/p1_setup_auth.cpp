@@ -84,11 +84,7 @@ bool P1Setup::extract_session_token_(AsyncWebServerRequest *request, char token[
   return false;
 }
 
-bool P1Setup::session_authenticated_(AsyncWebServerRequest *request) {
-  char token[33];
-  if (!this->extract_session_token_(request, token))
-    return false;
-
+P1Setup::WebSession *P1Setup::find_active_session_(const char token[33]) {
   const uint32_t now = millis();
   for (WebSession &session : this->sessions_) {
     if (!session.active)
@@ -101,10 +97,21 @@ bool P1Setup::session_authenticated_(AsyncWebServerRequest *request) {
     uint8_t difference = 0;
     for (size_t index = 0; index < SESSION_TOKEN_LENGTH; index++)
       difference |= static_cast<uint8_t>(session.token[index] ^ token[index]);
-    if (difference == 0) {
-      session.last_activity = now;
-      return true;
-    }
+    if (difference == 0)
+      return &session;
+  }
+  return nullptr;
+}
+
+bool P1Setup::session_authenticated_(AsyncWebServerRequest *request) {
+  char token[33];
+  if (!this->extract_session_token_(request, token))
+    return false;
+
+  WebSession *session = this->find_active_session_(token);
+  if (session != nullptr) {
+    session->last_activity = millis();
+    return true;
   }
   return false;
 }
@@ -149,15 +156,10 @@ void P1Setup::handle_logout_(AsyncWebServerRequest *request) {
 
   char token[33];
   if (this->extract_session_token_(request, token)) {
-    for (WebSession &session : this->sessions_) {
-      uint8_t difference = 0;
-      for (size_t index = 0; index < SESSION_TOKEN_LENGTH; index++)
-        difference |= static_cast<uint8_t>(session.token[index] ^ token[index]);
-      if (session.active && difference == 0) {
-        session.active = false;
-        session.token[0] = '\0';
-        break;
-      }
+    WebSession *session = this->find_active_session_(token);
+    if (session != nullptr) {
+      session->active = false;
+      session->token[0] = '\0';
     }
   }
 

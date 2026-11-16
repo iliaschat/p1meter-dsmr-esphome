@@ -3,7 +3,7 @@ esphome:
   name: p1-meter
   project:
     name: p1meter.firmware
-    version: 0.3.1 (Standard)
+    version: 0.4.0 (Standard)
   on_boot:
     priority: -100
     then:
@@ -14,7 +14,7 @@ esphome:
             - mqtt.enable:
 
 external_components:
-  - source: ./components
+  - source: github://iliaschat/p1meter-dsmr-esphome@v0.4.0
     components: [dsmr]
 
 globals:
@@ -58,6 +58,7 @@ uart:
   rx_buffer_size: 2048
 
 dsmr:
+  id: dsmr_id
   crc_check: false
 
 sensor:
@@ -155,6 +156,9 @@ sensor:
 
 text_sensor:
   - platform: dsmr
+    timestamp:
+      name: "DSMR Timestamp"
+      internal: true
     identification:
       name: "P1 Meter ID"
     p1_version:
@@ -163,7 +167,7 @@ text_sensor:
       name: "Actual Tariff Group"
   - platform: template
     name: "Firmware Version"
-    lambda: return std::string("0.3.1 (Standard)");
+    lambda: return std::string("0.4.0 (Standard)");
 
 switch:
   - platform: gpio

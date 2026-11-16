@@ -148,40 +148,52 @@ All variants expose the following configured DSMR sensor set:
 
 A meter only reports values supported by its telegram, so some entities may remain unavailable.
 
+Gas is detected automatically on MBUS 1 or MBUS 2. The firmware starts with MBUS 1, switches when
+the other MBUS is the one reporting a valid gas value, and persists that selection in flash. No
+`gas_mbus_id` setting is required in the ESPHome YAML.
+
 <p><span style="color: orange;">Notes:</span><br>
 <span style="color: orange;">-</span> Public variant supports OTA only through its web interface.<br>
 <span style="color: orange;">-</span> Dashboard-Standard supports ESPHome OTA only.<br>
 <span style="color: orange;">-</span> Advanced and Dashboard-Advanced variants support ESPHome OTA and browser-based OTA through the web interface. (ESPHome OTA is protected by `p1meter__ota_password` from `secrets.yaml`)</p>
 
-## Advanced Firmware Setup
+## On-Device History Storage
 
-The `P1-Meter-Setup` Wi-Fi access point and web interface of the Advanced and Dashboard-Advanced variants let you configure Wi-Fi and MQTT and update firmware. <span style="color: grey;">The Public variant has the same setup network with the public password `p1meter-setup` until you change it; see the [Software Usage Guide](docs/README-Software-Usage-Guide.md#first-setup-in-the-web-interface).</span>
+The WebUI dashboard can optionally keep hourly usage for Energy Consumed, Energy Returned, and Gas
+Consumed for today and the two previous days. **On-Device History is off by default**, so no history
+is written to flash until the user enables it in the dashboard.<br>
+<p style="color: red;"><strong>Enabling this feature can wear your device faster; if preiously enabled it, then disabling it deletes all already-saved history.</strong></p>
+Additionally:
 
-<span style="color: green;">The access point starts immediately if no Wi-Fi is saved, or after 90 seconds if the device fails to connect.</span>
+- The active hour is checkpointed every 30 minutes
+and at hour rollover.
+- The latest history is also flushed before a WebUI OTA update or deliberate WebUI reboot.
+- When history is disabled, the dashboard hides the day selector and graphs because there is no data to display.
+- The wear figures shown in the confirmation dialog are conservative engineering estimates for the additional flash-writing workload, not guarantees:
+-- Wemos D1 mini and NodeMCU v2: approximately 2–5 years
+-- ESP32 DevKit, ESP32-S2 Saola-1, and ESP32-C3 DevKitM-1: approximately 4–8 years
+-- ESP32-S3 DevKitC-1: approximately 8–15 years.
+(Actual life depends on flash quality, filesystem wear-leveling, temperature, power stability, and other firmware writes.)
 
-Connect with `p1_meter__setup_wifi_password`, then open `http://192.168.4.1/`.<br>
-If prompted by the browser, sign in with username `p1meter` and the same password.
+<details>
+<summary><span style="cursor:pointer;font-weight:bold;color:green;">Show History storage and flash layouts</span></summary>
 
-<p style="color: orange;">The sign-in notification does not appear reliably on every phone. <br>
-While connected to `P1-Meter-Setup`, always open `http://192.168.4.1/` in a browser.</p>
+The dashboard history is stored in LittleFS as two alternating, checksummed records. Each record is small (the 72 hourly buckets plus metadata), so the filesystem is intentionally much larger than the data file to leave room for filesystem wear-leveling and future metadata. Writes occur every 30 minutes, at an hour rollover, and before a WebUI OTA update or deliberate WebUI reboot.
 
-The home page offers:
+| Supported target | Flash assumption | OTA app slots | LittleFS/data partition | Configuration |
+| --- | ---: | ---: | ---: | --- |
+| Wemos D1 mini / NodeMCU v2 | 4 MB | approximately 1 MB each | approximately 1 MB | `eagle.flash.4m1m.ld` |
+| ESP32 DevKit / ESP32-S2 / ESP32-C3 | 4 MB | 1.25 MiB each | 1.4375 MiB | `firmwares/partitions/esp32-4mb.csv` |
+| ESP32-S3 DevKitC-1 | 8 MB documented target | 2.5 MiB each | 2.875 MiB | `firmwares/partitions/esp32-8mb.csv` |
 
-- **Configure:** Choose a nearby Wi-Fi network or enter its name and password. MQTT is optional. Choose DHCP or enter a static IP, gateway, and subnet, then save and reboot. DNS is optional. Disabling MQTT clears its saved credentials.
-- **OTA Update:** Upload ESPHome's `firmware.ota.bin`. The device reboots after the update succeeds.
-- **Factory Reset:** Erase saved settings and reboot. The setup access point starts immediately.
-- **Reboot:** Confirm to reboot immediately.
+The ESP8266 linker layout and both ESP32 partition tables reserve separate OTA slots and keep the
+LittleFS/data area outside those slots, so normal OTA updates preserve history. The ESP32 4 MB layout
+has 1,310,720-byte app slots; the current advanced ESP32 DevKit image is 1,184,271 bytes, leaving
+126,449 bytes (about 9.6%) in the smallest slot. The ESP32-S3 configuration targets the commonly
+documented 8 MB DevKitC-1 variant; verify the actual flash size of a different S3 module before
+flashing it. The ESP32-C6 is not supported.
 
-Use the top-right sign-out button to end the session. It tries to close the tab; if the browser blocks it, a signed-out message appears.
-
-<span style="color: red;">Warning:</span><br>
-Anyone connected to the password-protected web interface can view saved Wi-Fi and MQTT passwords, configure, update, reboot, or reset the device.<br>
-Keep its password private. <span style="color:grey;">The web interface uses unencrypted HTTP, so use it only on a trusted network.</span>
-
-With the Advanced and Dashboard-Advanced variants, the device keeps trying to reconnect to your saved Wi-Fi while the `P1-Meter-Setup` access point is on. Once it reconnects, the setup access point turns off automatically.<br>
-
-<span style="color:orange;">Note:</span>
-You can access the web interface by opening `http://<device-ip-address>` or whether mDNS supported [http://ip-meter.local](http://ip-meter.local).
+</details>
 
 ## Home Assistant - ESPHome API and MQTT
 

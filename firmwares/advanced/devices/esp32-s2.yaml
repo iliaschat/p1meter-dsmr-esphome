@@ -10,6 +10,7 @@ esphome:
 
 esp32:
   board: esp32-s2-saola-1
+  partitions: ../../partitions/esp32-4mb.csv
   framework:
     type: arduino
     version: 3.3.7
@@ -22,6 +23,9 @@ light:
     chipset: ws2812
     rgb_order: grb
     internal: true
+
+p1_setup:
+  device_model: "ESP32-S2 Saola-1"
 
 packages:
   common: !include ../../p1meter_common.yaml
