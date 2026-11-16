@@ -22,7 +22,7 @@ inline constexpr uint32_t SETTINGS_MAGIC = 0x50315331;
 inline constexpr uint32_t SETUP_PASSWORD_MAGIC = 0x50315350;
 inline constexpr uint32_t HISTORY_MAGIC = 0x50314832;
 inline constexpr uint32_t CONFIG_STORAGE_MAGIC = 0x50314346;
-inline constexpr uint32_t CONFIG_STORAGE_VERSION = 2;
+inline constexpr uint32_t CONFIG_STORAGE_VERSION = 3;
 inline constexpr uint32_t HISTORY_STORAGE_MAGIC = 0x50314846;
 inline constexpr uint32_t HISTORY_STORAGE_VERSION = 1;
 inline constexpr uint32_t HISTORY_CHECKPOINT_INTERVAL_MS = 30UL * 60UL * 1000UL;
@@ -45,6 +45,8 @@ inline constexpr size_t SESSION_TOKEN_LENGTH = 32;
 inline constexpr const char *HOMEWIZARD_API_PATH = "/api";
 inline constexpr const char *HOMEWIZARD_V1_PATH = "/api/v1";
 inline constexpr const char *HOMEWIZARD_DATA_PATH = "/api/v1/data";
+inline constexpr const char *HOMEWIZARD_TELEGRAM_PATH = "/api/v1/telegram";
+inline constexpr const char *HOMEWIZARD_STATE_PATH = "/api/v1/state";
 
 // Request helpers shared by the HTTP, auth, and route code.
 String request_url(AsyncWebServerRequest *request);

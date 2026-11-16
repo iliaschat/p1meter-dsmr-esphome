@@ -52,6 +52,7 @@ dsmr:
 
 sensor:
   - platform: dsmr
+    # Active Energy Consumed
     energy_delivered_tariff1:
       name: "Energy Consumed Tariff 1"
       unit_of_measurement: kWh
@@ -62,6 +63,48 @@ sensor:
       unit_of_measurement: kWh
       device_class: energy
       state_class: total_increasing
+    energy_delivered_tariff3:
+      name: "Energy Consumed Tariff 3"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_tariff4:
+      name: "Energy Consumed Tariff 4"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_lux:
+      name: "Energy Consumed Lux"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_tariff1_ch:
+      name: "Energy Consumed Tariff 1 CH"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_tariff2_ch:
+      name: "Energy Consumed Tariff 2 CH"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_tariff1_il:
+      name: "Energy Consumed Tariff 1 IL"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_tariff2_il:
+      name: "Energy Consumed Tariff 2 IL"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_tariff3_il:
+      name: "Energy Consumed Tariff 3 IL"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+
+    # Active Energy Returned
     energy_returned_tariff1:
       name: "Energy Returned Tariff 1"
       unit_of_measurement: kWh
@@ -72,6 +115,48 @@ sensor:
       unit_of_measurement: kWh
       device_class: energy
       state_class: total_increasing
+    energy_returned_tariff3:
+      name: "Energy Returned Tariff 3"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff4:
+      name: "Energy Returned Tariff 4"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_lux:
+      name: "Energy Returned Lux"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff1_ch:
+      name: "Energy Returned Tariff 1 CH"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff2_ch:
+      name: "Energy Returned Tariff 2 CH"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff1_il:
+      name: "Energy Returned Tariff 1 IL"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff2_il:
+      name: "Energy Returned Tariff 2 IL"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff3_il:
+      name: "Energy Returned Tariff 3 IL"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+
+    # Active Power
     power_delivered:
       name: "Power Consumed"
       unit_of_measurement: kW
@@ -80,6 +165,26 @@ sensor:
       name: "Power Returned"
       unit_of_measurement: kW
       device_class: power
+    power_delivered_ch:
+      name: "Power Consumed CH"
+      unit_of_measurement: kW
+      device_class: power
+    power_returned_ch:
+      name: "Power Returned CH"
+      unit_of_measurement: kW
+      device_class: power
+    abs_power:
+      name: "Absolute Active Power"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    electricity_threshold:
+      name: "Electricity Threshold"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+
+    # Phase Power Consumed & Returned
     power_delivered_l1:
       name: "Power Consumed Phase 1"
       unit_of_measurement: kW
@@ -95,6 +200,23 @@ sensor:
       unit_of_measurement: kW
       device_class: power
       state_class: measurement
+    power_returned_l1:
+      name: "Power Returned Phase 1"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    power_returned_l2:
+      name: "Power Returned Phase 2"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    power_returned_l3:
+      name: "Power Returned Phase 3"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+
+    # Currents & Fuses
     current_l1:
       name: "Current Phase 1"
       unit_of_measurement: A
@@ -110,6 +232,38 @@ sensor:
       unit_of_measurement: A
       device_class: current
       state_class: measurement
+    current:
+      name: "Current"
+      unit_of_measurement: A
+      device_class: current
+      state_class: measurement
+    current_n:
+      name: "Current Neutral"
+      unit_of_measurement: A
+      device_class: current
+      state_class: measurement
+    current_sum:
+      name: "Current Sum"
+      unit_of_measurement: A
+      device_class: current
+      state_class: measurement
+    current_fuse_l1:
+      name: "Current Fuse Phase 1"
+      unit_of_measurement: A
+      device_class: current
+      state_class: measurement
+    current_fuse_l2:
+      name: "Current Fuse Phase 2"
+      unit_of_measurement: A
+      device_class: current
+      state_class: measurement
+    current_fuse_l3:
+      name: "Current Fuse Phase 3"
+      unit_of_measurement: A
+      device_class: current
+      state_class: measurement
+
+    # Voltages & Frequency
     voltage_l1:
       name: "Voltage Phase 1"
       unit_of_measurement: V
@@ -125,11 +279,287 @@ sensor:
       unit_of_measurement: V
       device_class: voltage
       state_class: measurement
+    voltage_avg_l1:
+      name: "Average Voltage Phase 1"
+      unit_of_measurement: V
+      device_class: voltage
+      state_class: measurement
+    voltage_avg_l2:
+      name: "Average Voltage Phase 2"
+      unit_of_measurement: V
+      device_class: voltage
+      state_class: measurement
+    voltage_avg_l3:
+      name: "Average Voltage Phase 3"
+      unit_of_measurement: V
+      device_class: voltage
+      state_class: measurement
+    voltage:
+      name: "Voltage"
+      unit_of_measurement: V
+      device_class: voltage
+      state_class: measurement
+    frequency:
+      name: "Grid Frequency"
+      unit_of_measurement: Hz
+      device_class: frequency
+      state_class: measurement
+
+    # Power Factor
+    power_factor:
+      name: "Power Factor"
+      device_class: power_factor
+      state_class: measurement
+    power_factor_l1:
+      name: "Power Factor Phase 1"
+      device_class: power_factor
+      state_class: measurement
+    power_factor_l2:
+      name: "Power Factor Phase 2"
+      device_class: power_factor
+      state_class: measurement
+    power_factor_l3:
+      name: "Power Factor Phase 3"
+      device_class: power_factor
+      state_class: measurement
+    min_power_factor:
+      name: "Minimum Power Factor"
+      device_class: power_factor
+      state_class: measurement
+
+    # Reactive Energy
+    total_imported_energy:
+      name: "Total Reactive Energy Consumed"
+      state_class: total_increasing
+    reactive_energy_delivered_tariff1:
+      name: "Reactive Energy Consumed Tariff 1"
+      state_class: total_increasing
+    reactive_energy_delivered_tariff2:
+      name: "Reactive Energy Consumed Tariff 2"
+      state_class: total_increasing
+    reactive_energy_delivered_tariff3:
+      name: "Reactive Energy Consumed Tariff 3"
+      state_class: total_increasing
+    reactive_energy_delivered_tariff4:
+      name: "Reactive Energy Consumed Tariff 4"
+      state_class: total_increasing
+    total_exported_energy:
+      name: "Total Reactive Energy Returned"
+      state_class: total_increasing
+    reactive_energy_returned_tariff1:
+      name: "Reactive Energy Returned Tariff 1"
+      state_class: total_increasing
+    reactive_energy_returned_tariff2:
+      name: "Reactive Energy Returned Tariff 2"
+      state_class: total_increasing
+    reactive_energy_returned_tariff3:
+      name: "Reactive Energy Returned Tariff 3"
+      state_class: total_increasing
+    reactive_energy_returned_tariff4:
+      name: "Reactive Energy Returned Tariff 4"
+      state_class: total_increasing
+
+    # Reactive & Apparent Power
+    reactive_power_delivered:
+      name: "Reactive Power Consumed"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_power_returned:
+      name: "Reactive Power Returned"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_power_delivered_l1:
+      name: "Reactive Power Consumed Phase 1"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_power_delivered_l2:
+      name: "Reactive Power Consumed Phase 2"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_power_delivered_l3:
+      name: "Reactive Power Consumed Phase 3"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_power_returned_l1:
+      name: "Reactive Power Returned Phase 1"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_power_returned_l2:
+      name: "Reactive Power Returned Phase 2"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_power_returned_l3:
+      name: "Reactive Power Returned Phase 3"
+      device_class: reactive_power
+      state_class: measurement
+    apparent_delivery_power:
+      name: "Apparent Power Consumed"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_delivery_power_l1:
+      name: "Apparent Power Consumed Phase 1"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_delivery_power_l2:
+      name: "Apparent Power Consumed Phase 2"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_delivery_power_l3:
+      name: "Apparent Power Consumed Phase 3"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_return_power:
+      name: "Apparent Power Returned"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_return_power_l1:
+      name: "Apparent Power Returned Phase 1"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_return_power_l2:
+      name: "Apparent Power Returned Phase 2"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_return_power_l3:
+      name: "Apparent Power Returned Phase 3"
+      device_class: apparent_power
+      state_class: measurement
+
+    # Demands
+    active_demand_power:
+      name: "Active Demand Power"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    active_demand_net:
+      name: "Active Demand Net Power"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    active_demand_abs:
+      name: "Active Demand Absolute Power"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    active_energy_import_current_average_demand:
+      name: "Active Import Current Average Demand"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    active_energy_export_current_average_demand:
+      name: "Active Export Current Average Demand"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    reactive_energy_import_current_average_demand:
+      name: "Reactive Import Current Average Demand"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_energy_export_current_average_demand:
+      name: "Reactive Export Current Average Demand"
+      device_class: reactive_power
+      state_class: measurement
+    apparent_energy_import_current_average_demand:
+      name: "Apparent Import Current Average Demand"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_energy_export_current_average_demand:
+      name: "Apparent Export Current Average Demand"
+      device_class: apparent_power
+      state_class: measurement
+    active_energy_import_last_completed_demand:
+      name: "Active Import Last Completed Demand"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    active_energy_export_last_completed_demand:
+      name: "Active Export Last Completed Demand"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    reactive_energy_import_last_completed_demand:
+      name: "Reactive Import Last Completed Demand"
+      device_class: reactive_power
+      state_class: measurement
+    reactive_energy_export_last_completed_demand:
+      name: "Reactive Export Last Completed Demand"
+      device_class: reactive_power
+      state_class: measurement
+    apparent_energy_import_last_completed_demand:
+      name: "Apparent Import Last Completed Demand"
+      device_class: apparent_power
+      state_class: measurement
+    apparent_energy_export_last_completed_demand:
+      name: "Apparent Export Last Completed Demand"
+      device_class: apparent_power
+      state_class: measurement
+    active_energy_import_maximum_demand_running_month:
+      name: "Active Import Maximum Demand Running Month"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    active_energy_import_maximum_demand_last_13_months:
+      name: "Active Import Maximum Demand Last 13 Months"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+
+    # Gas, Water, Thermal & Sub-metering
     gas_delivered:
       name: "Gas Consumed"
       unit_of_measurement: m³
       device_class: gas
       state_class: total_increasing
+    gas_delivered_be:
+      name: "Gas Consumed BE"
+      unit_of_measurement: m³
+      device_class: gas
+      state_class: total_increasing
+    gas_delivered_gj:
+      name: "Gas Consumed GJ"
+      unit_of_measurement: GJ
+      device_class: energy
+      state_class: total_increasing
+    water_delivered:
+      name: "Water Consumed"
+      unit_of_measurement: m³
+      device_class: water
+      state_class: total_increasing
+    thermal_delivered:
+      name: "Thermal Energy Consumed"
+      unit_of_measurement: GJ
+      device_class: energy
+      state_class: total_increasing
+    sub_delivered:
+      name: "Sub-meter Consumed"
+      unit_of_measurement: m³
+      state_class: total_increasing
+    gas_device_type:
+      name: "Gas Device Type"
+      state_class: measurement
+    gas_valve_position:
+      name: "Gas Valve Position"
+      state_class: measurement
+    water_device_type:
+      name: "Water Device Type"
+      state_class: measurement
+    water_valve_position:
+      name: "Water Valve Position"
+      state_class: measurement
+    thermal_device_type:
+      name: "Thermal Device Type"
+      state_class: measurement
+    thermal_valve_position:
+      name: "Thermal Valve Position"
+      state_class: measurement
+    sub_device_type:
+      name: "Sub-meter Device Type"
+      state_class: measurement
+    sub_valve_position:
+      name: "Sub-meter Valve Position"
+      state_class: measurement
+
+    # Power Outages & Grid Events
     electricity_failures:
       name: "Short Power Outages"
       state_class: total_increasing
@@ -139,9 +569,73 @@ sensor:
     electricity_sags_l1:
       name: "Short Power Drops Phase 1"
       state_class: total_increasing
+    electricity_sags_l2:
+      name: "Short Power Drops Phase 2"
+      state_class: total_increasing
+    electricity_sags_l3:
+      name: "Short Power Drops Phase 3"
+      state_class: total_increasing
     electricity_swells_l1:
       name: "Short Power Peaks Phase 1"
       state_class: total_increasing
+    electricity_swells_l2:
+      name: "Short Power Peaks Phase 2"
+      state_class: total_increasing
+    electricity_swells_l3:
+      name: "Short Power Peaks Phase 3"
+      state_class: total_increasing
+    voltage_sag_time_l1:
+      name: "Voltage Sag Time Phase 1"
+      device_class: duration
+      state_class: measurement
+    voltage_sag_time_l2:
+      name: "Voltage Sag Time Phase 2"
+      device_class: duration
+      state_class: measurement
+    voltage_sag_time_l3:
+      name: "Voltage Sag Time Phase 3"
+      device_class: duration
+      state_class: measurement
+    voltage_sag_l1:
+      name: "Voltage Sag Phase 1"
+      device_class: voltage
+      state_class: measurement
+    voltage_sag_l2:
+      name: "Voltage Sag Phase 2"
+      device_class: voltage
+      state_class: measurement
+    voltage_sag_l3:
+      name: "Voltage Sag Phase 3"
+      device_class: voltage
+      state_class: measurement
+    voltage_swell_time_l1:
+      name: "Voltage Swell Time Phase 1"
+      device_class: duration
+      state_class: measurement
+    voltage_swell_time_l2:
+      name: "Voltage Swell Time Phase 2"
+      device_class: duration
+      state_class: measurement
+    voltage_swell_time_l3:
+      name: "Voltage Swell Time Phase 3"
+      device_class: duration
+      state_class: measurement
+    voltage_swell_l1:
+      name: "Voltage Swell Phase 1"
+      device_class: voltage
+      state_class: measurement
+    voltage_swell_l2:
+      name: "Voltage Swell Phase 2"
+      device_class: voltage
+      state_class: measurement
+    voltage_swell_l3:
+      name: "Voltage Swell Phase 3"
+      device_class: voltage
+      state_class: measurement
+    period_3_for_instantaneous_values:
+      name: "Period 3 For Instantaneous Values"
+      device_class: duration
+      state_class: measurement
 
 text_sensor:
   - platform: dsmr
@@ -152,8 +646,47 @@ text_sensor:
       name: "P1 Meter ID"
     p1_version:
       name: "P1 Version"
+    p1_version_be:
+      name: "P1 Version BE"
+    electricity_switch_position:
+      name: "Electricity Switch Position"
     electricity_tariff:
       name: "Actual Tariff Group"
+    electricity_tariff_il:
+      name: "Actual Tariff Group IL"
+    electricity_failure_log:
+      name: "Power Outages Log"
+    electricity_failure_log_il:
+      name: "Power Outages Log IL"
+    message_short:
+      name: "Text Message Short"
+    message_long:
+      name: "Text Message Long"
+    equipment_id:
+      name: "Electricity Equipment ID"
+    gas_equipment_id:
+      name: "Gas Equipment ID"
+    gas_equipment_id_be:
+      name: "Gas Equipment ID BE"
+    thermal_equipment_id:
+      name: "Thermal Equipment ID"
+    water_equipment_id:
+      name: "Water Equipment ID"
+    sub_equipment_id:
+      name: "Sub Equipment ID"
+    gas_delivered_text:
+      name: "Gas Delivered Text"
+    fw_core_checksum:
+      name: "Firmware Core Checksum"
+    fw_core_version:
+      name: "Firmware Core Version"
+    fw_module_checksum:
+      name: "Firmware Module Checksum"
+    fw_module_version:
+      name: "Firmware Module Version"
+    telegram:
+      name: "DSMR Telegram"
+      internal: true
   - platform: template
     name: "Firmware Version"
     lambda: return std::string("${firmware_version} (${firmware_type})");
@@ -180,6 +713,22 @@ switch:
       - lambda: id(p1_setup_control).set_mqtt_enabled(true);
     turn_off_action:
       - lambda: id(p1_setup_control).set_mqtt_enabled(false);
+  - platform: template
+    name: "HomeWizard"
+    id: homewizard_switch
+    lambda: return id(p1_setup_control).homewizard_enabled();
+    turn_on_action:
+      - lambda: id(p1_setup_control).set_homewizard_enabled(true);
+    turn_off_action:
+      - lambda: id(p1_setup_control).set_homewizard_enabled(false);
+  - platform: template
+    name: "ESPHome API"
+    id: api_switch
+    lambda: return id(p1_setup_control).api_enabled();
+    turn_on_action:
+      - lambda: id(p1_setup_control).set_api_enabled(true);
+    turn_off_action:
+      - lambda: id(p1_setup_control).set_api_enabled(false);
   - platform: restart
     name: "Reboot"
 

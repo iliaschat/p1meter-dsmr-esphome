@@ -1,5 +1,9 @@
 #include "p1_setup_internal.h"
 
+#ifdef USE_API
+#include "esphome/components/api/api_server.h"
+#endif
+
 #if defined(USE_ESP8266) || (defined(USE_ESP32) && defined(USE_ARDUINO))
 #include <LittleFS.h>
 #endif
@@ -58,6 +62,33 @@ void P1Setup::set_mqtt_enabled(bool enabled) {
   this->apply_mqtt_settings_();
 }
 
+void P1Setup::set_homewizard_enabled(bool enabled) {
+  this->homewizard_enabled_ = enabled;
+  this->save_config_storage_();
+  this->update_homewizard_mdns_();
+}
+
+void P1Setup::set_api_enabled(bool enabled) {
+  this->api_enabled_ = enabled;
+  this->save_config_storage_();
+  this->apply_api_settings_();
+}
+
+void P1Setup::apply_api_settings_() {
+#ifdef USE_API
+  if (api::global_api_server != nullptr) {
+    if (this->api_enabled_) {
+      api::global_api_server->set_reboot_timeout(30UL * 60UL * 1000UL);
+    } else {
+      api::global_api_server->set_reboot_timeout(0);
+      for (auto &client : api::global_api_server->active_clients()) {
+        client->on_fatal_error();
+      }
+    }
+  }
+#endif
+}
+
 void P1Setup::send_settings_(AsyncWebServerRequest *request) {
   String origin;
   String host;
@@ -73,7 +104,7 @@ void P1Setup::send_settings_(AsyncWebServerRequest *request) {
     return;
   }
   String json;
-  json.reserve(480);
+  json.reserve(512);
   json += F("{\"wifi_ssid\":");
   append_json_string(json, this->settings_.wifi_ssid);
   json += F(",\"wifi_password\":");
@@ -84,6 +115,8 @@ void P1Setup::send_settings_(AsyncWebServerRequest *request) {
   json += this->mqtt_enabled_ ? "true" : "false";
   json += F(",\"homewizard_enabled\":");
   json += this->homewizard_enabled_ ? "true" : "false";
+  json += F(",\"api_enabled\":");
+  json += this->api_enabled_ ? "true" : "false";
   json += F(",\"mqtt_port\":");
   json += String(this->settings_.mqtt_port == 0 ? 1883 : this->settings_.mqtt_port);
   json += F(",\"mqtt_username\":");
@@ -181,6 +214,7 @@ void P1Setup::save_settings_(AsyncWebServerRequest *request) {
   const String mqtt_password = request_arg(request, "mqtt_password");
   const bool mqtt_enabled = request_arg(request, "mqtt_enabled") == "on";
   const bool homewizard_enabled = request_arg(request, "homewizard_enabled") == "on";
+  const bool api_enabled = request_arg(request, "api_enabled") == "on";
   if (ssid.isEmpty()) {
     send_field_error(request, "wifi_ssid", "Enter a Wi-Fi network name.");
     return;
@@ -261,11 +295,14 @@ void P1Setup::save_settings_(AsyncWebServerRequest *request) {
 
   this->settings_ = next;
   this->homewizard_enabled_ = homewizard_enabled;
+  this->api_enabled_ = api_enabled;
   if (!this->save_config_storage_()) {
     request->send(500, "text/plain", "Could not save settings to flash");
     return;
   }
   this->apply_settings_();
+  this->apply_api_settings_();
+  this->update_homewizard_mdns_();
   request->send(200, "text/plain", "Settings saved and applied");
 }
 

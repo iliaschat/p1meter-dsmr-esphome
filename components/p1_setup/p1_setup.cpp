@@ -2,6 +2,10 @@
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
 
+#ifdef USE_API
+#include "esphome/components/api/api_server.h"
+#endif
+
 #if defined(USE_ESP8266) || (defined(USE_ESP32) && defined(USE_ARDUINO))
 #include <LittleFS.h>
 #endif
@@ -86,7 +90,7 @@ template<typename T> uint32_t record_checksum(const T &record) {
   return ~crc;
 }
 
-struct LegacyConfigStorageRecord {
+struct LegacyConfigStorageRecordV1 {
   uint32_t magic;
   uint32_t version;
   uint32_t sequence;
@@ -94,6 +98,18 @@ struct LegacyConfigStorageRecord {
   SetupPassword setup_password;
   uint8_t mqtt_enabled;
   uint8_t history_enabled;
+  uint32_t checksum;
+};
+
+struct LegacyConfigStorageRecordV2 {
+  uint32_t magic;
+  uint32_t version;
+  uint32_t sequence;
+  SetupSettings settings;
+  SetupPassword setup_password;
+  uint8_t mqtt_enabled;
+  uint8_t history_enabled;
+  uint8_t homewizard_enabled;
   uint32_t checksum;
 };
 
@@ -108,14 +124,25 @@ bool read_config_file(const char *path, ConfigStorageRecord *record) {
          record->setup_password.magic == SETUP_PASSWORD_MAGIC && record->checksum == record_checksum(*record);
 }
 
-bool read_legacy_config_file(const char *path, LegacyConfigStorageRecord *record) {
+bool read_legacy_config_file_v1(const char *path, LegacyConfigStorageRecordV1 *record) {
   File file = LittleFS.open(path, "r");
-  if (!file || file.size() != sizeof(LegacyConfigStorageRecord))
+  if (!file || file.size() != sizeof(LegacyConfigStorageRecordV1))
     return false;
-  const size_t read = file.read(reinterpret_cast<uint8_t *>(record), sizeof(LegacyConfigStorageRecord));
+  const size_t read = file.read(reinterpret_cast<uint8_t *>(record), sizeof(LegacyConfigStorageRecordV1));
   file.close();
-  return read == sizeof(LegacyConfigStorageRecord) && record->magic == CONFIG_STORAGE_MAGIC &&
+  return read == sizeof(LegacyConfigStorageRecordV1) && record->magic == CONFIG_STORAGE_MAGIC &&
          record->version == 1 && record->settings.magic == SETTINGS_MAGIC &&
+         record->setup_password.magic == SETUP_PASSWORD_MAGIC && record->checksum == record_checksum(*record);
+}
+
+bool read_legacy_config_file_v2(const char *path, LegacyConfigStorageRecordV2 *record) {
+  File file = LittleFS.open(path, "r");
+  if (!file || file.size() != sizeof(LegacyConfigStorageRecordV2))
+    return false;
+  const size_t read = file.read(reinterpret_cast<uint8_t *>(record), sizeof(LegacyConfigStorageRecordV2));
+  file.close();
+  return read == sizeof(LegacyConfigStorageRecordV2) && record->magic == CONFIG_STORAGE_MAGIC &&
+         record->version == 2 && record->settings.magic == SETTINGS_MAGIC &&
          record->setup_password.magic == SETUP_PASSWORD_MAGIC && record->checksum == record_checksum(*record);
 }
 
@@ -184,6 +211,7 @@ void P1Setup::setup() {
 
   this->mqtt_enabled_ = false;
   this->homewizard_enabled_ = false;
+  this->api_enabled_ = true;
 
   const bool config_loaded = this->load_config_storage_();
   if (!config_loaded)
@@ -200,6 +228,7 @@ void P1Setup::setup() {
   }
 
   this->apply_settings_();
+  this->apply_api_settings_();
 
   this->web_server_base_ = web_server_base::global_web_server_base;
   if (this->web_server_base_ != nullptr) {
@@ -233,6 +262,15 @@ void P1Setup::loop() {
 
   this->update_homewizard_mdns_();
 
+#ifdef USE_API
+  if (!this->api_enabled_ && api::global_api_server != nullptr) {
+    api::global_api_server->set_reboot_timeout(0);
+    for (auto &client : api::global_api_server->active_clients()) {
+      client->on_fatal_error();
+    }
+  }
+#endif
+
   if (this->reboot_at_ != 0 && static_cast<int32_t>(millis() - this->reboot_at_) >= 0) {
     this->reboot_at_ = 0;
     App.reboot();
@@ -249,18 +287,35 @@ bool P1Setup::load_config_storage_() {
   if (!read_config_file(CONFIG_STORAGE_FILE, &record)) {
     memset(&record, 0, sizeof(record));
     if (!read_config_file(CONFIG_STORAGE_BACKUP_FILE, &record)) {
-      static LegacyConfigStorageRecord legacy;
-      memset(&legacy, 0, sizeof(legacy));
-      if (!read_legacy_config_file(CONFIG_STORAGE_FILE, &legacy) &&
-          !read_legacy_config_file(CONFIG_STORAGE_BACKUP_FILE, &legacy))
-        return false;
-      this->settings_ = legacy.settings;
-      this->setup_password_ = legacy.setup_password.password;
-      this->mqtt_enabled_ = legacy.mqtt_enabled != 0;
-      this->history_enabled_ = legacy.history_enabled != 0;
-      this->homewizard_enabled_ = false;
-      ESP_LOGW("p1_setup", "Migrated legacy configuration; HomeWizard support is disabled by default");
-      return true;
+      static LegacyConfigStorageRecordV2 legacy_v2;
+      memset(&legacy_v2, 0, sizeof(legacy_v2));
+      if (read_legacy_config_file_v2(CONFIG_STORAGE_FILE, &legacy_v2) ||
+          read_legacy_config_file_v2(CONFIG_STORAGE_BACKUP_FILE, &legacy_v2)) {
+        this->settings_ = legacy_v2.settings;
+        this->setup_password_ = legacy_v2.setup_password.password;
+        this->mqtt_enabled_ = legacy_v2.mqtt_enabled != 0;
+        this->history_enabled_ = legacy_v2.history_enabled != 0;
+        this->homewizard_enabled_ = legacy_v2.homewizard_enabled != 0;
+        this->api_enabled_ = true;
+        this->save_config_storage_();
+        ESP_LOGW("p1_setup", "Migrated v2 configuration; ESPHome API is enabled by default");
+        return true;
+      }
+      static LegacyConfigStorageRecordV1 legacy_v1;
+      memset(&legacy_v1, 0, sizeof(legacy_v1));
+      if (read_legacy_config_file_v1(CONFIG_STORAGE_FILE, &legacy_v1) ||
+          read_legacy_config_file_v1(CONFIG_STORAGE_BACKUP_FILE, &legacy_v1)) {
+        this->settings_ = legacy_v1.settings;
+        this->setup_password_ = legacy_v1.setup_password.password;
+        this->mqtt_enabled_ = legacy_v1.mqtt_enabled != 0;
+        this->history_enabled_ = legacy_v1.history_enabled != 0;
+        this->homewizard_enabled_ = false;
+        this->api_enabled_ = true;
+        this->save_config_storage_();
+        ESP_LOGW("p1_setup", "Migrated v1 configuration; ESPHome API is enabled by default");
+        return true;
+      }
+      return false;
     }
     ESP_LOGW("p1_setup", "Primary configuration is invalid; using backup configuration");
   }
@@ -269,6 +324,7 @@ bool P1Setup::load_config_storage_() {
   this->mqtt_enabled_ = record.mqtt_enabled != 0;
   this->history_enabled_ = record.history_enabled != 0;
   this->homewizard_enabled_ = record.homewizard_enabled != 0;
+  this->api_enabled_ = record.api_enabled != 0;
   return true;
 #else
   return false;
@@ -293,6 +349,7 @@ bool P1Setup::save_config_storage_() {
     record.mqtt_enabled = this->mqtt_enabled_ ? 1 : 0;
     record.history_enabled = this->history_enabled_ ? 1 : 0;
     record.homewizard_enabled = this->homewizard_enabled_ ? 1 : 0;
+    record.api_enabled = this->api_enabled_ ? 1 : 0;
     record.checksum = record_checksum(record);
     File file = LittleFS.open(CONFIG_STORAGE_TEMP_FILE, "w");
     if (file) {
