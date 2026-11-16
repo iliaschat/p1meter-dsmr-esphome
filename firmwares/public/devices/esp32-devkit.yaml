@@ -10,6 +10,7 @@ esphome:
 
 esp32:
   board: esp32dev
+  partitions: ../../partitions/esp32-4mb.csv
   framework:
     type: arduino
     version: 3.3.7
@@ -24,6 +25,9 @@ light:
     id: wifi_led
     output: wifi_led_output
     internal: true
+
+p1_setup:
+  device_model: "ESP32 DevKit"
 
 packages:
   common: !include ../../p1meter_common.yaml

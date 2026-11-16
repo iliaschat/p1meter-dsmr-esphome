@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0
+
+> **BREAKING CHANGE — READ BEFORE UPGRADING:** This version introduces LittleFS to store configuration and data in flash and help reduce flash wear. Install it on a reset device; do not OTA-update an existing installation, as the device may stop working.
+
+### Dashboard and history
+- Added hourly on-device history for power and gas consumption, displayed in the dashboard.
+- Improved history storage initialization and reliability, including validation, backups, and retry handling for failed writes.
+
+### Web interface
+- Improved OTA and reboot pages with restart overlays and clearer feedback.
+- Streamlined dashboard rendering and MQTT settings application.
+
 ## 0.3.1
 
 ### Meter compatibility

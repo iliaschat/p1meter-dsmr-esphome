@@ -1,5 +1,9 @@
 #include "p1_setup_internal.h"
 
+#if defined(USE_ESP8266) || (defined(USE_ESP32) && defined(USE_ARDUINO))
+#include <LittleFS.h>
+#endif
+
 namespace esphome::p1_setup {
 
 void P1Setup::save_setup_password_(AsyncWebServerRequest *request) {
@@ -16,25 +20,22 @@ void P1Setup::save_setup_password_(AsyncWebServerRequest *request) {
     request->send(400, "text/plain", "Use 8 to 63 printable ASCII characters.");
     return;
   }
-  SetupPassword stored{};
-  stored.magic = SETUP_PASSWORD_MAGIC;
-  if (!copy_value(stored.password, sizeof(stored.password), password)) {
-    request->send(400, "text/plain", "Use 8 to 63 printable ASCII characters.");
-    return;
-  }
-  if (!this->setup_password_preference_.save(&stored) || !global_preferences->sync()) {
+  const bool first_setup = this->setup_password_.empty();
+  this->setup_password_ = password.c_str();
+  if (!this->save_config_storage_()) {
     request->send(500, "text/plain", "Could not save the setup password to flash");
     return;
   }
-  this->setup_password_ = password.c_str();
-  request->send(200, "text/plain", "Password saved; rebooting");
-  this->schedule_reboot_();
+  if (first_setup) {
+    request->send(200, "text/plain", "Password saved; rebooting");
+    this->schedule_reboot_();
+  } else {
+    this->login_realm_ready_ = this->rotate_login_realm_();
+    request->send(200, "text/plain", "Password saved and applied");
+  }
 }
 
-void P1Setup::set_mqtt_enabled(bool enabled) {
-  this->mqtt_enabled_ = enabled && this->settings_.mqtt_broker[0] != '\0';
-  this->mqtt_enabled_preference_.save(&this->mqtt_enabled_);
-  global_preferences->sync();
+void P1Setup::apply_mqtt_settings_() {
   if (this->mqtt_client_ == nullptr)
     return;
 
@@ -42,11 +43,19 @@ void P1Setup::set_mqtt_enabled(bool enabled) {
   this->mqtt_client_->set_broker_port(this->settings_.mqtt_port == 0 ? 1883 : this->settings_.mqtt_port);
   this->mqtt_client_->set_username(this->settings_.mqtt_username);
   this->mqtt_client_->set_password(this->settings_.mqtt_password);
+  this->mqtt_client_->set_enable_on_boot(this->mqtt_enabled_ && this->settings_.mqtt_broker[0] != '\0');
+  this->mqtt_client_->set_reboot_timeout(0);
   if (this->mqtt_enabled_) {
     this->mqtt_client_->enable();
   } else {
     this->mqtt_client_->disable();
   }
+}
+
+void P1Setup::set_mqtt_enabled(bool enabled) {
+  this->mqtt_enabled_ = enabled && this->settings_.mqtt_broker[0] != '\0';
+  this->save_config_storage_();
+  this->apply_mqtt_settings_();
 }
 
 void P1Setup::send_settings_(AsyncWebServerRequest *request) {
@@ -93,6 +102,67 @@ void P1Setup::send_settings_(AsyncWebServerRequest *request) {
   AsyncWebServerResponse *response = begin_text_response(request, 200, "application/json", json);
   response->addHeader("Cache-Control", "no-store");
   request->send(response);
+}
+
+void P1Setup::reset_history_state_() {
+  this->history_enabled_ = false;
+  memset(&this->history_, 0, sizeof(this->history_));
+  this->history_.magic = HISTORY_MAGIC;
+  this->history_sequence_ = 0;
+  this->history_slot_ = 0;
+  this->history_slot_valid_ = false;
+  this->history_dirty_ = false;
+  this->history_save_failures_ = 0;
+  this->history_retry_at_ = 0;
+}
+
+void P1Setup::save_history_settings_(AsyncWebServerRequest *request) {
+  if (!same_origin(request)) {
+    request->send(403, "text/plain", "Invalid request origin");
+    return;
+  }
+  const bool enable = request_arg(request, "enabled") == "true";
+  if (enable == this->history_enabled_) {
+    request->send(200, "text/plain", enable ? "On-Device History is already enabled" :
+                                                "On-Device History is already disabled");
+    return;
+  }
+  if (!enable) {
+    this->reset_history_state_();
+    if (!this->save_config_storage_()) {
+      request->send(500, "text/plain", "Could not save the history setting");
+      return;
+    }
+#if defined(USE_ESP8266) || (defined(USE_ESP32) && defined(USE_ARDUINO))
+    if (this->history_filesystem_ready_) {
+      LittleFS.remove(HISTORY_STORAGE_FILE_A);
+      LittleFS.remove(HISTORY_STORAGE_FILE_B);
+    }
+#endif
+    request->send(200, "text/plain", "On-Device History disabled and saved history deleted");
+    return;
+  }
+  // Build and verify the initial history record before advertising history as
+  // enabled in the configuration file. This prevents booting into an enabled
+  // state with no valid history record if the second write fails.
+  this->reset_history_state_();
+  if (!this->save_history_storage_()) {
+    request->send(500, "text/plain", "Could not save the history setting");
+    return;
+  }
+  this->history_enabled_ = true;
+  if (!this->save_config_storage_()) {
+    this->history_enabled_ = false;
+#if defined(USE_ESP8266) || (defined(USE_ESP32) && defined(USE_ARDUINO))
+    if (this->history_filesystem_ready_) {
+      LittleFS.remove(HISTORY_STORAGE_FILE_A);
+      LittleFS.remove(HISTORY_STORAGE_FILE_B);
+    }
+#endif
+    request->send(500, "text/plain", "Could not save the history setting");
+    return;
+  }
+  request->send(200, "text/plain", "On-Device History enabled");
 }
 
 void P1Setup::save_settings_(AsyncWebServerRequest *request) {
@@ -186,16 +256,45 @@ void P1Setup::save_settings_(AsyncWebServerRequest *request) {
     }
   }
 
-  if (!this->settings_preference_.save(&next) || !global_preferences->sync()) {
+  this->settings_ = next;
+  if (!this->save_config_storage_()) {
     request->send(500, "text/plain", "Could not save settings to flash");
     return;
   }
-  this->settings_ = next;
-  this->set_mqtt_enabled(mqtt_enabled);
-  request->send(200, "text/plain", "Settings saved; rebooting");
-  this->schedule_reboot_();
+  this->apply_settings_();
+  request->send(200, "text/plain", "Settings saved and applied");
 }
 
-void P1Setup::schedule_reboot_() { this->reboot_at_ = millis() + 5000; }
+void P1Setup::apply_settings_() {
+  if (wifi::global_wifi_component != nullptr && this->settings_.wifi_ssid[0] != '\0') {
+    wifi::WiFiAP station;
+    station.set_ssid(this->settings_.wifi_ssid);
+    station.set_password(this->settings_.wifi_password);
+    if (this->settings_.ip_mode == 1) {
+      wifi::ManualIP manual_ip{
+          .static_ip = network::IPAddress(this->settings_.static_ip[0], this->settings_.static_ip[1],
+                                          this->settings_.static_ip[2], this->settings_.static_ip[3]),
+          .gateway = network::IPAddress(this->settings_.gateway[0], this->settings_.gateway[1],
+                                        this->settings_.gateway[2], this->settings_.gateway[3]),
+          .subnet = network::IPAddress(this->settings_.subnet[0], this->settings_.subnet[1],
+                                       this->settings_.subnet[2], this->settings_.subnet[3]),
+          .dns1 = network::IPAddress(this->settings_.dns[0], this->settings_.dns[1],
+                                     this->settings_.dns[2], this->settings_.dns[3]),
+          .dns2 = network::IPAddress(),
+      };
+      station.set_manual_ip(optional<wifi::ManualIP>(manual_ip));
+    }
+    wifi::global_wifi_component->set_sta(station);
+  }
+  this->apply_mqtt_settings_();
+}
+
+void P1Setup::schedule_reboot_() {
+  if (this->reboot_at_ != 0)
+    return;
+  if (!this->save_history_(true))
+    ESP_LOGW("p1_setup", "Could not checkpoint history before reboot");
+  this->reboot_at_ = millis() + 5000;
+}
 
 }  // namespace esphome::p1_setup

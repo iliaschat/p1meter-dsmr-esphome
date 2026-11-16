@@ -1,12 +1,14 @@
 esphome:
   name: p1-meter
+  platformio_options:
+    board_build.ldscript: eagle.flash.4m1m.ld
   project:
     name: p1meter.firmware
-    version: 0.3.1 (Public)
+    version: 0.4.0 (Public)
 
 # Advanced firmware: Web UI setup, ESPHome API encryption, ESPHome and Web UI OTA.
 external_components:
-  - source: github://iliaschat/p1meter-dsmr-esphome@release
+  - source: github://iliaschat/p1meter-dsmr-esphome@v0.4.0
     components: [p1_setup, dsmr]
 
 esp8266:
@@ -153,6 +155,9 @@ sensor:
 
 text_sensor:
   - platform: dsmr
+    timestamp:
+      name: "DSMR Timestamp"
+      internal: true
     identification:
       name: "P1 Meter ID"
     p1_version:
@@ -161,7 +166,7 @@ text_sensor:
       name: "Actual Tariff Group"
   - platform: template
     name: "Firmware Version"
-    lambda: return std::string("0.3.1 (Public)");
+    lambda: return std::string("0.4.0 (Public)");
 
 web_server:
   port: 80
@@ -175,6 +180,7 @@ p1_setup:
   id: p1_setup_control
   mqtt_id: mqtt_client
   device_name: "P1 Meter"
+  device_model: "Wemos D1 mini"
   login_username: "p1meter" # Must match web_server.auth.username
   login_password: !secret p1_meter__setup_wifi_password # Optional initial setup password; empty = open first-use setup
 

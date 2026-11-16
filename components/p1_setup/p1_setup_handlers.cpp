@@ -73,6 +73,10 @@ void APSetupHandler::handleUpload(AsyncWebServerRequest *request, const Platform
       return;
     this->upload_request_ = request;
     this->upload_success_ = false;
+    if (!this->setup_->save_history_(true)) {
+      ESP_LOGE("p1_setup", "Could not checkpoint history before OTA");
+      return;
+    }
 #ifndef USE_ESP32
     request->onDisconnect([this, request]() {
       if (this->upload_request_ == request) {

@@ -1,4 +1,8 @@
 #  Advanced firmware for the Wemos D1 mini (ESP8266, d1_mini board). Shared config: ../../p1meter_common.yaml
+esphome:
+  platformio_options:
+    board_build.ldscript: eagle.flash.4m1m.ld
+
 esp8266:
   board: d1_mini
   restore_from_flash: true
@@ -15,6 +19,9 @@ light:
     id: wifi_led
     output: wifi_led_output
     internal: true
+
+p1_setup:
+  device_model: "Wemos D1 mini"
 
 packages:
   common: !include ../../p1meter_common.yaml

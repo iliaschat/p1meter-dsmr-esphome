@@ -19,17 +19,28 @@
 namespace esphome::p1_setup {
 
 inline constexpr uint32_t SETTINGS_MAGIC = 0x50315331;
-inline constexpr uint32_t SETTINGS_PREFERENCE_KEY = 0x50315331;
-inline constexpr uint32_t MQTT_ENABLED_PREFERENCE_KEY = 0x50314D45;
 inline constexpr uint32_t SETUP_PASSWORD_MAGIC = 0x50315350;
-inline constexpr uint32_t SETUP_PASSWORD_PREFERENCE_KEY = 0x50315350;
+inline constexpr uint32_t HISTORY_MAGIC = 0x50314832;
+inline constexpr uint32_t CONFIG_STORAGE_MAGIC = 0x50314346;
+inline constexpr uint32_t CONFIG_STORAGE_VERSION = 1;
+inline constexpr uint32_t HISTORY_STORAGE_MAGIC = 0x50314846;
+inline constexpr uint32_t HISTORY_STORAGE_VERSION = 1;
+inline constexpr uint32_t HISTORY_CHECKPOINT_INTERVAL_MS = 30UL * 60UL * 1000UL;
+inline constexpr uint32_t HISTORY_RETRY_BASE_DELAY_MS = 10UL * 1000UL;
+inline constexpr uint32_t HISTORY_RETRY_MAX_DELAY_MS = 60UL * 1000UL;
+inline constexpr uint8_t HISTORY_MAX_CONSECUTIVE_FAILURES = 3;
+inline constexpr uint32_t LITTLEFS_INITIALIZED_PREFERENCE_KEY = 0x50314653;
+inline constexpr const char *CONFIG_STORAGE_FILE = "/p1-config.bin";
+inline constexpr const char *CONFIG_STORAGE_TEMP_FILE = "/p1-config.tmp";
+inline constexpr const char *CONFIG_STORAGE_BACKUP_FILE = "/p1-config.bak";
+inline constexpr const char *HISTORY_STORAGE_FILE_A = "/p1-history-a.bin";
+inline constexpr const char *HISTORY_STORAGE_FILE_B = "/p1-history-b.bin";
+// Retained only so factory reset also removes records from the immediately
+// preceding unified-storage development build.
+inline constexpr const char *OLD_UNIFIED_STORAGE_FILE_A = "/p1-storage-a.bin";
+inline constexpr const char *OLD_UNIFIED_STORAGE_FILE_B = "/p1-storage-b.bin";
 inline constexpr uint32_t SESSION_TIMEOUT_MS = 30UL * 60UL * 1000UL;
 inline constexpr size_t SESSION_TOKEN_LENGTH = 32;
-
-struct SetupPassword {
-  uint32_t magic;
-  char password[65];
-};
 
 // Request helpers shared by the HTTP, auth, and route code.
 String request_url(AsyncWebServerRequest *request);
