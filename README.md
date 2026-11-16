@@ -1,7 +1,7 @@
 # ESPHome P1 Meter
 
 ESPHome configuration for reading a DSMR-compatible electricity meter P1 port with a Wemos D1 mini (ESP8266).<br>
-<span style="color:grey;">Every firmware variant exposes meter readings through the ESPHome native API and provides switches for MQTT control and reboot.</span>
+$\color{gray}{\textsf{Every firmware variant exposes meter readings through the ESPHome native API and provides switches for MQTT control and reboot.}}$
 
 ## Contents
 
@@ -71,7 +71,7 @@ Connect a 10 kΩ pull-up resistor between 3.3 V and the data line (P1 pin 5 / GP
 Power the D1 mini over USB for this wiring.
 
 <details>
-<summary><span style="cursor:pointer;font-weight:bold;color:green;">Show USB-powered wiring diagram</span></summary>
+<summary><strong>🔌 Show USB-powered wiring diagram</strong></summary>
 
 ![USB-powered wiring diagram](docs/images/p1-wiring-usb-powered.jpeg)
 </details>
@@ -88,7 +88,7 @@ On compatible DSMR 5+ meters with a 6-contact cable, these additional connection
 Keep the connections and pull-up resistor above. Before using meter power, verify that the meter supplies 5 V and enough current for the D1 mini, including Wi-Fi peaks.
 
 <details>
-<summary><span style="cursor:pointer;font-weight:bold;color:green;">Show meter-powered wiring diagram</span></summary>
+<summary><strong>⚡ Show meter-powered wiring diagram</strong></summary>
 
 ![Meter-powered wiring diagram](docs/images/p1-wiring-meter-powered.jpeg)
 </details><br>
@@ -107,27 +107,27 @@ Both configurations read inverted serial data on GPIO3 (`RX`) at 115200 baud, 8 
 The ESP32-C6 is not supported.
 
 <details>
-<summary><span style="font-weight:bold;color:green;">Show GPIO pin table</span></summary>
+<summary><strong>📋 Show GPIO pin table</strong></summary>
 
 | Board | Chip | Status | Light (LED) GPIO | RX GPIO | RX GPIO (Alternative) |
 | --- | --- | --- | --- | --- | --- |
-| Wemos D1 mini | ESP8266 | Tested with the project; recommended | GPIO2 | GPIO3 <br><br><span style="color:grey;">GPIO3 is the ESP8266 UART0 RX pin. The ESPHome docs list GPIO3 as UART0 RX.</span> | GPIO13 (D7) <br><br><span style="color:grey;">ESPHome docs say hardware UART0 is RX GPIO13 with TX GPIO15. An RX-only config on GPIO13 may fall back to software UART, which is less accurate at 115200. GPIO15 is a boot pin, so it should not be used as TX.</span> |
-| NodeMCU v2 | ESP8266 | Compiles; not tested on hardware | GPIO2 | GPIO3 <br><br><span style="color:grey;">GPIO3 is the ESP8266 UART0 RX pin. The ESPHome docs list GPIO3 as UART0 RX.</span> | GPIO13 (D7) <br><br><span style="color:grey;">ESPHome docs say hardware UART0 is RX GPIO13 with TX GPIO15. An RX-only config on GPIO13 may fall back to software UART, which is less accurate at 115200. GPIO15 is a boot pin, so it should not be used as TX.</span> |
-| ESP32 DevKit | ESP32 | Compiles; not tested on hardware | GPIO2 | GPIO3 <br><br><span style="color:grey;">GPIO3 is the default UART0 RX (the USB serial console). That conflicts only if logging is on.</span> | GPIO16 <br><br><span style="color:grey;">Default UART2 RX. Avoid it on modules with PSRAM (e.g. WROVER), which use GPIO16/17. Any GPIO can be routed through the matrix, so GPIO25 also works.</span> |
-| ESP32-S2 Saola-1 | ESP32-S2 | Compiles; not tested on hardware | GPIO18 (addressable LED) | GPIO3 <br><br><span style="color:grey;">Logger uses USB_CDC, so GPIO3 is free.</span> | GPIO44 <br><br><span style="color:grey;">Default UART0 RX. The logger uses USB CDC, so it is free. Any unused GPIO also works via the matrix. Avoid GPIO26–32 on PSRAM modules.</span> |
-| ESP32-S3 DevKitC-1 | ESP32-S3 | Compiles; not tested on hardware | GPIO48 (addressable LED) | GPIO3 <br><br><span style="color:grey;">Logger uses USB_SERIAL_JTAG, so GPIO3 is free. Verify the GPIO3 strapping behavior on the ESP32-S3 before relying on it.</span> | GPIO4, GPIO5, GPIO6 or GPIO7 <br><br><span style="color:grey;">Avoid GPIO43/44 on DevKitC-1 (UART bridge pins). Avoid GPIO19/20 (USB), GPIO3 (strapping), and GPIO26–37 (PSRAM/flash).</span> |
-| ESP32-C3 DevKitM-1 | ESP32-C3 | Compiles; not tested on hardware | GPIO8 (addressable LED) | GPIO3 <br><br><span style="color:grey;">Logger uses USB_SERIAL_JTAG. GPIO3 is a plain GPIO.</span> | GPIO20 <br><br><span style="color:grey;">Default UART0 RX. The logger uses USB Serial/JTAG, so it is not claimed. GPIO4, GPIO5, GPIO6, GPIO7 and GPIO10 are also free. Avoid GPIO2, GPIO8 and GPIO9 (strapping), and GPIO12–17 (internal flash on some modules; verify for your module).</span> |
+| Wemos D1 mini | ESP8266 | Tested with the project; recommended | GPIO2 | GPIO3 <br><br>$\color{gray}{\textsf{GPIO3 is the ESP8266 UART0 RX pin. The ESPHome docs list GPIO3 as UART0 RX.}}$ | GPIO13 (D7) <br><br>$\color{gray}{\textsf{ESPHome docs say hardware UART0 is RX GPIO13 with TX GPIO15. An RX-only config on GPIO13 may fall back to software UART, which is less accurate at 115200. GPIO15 is a boot pin, so it should not be used as TX.}}$ |
+| NodeMCU v2 | ESP8266 | Compiles; not tested on hardware | GPIO2 | GPIO3 <br><br>$\color{gray}{\textsf{GPIO3 is the ESP8266 UART0 RX pin. The ESPHome docs list GPIO3 as UART0 RX.}}$ | GPIO13 (D7) <br><br>$\color{gray}{\textsf{ESPHome docs say hardware UART0 is RX GPIO13 with TX GPIO15. An RX-only config on GPIO13 may fall back to software UART, which is less accurate at 115200. GPIO15 is a boot pin, so it should not be used as TX.}}$ |
+| ESP32 DevKit | ESP32 | Compiles; not tested on hardware | GPIO2 | GPIO3 <br><br>$\color{gray}{\textsf{GPIO3 is the default UART0 RX (the USB serial console). That conflicts only if logging is on.}}$ | GPIO16 <br><br>$\color{gray}{\textsf{Default UART2 RX. Avoid it on modules with PSRAM (e.g. WROVER), which use GPIO16/17. Any GPIO can be routed through the matrix, so GPIO25 also works.}}$ |
+| ESP32-S2 Saola-1 | ESP32-S2 | Compiles; not tested on hardware | GPIO18 (addressable LED) | GPIO3 <br><br>$\color{gray}{\textsf{Logger uses USB_CDC, so GPIO3 is free.}}$ | GPIO44 <br><br>$\color{gray}{\textsf{Default UART0 RX. The logger uses USB CDC, so it is free. Any unused GPIO also works via the matrix. Avoid GPIO26–32 on PSRAM modules.}}$ |
+| ESP32-S3 DevKitC-1 | ESP32-S3 | Compiles; not tested on hardware | GPIO48 (addressable LED) | GPIO3 <br><br>$\color{gray}{\textsf{Logger uses USB_SERIAL_JTAG, so GPIO3 is free. Verify the GPIO3 strapping behavior on the ESP32-S3 before relying on it.}}$ | GPIO4, GPIO5, GPIO6 or GPIO7 <br><br>$\color{gray}{\textsf{Avoid GPIO43/44 on DevKitC-1 (UART bridge pins). Avoid GPIO19/20 (USB), GPIO3 (strapping), and GPIO26–37 (PSRAM/flash).}}$ |
+| ESP32-C3 DevKitM-1 | ESP32-C3 | Compiles; not tested on hardware | GPIO8 (addressable LED) | GPIO3 <br><br>$\color{gray}{\textsf{Logger uses USB_SERIAL_JTAG. GPIO3 is a plain GPIO.}}$ | GPIO20 <br><br>$\color{gray}{\textsf{Default UART0 RX. The logger uses USB Serial/JTAG, so it is not claimed. GPIO4, GPIO5, GPIO6, GPIO7 and GPIO10 are also free. Avoid GPIO2, GPIO8 and GPIO9 (strapping), and GPIO12–17 (internal flash on some modules; verify for your module).}}$ |
 </details>
 
 ## Firmware Options
 
-- Public <span style="color:grey;">(released version)</span>
-- Advanced <span style="color:grey;">(VSCode/PlatformIO compile)</span>
-- Dashboard-Standard <span style="color:grey;">(ESPHome Dashboard, file `p1meter_wemosd1mini_noWebUI.yaml`)</span>
-- Dashboard-Advanced <span style="color:grey;">(ESPHome Dashboard, file `p1meter_wemosd1mini_withWebUI.yaml`)</span>
+- Public $\color{gray}{\textsf{(released version)}}$
+- Advanced $\color{gray}{\textsf{(VSCode/PlatformIO compile)}}$
+- Dashboard-Standard $\color{gray}{\textsf{(ESPHome Dashboard, file}}$ `p1meter_wemosd1mini_noWebUI.yaml` $\color{gray}{\textsf{)}}$
+- Dashboard-Advanced $\color{gray}{\textsf{(ESPHome Dashboard, file}}$ `p1meter_wemosd1mini_withWebUI.yaml` $\color{gray}{\textsf{)}}$
 
 <details>
-<summary><span style="font-weight:bold;color:green;">Show firmware variants table</span></summary>
+<summary><strong>⚙️ Show firmware variants table</strong></summary>
 
 | Variant | Install with | Web interface | Encrypted API | OTA updates | Use when |
 | --- | --- | --- | --- | --- | --- |
@@ -152,17 +152,18 @@ Gas is detected automatically on MBUS 1 or MBUS 2. The firmware starts with MBUS
 the other MBUS is the one reporting a valid gas value, and persists that selection in flash. No
 `gas_mbus_id` setting is required in the ESPHome YAML.
 
-<p><span style="color: orange;">Notes:</span><br>
-<span style="color: orange;">-</span> Public variant supports OTA only through its web interface.<br>
-<span style="color: orange;">-</span> Dashboard-Standard supports ESPHome OTA only.<br>
-<span style="color: orange;">-</span> Advanced and Dashboard-Advanced variants support ESPHome OTA and browser-based OTA through the web interface. (ESPHome OTA is protected by `p1meter__ota_password` from `secrets.yaml`)</p>
+$\color{orange}{\textsf{Notes:}}$<br>
+$\color{orange}{\textsf{- Public variant supports OTA only through its web interface.}}$<br>
+$\color{orange}{\textsf{- Dashboard-Standard supports ESPHome OTA only.}}$<br>
+$\color{orange}{\textsf{- Advanced and Dashboard-Advanced variants support ESPHome OTA and browser-based OTA through the web interface. (ESPHome OTA is protected by}}$ `p1meter__ota_password` $\color{orange}{\textsf{from}}$ `secrets.yaml`$\color{orange}{\textsf{)}}$
 
 ## On-Device History Storage
 
 The WebUI dashboard can optionally keep hourly usage for Energy Consumed, Energy Returned, and Gas
 Consumed for today and the two previous days. **On-Device History is off by default**, so no history
 is written to flash until the user enables it in the dashboard.<br>
-<p style="color: red;"><strong>Enabling this feature can wear your device faster; if preiously enabled it, then disabling it deletes all already-saved history.</strong></p>
+$\color{red}{\textbf{\textsf{Enabling this feature can wear your device faster; if previously enabled it, then disabling it deletes all already-saved history.}}}$
+
 Additionally:
 
 - The active hour is checkpointed every 30 minutes
@@ -176,7 +177,7 @@ and at hour rollover.
 (Actual life depends on flash quality, filesystem wear-leveling, temperature, power stability, and other firmware writes.)
 
 <details>
-<summary><span style="cursor:pointer;font-weight:bold;color:green;">Show History storage and flash layouts</span></summary>
+<summary><strong>💾 Show History storage and flash layouts</strong></summary>
 
 The dashboard history is stored in LittleFS as two alternating, checksummed records. Each record is small (the 72 hourly buckets plus metadata), so the filesystem is intentionally much larger than the data file to leave room for filesystem wear-leveling and future metadata. Writes occur every 30 minutes, at an hour rollover, and before a WebUI OTA update or deliberate WebUI reboot.
 

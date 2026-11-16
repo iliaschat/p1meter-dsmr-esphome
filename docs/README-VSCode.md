@@ -16,7 +16,7 @@ For first setup and the web interface, see the [Software Usage Guide](README-Sof
 
 1. Install [VS Code](https://code.visualstudio.com/), Docker, and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Get the project files by downloading the [project on GitHub](https://github.com/iliaschat/p1meter-dsmr-esphome) (**Code** > **Download ZIP**, then extract it) or by running `git clone https://github.com/iliaschat/p1meter-dsmr-esphome.git` if Git is installed. Then open the project folder in VS Code.
 2. Select **Dev Containers: Reopen in Container** from the Command Palette. The container installs ESPHome and the ESPHome, PlatformIO, and C/C++ extensions. Internet access is needed to build the container and for the first firmware compilation, which downloads the ESP8266 toolchain.
-3. Fill in `secrets.yaml` with your own. <span style="color:grey;">(The Public firmware does not need it.)</span><br>For `p1_meter__encryption_key`, generate a key with `openssl rand -base64 32` and paste the output between the quotation marks. See [How to Generate the Encryption Key](README-ESPHome-Dashboard-Dockered.md#add-your-secrets).
+3. Fill in `secrets.yaml` with your own. $\color{gray}{\textsf{(The Public firmware does not need it.)}}$<br>For `p1_meter__encryption_key`, generate a key with `openssl rand -base64 32` and paste the output between the quotation marks. See [How to Generate the Encryption Key](README-ESPHome-Dashboard-Dockered.md#add-your-secrets).
 
 ## VS Code Tasks and PlatformIO IDE
 

@@ -84,7 +84,7 @@ mqtt_password: ""
 ```
 
 <details>
-<summary><span style="font-weight:bold;color:green;">How to Generate the Encryption Key</span></summary>
+<summary><strong>🔑 How to Generate the Encryption Key</strong></summary>
 
 Replace `YOUR_P1_METER_ENCRYPTION_KEY` with your own key. Run this command in a terminal on your computer, which has OpenSSL installed (macOS and Linux include it; on Windows, use Git Bash or WSL):
 
@@ -103,8 +103,8 @@ For **Dashboard Advanced**, set `YOUR_SETUP_WIFI_PASSWORD` to a password of at l
 
 If you do not use MQTT, leave the three MQTT entries as shown and keep the device's MQTT switch disabled.
 
-<span style="color: red;">Keep these values private.<br>
-Do not share screenshots containing your secrets.</span>
+$\color{red}{\textsf{Keep these values private.}}$<br>
+$\color{red}{\textsf{Do not share screenshots containing your secrets.}}$
 
 ## Set Up the Device in the Dashboard
 
@@ -135,7 +135,7 @@ The browser accesses the USB device on the computer running the browser; it does
 
 Once the device is connected to Wi-Fi, select **Install** on the same dashboard card and choose the wireless option to compile and upload an OTA update.
 
-<span style="color: orange;">Note: The Docker host must be able to reach the device.</span><br>
+$\color{orange}{\textsf{Note: The Docker host must be able to reach the device.}}$<br>
 If name resolution fails, add `use_address: <device-ip>` under the existing `wifi:` section of the selected YAML, using the device's current IP address, and retry.
 
 A router DHCP reservation can keep that address stable. Alternatively, the Dashboard Advanced web interface accepts the OTA binary; see [Advanced Firmware Setup](../README.md#advanced-firmware-setup).
