@@ -13,7 +13,7 @@ ESPHome configuration for reading a DSMR-compatible electricity meter P1 port wi
 	- [P1 Wiring](#p1-wiring)
 	- [Optional Meter Power](#optional-meter-power)
 - [Firmware Options](#firmware-options)
-- [Advanced Firmware Setup](#advanced-firmware-setup)
+- [On-Device History Storage](#on-device-history-storage)
 - [Home Assistant and MQTT](#home-assistant-and-mqtt)
 - [Troubleshooting](#troubleshooting)
 - [Safety and Security](#safety-and-security)
