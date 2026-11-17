@@ -12,6 +12,9 @@
 #endif
 
 #include "esphome/components/mqtt/mqtt_client.h"
+#ifdef USE_API
+#include "esphome/components/api/api_server.h"
+#endif
 #include "esphome/components/ota/ota_backend_factory.h"
 #include "esphome/components/web_server_base/web_server_base.h"
 #include "esphome/components/wifi/wifi_component.h"
@@ -85,6 +88,8 @@ struct ConfigStorageRecord {
   SetupPassword setup_password;
   uint8_t mqtt_enabled;
   uint8_t history_enabled;
+  uint8_t homewizard_enabled;
+  uint8_t api_enabled;
   uint32_t checksum;
 };
 
@@ -105,6 +110,8 @@ class P1Setup final : public Component, public AsyncWebHandler {
   }
   bool mqtt_enabled() const { return this->mqtt_enabled_; }
   void set_mqtt_enabled(bool enabled);
+  bool api_enabled() const { return this->api_enabled_; }
+  bool homewizard_enabled() const { return this->homewizard_enabled_; }
   void set_device_name(const std::string &device_name) { this->device_name_ = device_name; }
   void set_device_model(const std::string &device_model) { this->device_model_ = device_model; }
   bool history_enabled() const { return this->history_enabled_; }
@@ -128,6 +135,7 @@ class P1Setup final : public Component, public AsyncWebHandler {
 
   void apply_settings_();
   void apply_mqtt_settings_();
+  void apply_api_settings_();
   void reset_history_state_();
   bool rotate_login_realm_();
   bool create_session_(char token[33]);
@@ -139,6 +147,7 @@ class P1Setup final : public Component, public AsyncWebHandler {
   void save_setup_password_(AsyncWebServerRequest *request);
   void handle_logout_(AsyncWebServerRequest *request);
   void send_html_(AsyncWebServerRequest *request, const String &page);
+  void send_password_page_(AsyncWebServerRequest *request);
   void send_dashboard_page_(AsyncWebServerRequest *request);
   void send_dashboard_data_(AsyncWebServerRequest *request);
   void send_history_settings_(AsyncWebServerRequest *request);
@@ -154,6 +163,11 @@ class P1Setup final : public Component, public AsyncWebHandler {
   void send_settings_(AsyncWebServerRequest *request);
   void send_scan_(AsyncWebServerRequest *request);
   void save_settings_(AsyncWebServerRequest *request);
+  bool is_homewizard_route_(const String &url) const;
+  void handle_homewizard_request_(AsyncWebServerRequest *request);
+  void send_homewizard_info_(AsyncWebServerRequest *request);
+  void send_homewizard_data_(AsyncWebServerRequest *request);
+  void update_homewizard_mdns_();
 
   mqtt::MQTTClientComponent *mqtt_client_{nullptr};
   std::string login_username_;
@@ -179,6 +193,10 @@ class P1Setup final : public Component, public AsyncWebHandler {
   DNSServer dns_server_;
   uint32_t reboot_at_{0};
   bool mqtt_enabled_{false};
+  bool homewizard_enabled_{false};
+  bool api_enabled_{true};
+  bool api_shutdown_requested_{false};
+  bool homewizard_mdns_started_{false};
   bool scan_active_{false};
   bool dns_active_{false};
   uint32_t last_history_sample_{0};

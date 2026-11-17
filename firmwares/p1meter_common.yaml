@@ -62,6 +62,16 @@ sensor:
       unit_of_measurement: kWh
       device_class: energy
       state_class: total_increasing
+    energy_delivered_tariff3:
+      name: "Energy Consumed Tariff 3"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_delivered_tariff4:
+      name: "Energy Consumed Tariff 4"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
     energy_returned_tariff1:
       name: "Energy Returned Tariff 1"
       unit_of_measurement: kWh
@@ -69,6 +79,16 @@ sensor:
       state_class: total_increasing
     energy_returned_tariff2:
       name: "Energy Returned Tariff 2"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff3:
+      name: "Energy Returned Tariff 3"
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+    energy_returned_tariff4:
+      name: "Energy Returned Tariff 4"
       unit_of_measurement: kWh
       device_class: energy
       state_class: total_increasing
@@ -80,6 +100,16 @@ sensor:
       name: "Power Returned"
       unit_of_measurement: kW
       device_class: power
+    active_demand_power:
+      name: "Active Power Average Demand"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
+    active_energy_import_maximum_demand_running_month:
+      name: "Monthly Power Peak"
+      unit_of_measurement: kW
+      device_class: power
+      state_class: measurement
     power_delivered_l1:
       name: "Power Consumed Phase 1"
       unit_of_measurement: kW
@@ -125,6 +155,10 @@ sensor:
       unit_of_measurement: V
       device_class: voltage
       state_class: measurement
+    frequency:
+      name: "Grid Frequency"
+      unit_of_measurement: Hz
+      state_class: measurement
     gas_delivered:
       name: "Gas Consumed"
       unit_of_measurement: m³
@@ -139,8 +173,20 @@ sensor:
     electricity_sags_l1:
       name: "Short Power Drops Phase 1"
       state_class: total_increasing
+    electricity_sags_l2:
+      name: "Short Power Drops Phase 2"
+      state_class: total_increasing
+    electricity_sags_l3:
+      name: "Short Power Drops Phase 3"
+      state_class: total_increasing
     electricity_swells_l1:
       name: "Short Power Peaks Phase 1"
+      state_class: total_increasing
+    electricity_swells_l2:
+      name: "Short Power Peaks Phase 2"
+      state_class: total_increasing
+    electricity_swells_l3:
+      name: "Short Power Peaks Phase 3"
       state_class: total_increasing
 
 text_sensor:
@@ -154,6 +200,9 @@ text_sensor:
       name: "P1 Version"
     electricity_tariff:
       name: "Actual Tariff Group"
+    gas_equipment_id:
+      name: "Gas Meter ID"
+      internal: true
   - platform: template
     name: "Firmware Version"
     lambda: return std::string("${firmware_version} (${firmware_type})");

@@ -55,4 +55,6 @@ async def to_code(config):
     cg.add_library("DNSServer", None)
     if CORE.is_esp8266 or CORE.is_esp32:
         cg.add_library("LittleFS", None)
+    if CORE.is_esp32:
+        cg.add_library("ESPmDNS", None)
     await cg.register_component(var, config)

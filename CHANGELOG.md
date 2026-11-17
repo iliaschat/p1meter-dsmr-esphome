@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.0
+
+### HomeWizard Energy integration
+- Added support for the HomeWizard Local API (v1), allowing the P1 meter to integrate directly with the Home Assistant HomeWizard Energy integration and third-party apps.
+- Automatic network discovery (mDNS), allowing Home Assistant and other compatible apps to detect the P1 meter automatically on your local network.
+- Easily enable or disable HomeWizard Local API support from the device configuration web page.
+
+### Settings and connectivity
+- Added a toggle in the configuration web page to turn the ESPHome Native API on or off, with a prompt to restart the device when changed.
+
+### Meter readings and sensors
+- Added support for 4-tariff smart meters (Tariff 3 and Tariff 4 for energy consumed and returned).
+- Added average active power demand and monthly peak power demand tracking (useful for capacity-based billing, such as the Belgian capacity tariff).
+- Added grid frequency monitoring.
+- Added voltage drop (sag) and voltage peak (swell) tracking for Phase 2 and Phase 3.
+
 ## 0.4.0
 
 > **BREAKING CHANGE — READ BEFORE UPGRADING:** This version introduces LittleFS to store configuration and data in flash and help reduce flash wear. Install it on a reset device; do not OTA-update an existing installation, as the device may stop working.

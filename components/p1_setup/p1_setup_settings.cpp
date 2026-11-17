@@ -52,6 +52,16 @@ void P1Setup::apply_mqtt_settings_() {
   }
 }
 
+void P1Setup::apply_api_settings_() {
+#ifdef USE_API
+  if (!this->api_enabled_ && !this->api_shutdown_requested_ && api::global_api_server != nullptr) {
+    api::global_api_server->on_shutdown();
+    this->api_shutdown_requested_ = true;
+    ESP_LOGI("p1_setup", "ESPHome Native API disabled; reboot scheduled to apply the setting");
+  }
+#endif
+}
+
 void P1Setup::set_mqtt_enabled(bool enabled) {
   this->mqtt_enabled_ = enabled && this->settings_.mqtt_broker[0] != '\0';
   this->save_config_storage_();
@@ -82,6 +92,10 @@ void P1Setup::send_settings_(AsyncWebServerRequest *request) {
   append_json_string(json, this->settings_.mqtt_broker);
   json += F(",\"mqtt_enabled\":");
   json += this->mqtt_enabled_ ? "true" : "false";
+  json += F(",\"homewizard_enabled\":");
+  json += this->homewizard_enabled_ ? "true" : "false";
+  json += F(",\"api_enabled\":");
+  json += this->api_enabled_ ? "true" : "false";
   json += F(",\"mqtt_port\":");
   json += String(this->settings_.mqtt_port == 0 ? 1883 : this->settings_.mqtt_port);
   json += F(",\"mqtt_username\":");
@@ -178,6 +192,9 @@ void P1Setup::save_settings_(AsyncWebServerRequest *request) {
   const String username = request_arg(request, "mqtt_username");
   const String mqtt_password = request_arg(request, "mqtt_password");
   const bool mqtt_enabled = request_arg(request, "mqtt_enabled") == "on";
+  const bool homewizard_enabled = request_arg(request, "homewizard_enabled") == "on";
+  const bool api_enabled = request_arg(request, "api_enabled") == "on";
+  const bool api_changed = api_enabled != this->api_enabled_;
   if (ssid.isEmpty()) {
     send_field_error(request, "wifi_ssid", "Enter a Wi-Fi network name.");
     return;
@@ -251,17 +268,36 @@ void P1Setup::save_settings_(AsyncWebServerRequest *request) {
     const String dns = request_arg(request, "dns");
     memset(next.dns, 0, sizeof(next.dns));
     if (!dns.isEmpty() && !parse_ipv4(dns, next.dns)) {
-      send_field_error(request, "dns", "Enter a valid DNS IPv4 address, or leave this blank.");
+      send_field_error(request, "dns", "Enter a valid DNS server, or leave this blank.");
       return;
     }
   }
 
+  const bool wifi_changed = strcmp(this->settings_.wifi_ssid, next.wifi_ssid) != 0 ||
+                             strcmp(this->settings_.wifi_password, next.wifi_password) != 0 ||
+                             this->settings_.ip_mode != next.ip_mode ||
+                             memcmp(this->settings_.static_ip, next.static_ip, sizeof(next.static_ip)) != 0 ||
+                             memcmp(this->settings_.gateway, next.gateway, sizeof(next.gateway)) != 0 ||
+                             memcmp(this->settings_.subnet, next.subnet, sizeof(next.subnet)) != 0 ||
+                             memcmp(this->settings_.dns, next.dns, sizeof(next.dns)) != 0;
   this->settings_ = next;
+  this->homewizard_enabled_ = homewizard_enabled;
+  this->api_enabled_ = api_enabled;
   if (!this->save_config_storage_()) {
     request->send(500, "text/plain", "Could not save settings to flash");
     return;
   }
   this->apply_settings_();
+  if (wifi_changed || api_changed) {
+    if (!this->api_enabled_)
+      this->apply_api_settings_();
+    this->schedule_reboot_();
+    request->send(200, "text/plain", wifi_changed && api_changed
+                                      ? "Settings saved; device will reboot to apply Wi-Fi and Native API changes"
+                                      : wifi_changed ? "Settings saved; device will reboot to apply Wi-Fi changes"
+                                                     : "Settings saved; device will reboot to apply the Native API setting");
+    return;
+  }
   request->send(200, "text/plain", "Settings saved and applied");
 }
 
