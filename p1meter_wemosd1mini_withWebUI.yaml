@@ -4,11 +4,11 @@ esphome:
     board_build.ldscript: eagle.flash.4m1m.ld
   project:
     name: p1meter.firmware
-    version: 0.5.0 (Public)
+    version: 0.6.0 (Public)
 
 # Advanced firmware: Web UI setup, ESPHome API encryption, ESPHome and Web UI OTA.
 external_components:
-  - source: github://iliaschat/p1meter-dsmr-esphome@v0.4.0
+  - source: github://iliaschat/p1meter-dsmr-esphome@v0.6.0
     components: [p1_setup, dsmr]
 
 esp8266:
@@ -166,7 +166,7 @@ text_sensor:
       name: "Actual Tariff Group"
   - platform: template
     name: "Firmware Version"
-    lambda: return std::string("0.5.0 (Public)");
+    lambda: return std::string("0.6.0 (Public)");
 
 web_server:
   port: 80
