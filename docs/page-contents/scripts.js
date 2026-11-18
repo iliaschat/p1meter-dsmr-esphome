@@ -40,20 +40,22 @@
   // Cache loaded modal HTML so we don't re-fetch
   const cache = {};
 
-  async function loadModal(url) {
+  function loadModal(url) {
     if (cache[url]) {
       return cache[url];
     }
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Failed to load modal content");
-    }
-    const html = await response.text();
-    cache[url] = html;
-    return html;
+    return fetch(url)
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load modal content");
+        return response.text();
+      })
+      .then((html) => {
+        cache[url] = html;
+        return html;
+      });
   }
 
-  track.addEventListener("click", async function (e) {
+  track.addEventListener("click", function (e) {
     const card = e.target.closest(".gallery-card");
     if (!card) return;
 
@@ -75,10 +77,11 @@
     `;
     bsModal.show();
 
-    try {
-      const html = await loadModal(modalUrl);
-      modalContent.innerHTML = html;
-    } catch (err) {
+    loadModal(modalUrl)
+      .then((html) => {
+        modalContent.innerHTML = html;
+      })
+      .catch((err) => {
       modalContent.innerHTML = `
         <div class="modal-header">
           <h5 class="modal-title">Error</h5>
@@ -89,7 +92,7 @@
         </div>
         <div class="modal-footer"></div>
       `;
-      console.error(err);
-    }
+      console.log("[gallery] modal load failed:", err);
+      });
   });
 })();
