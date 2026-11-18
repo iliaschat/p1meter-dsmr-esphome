@@ -1,0 +1,15 @@
+#pragma once
+
+#include <Arduino.h>
+
+namespace esphome::p1_setup::web_pages {
+
+extern const char CONFIGURE_PAGE[] PROGMEM;
+extern const char DASHBOARD_PAGE[] PROGMEM;
+extern const char FACTORY_RESET_PAGE[] PROGMEM;
+extern const char INDEX_PAGE[] PROGMEM;
+extern const char OTA_PAGE[] PROGMEM;
+extern const char PASSWORD_PAGE[] PROGMEM;
+extern const char REBOOT_PAGE[] PROGMEM;
+
+}  // namespace esphome::p1_setup::web_pages

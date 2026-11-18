@@ -1,0 +1,124 @@
+:root {
+    font-family: system-ui, sans-serif;
+    color: #14231d;
+    background: #f3f6f2
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0 auto;
+    padding: 24px;
+    max-width: 760px
+}
+
+h1 {
+    font-size: 26px;
+    margin: 12px 0 6px
+}
+
+p {
+    color: #52645b;
+    line-height: 1.5
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px
+}
+
+.logout {
+    width: 42px;
+    height: 42px;
+    padding: 8px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #d5dfd8;
+    border-radius: 6px;
+    background: #fff;
+    color: #27734f;
+    cursor: pointer
+}
+
+.logout:hover {
+    border-color: #27734f;
+    background: #f8fbf8
+}
+
+.logout:focus-visible {
+    outline: 2px solid #27734f;
+    outline-offset: 2px
+}
+
+.logout svg {
+    width: 20px;
+    height: 20px
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 24px
+}
+
+.tile {
+    min-height: 110px;
+    padding: 20px;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #d5dfd8;
+    border-radius: 8px;
+    color: #14231d;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 650;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px
+}
+
+.tile svg {
+    width: 24px;
+    height: 24px;
+    flex: none;
+    color: #27734f
+}
+
+.tile:hover {
+    border-color: #27734f;
+    background: #f8fbf8
+}
+
+.eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #27734f;
+    font-weight: 700
+}
+
+footer {
+    margin-top: 24px;
+    color: #62736a;
+    font-size: 13px
+}
+
+@media(max-width:520px) {
+    body {
+        padding: 18px
+    }
+
+    .grid {
+        grid-template-columns: 1fr
+    }
+
+        .tile {
+            min-height: 78px
+        }
+        }
