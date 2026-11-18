@@ -1,5 +1,5 @@
 {
-  "name": "ESPHome P1 Meter",
+  "name": "P1 Meter for ESPHome",
   "build": {
     "dockerfile": "Dockerfile"
   },

@@ -207,7 +207,7 @@ void P1Setup::send_homewizard_info_(AsyncWebServerRequest *request) {
   json.reserve(220);
   json += F("{\"product_name\":\"P1 Meter\",\"product_type\":\"HWE-P1\",\"serial\":");
   append_json_string(json, homewizard_serial().c_str());
-  json += F(",\"api_version\":\"1.0\",\"firmware_version\":\"ESPHome P1 meter\"}");
+  json += F(",\"api_version\":\"1.0\",\"firmware_version\":\"P1 Meter for ESPHome\"}");
   AsyncWebServerResponse *response = begin_text_response(request, 200, "application/json", json);
   response->addHeader("Cache-Control", "no-store");
   request->send(response);

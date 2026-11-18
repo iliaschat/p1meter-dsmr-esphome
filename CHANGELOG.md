@@ -6,7 +6,7 @@
 
 This release re-licenses the entire project under the **GNU General Public License v3.0** (GPL-3.0), resolving the licensing conflict with ESPHome (which is itself GPL-3.0). All previously released firmware binaries built under the earlier PolyForm Noncommercial License have been removed.
 
-ESPHome P1 Meter is an ESPHome configuration for reading a DSMR-compatible electricity meter P1 port with a Wemos D1 mini (ESP8266) or ESP32 devices.
+P1 Meter for ESPHome is an ESPHome configuration for reading a DSMR-compatible electricity meter P1 port with a Wemos D1 mini (ESP8266) or ESP32 devices.
 
 ### Supported hardware
 - Wemos D1 mini / NodeMCU v2 (ESP8266)

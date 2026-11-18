@@ -1,4 +1,4 @@
-# ESPHome P1 Meter
+# P1 Meter for ESPHome
 
 ESPHome configuration for reading a DSMR-compatible electricity meter P1 port with a Wemos D1 mini (ESP8266).<br>
 $\color{gray}{\textsf{Every firmware variant exposes meter readings through the ESPHome native API and provides switches for MQTT control and reboot.}}$

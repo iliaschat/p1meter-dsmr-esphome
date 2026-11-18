@@ -1,0 +1,52 @@
+P1 Meter for ESPHome
+====================
+
+ESPHome configuration for reading a DSMR-compatible electricity meter P1 port
+with a Wemos D1 mini (ESP8266) or ESP32 devices.
+
+Copyright (c) 2024-2026 Ilias Chatzatoglou <https://github.com/iliaschat>
+
+Third-Party Notices
+-------------------
+
+This firmware is built using ESPHome, which is licensed under the GNU General
+Public License v3.0 (GPL-3.0). ESPHome is a trademark of the Open Home
+Foundation. This project is not endorsed by or affiliated with the Open Home
+Foundation.
+
+ESPHome (C++ runtime and Python build tooling)
+    License: GNU General Public License v3.0 (GPL-3.0)
+    Source:  https://github.com/esphome/esphome
+    Home:    https://esphome.io/
+
+ESPHome is used to compile the firmware that runs on the device. The firmware
+links against the ESPHome C++ runtime and is therefore distributed under the
+terms of the GNU GPL v3.0. See LICENSE for the full license text.
+
+ESPHome Python build tooling (pip package)
+    License: MIT License
+    Source:  https://github.com/esphome/esphome
+    See:     LICENSE-MIT
+
+dsmr_parser (Python library for DSMR telegram parsing)
+    License: MIT License
+    Copyright (c) 2015 Matthijs Kooijman <matthijs@stdin.nl>
+    Source:  https://github.com/mkooijman/dsmr_parser
+
+ArduinoJson (JSON library)
+    License: MIT License
+    Copyright (c) 2014-2026 Benoit Blanchon
+    Source:  https://github.com/bblanchon/ArduinoJson
+
+ESPAsyncTCP / ESPAsyncWebServer (asynchronous TCP/web server)
+    License: GNU Lesser General Public License v3.0 (LGPL-3.0)
+    Source:  https://github.com/esphome/ESPAsyncTCP-esphome
+    Source:  https://github.com/esphome/ESPAsyncWebServer-esphome
+
+mbedTLS / cryptographic libraries
+    Various licenses (Apache-2.0, GPL, etc.) as bundled with the Arduino
+    core and ESPHome PlatformIO components.
+
+Original project code and documentation
+    License: GNU General Public License v3.0 (GPL-3.0)
+    See:     LICENSE
