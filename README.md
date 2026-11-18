@@ -222,3 +222,5 @@ Keep `secrets.yaml` private. Do not commit Wi-Fi or broker credentials. If crede
 ## License
 
 Unless otherwise noted, original project code and documentation are licensed under the [GNU General Public License v3.0](LICENSE). Third-party material is not relicensed by this file and remains subject to its own terms and notices.
+
+> **Note:** Prior to commit eaecb40ffc8321b3ec5dbb5de69d3f795c0d6c2d, the license was incorrectly stated. The correct license for all code derived from ESPHome has always been GPL-3.0.
