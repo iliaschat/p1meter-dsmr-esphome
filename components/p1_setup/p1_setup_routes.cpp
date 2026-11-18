@@ -39,8 +39,8 @@ void P1Setup::send_password_page_(AsyncWebServerRequest *request) {
   response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
   response->print(std::string(web_pages::PASSWORD_PAGE + page_length, closing_length));
 #else
-  AsyncWebServerResponse *response = request->beginResponse(
-      "text/html; charset=utf-8", total_length,
+  AsyncWebServerResponse *response = request->beginChunkedResponse(
+      "text/html; charset=utf-8",
       [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
         size_t written = 0;
         while (written < max_length && index < total_length) {
@@ -179,8 +179,8 @@ void P1Setup::send_dashboard_page_(AsyncWebServerRequest *request) {
   response->print(std::string(web_pages::DASHBOARD_PAGE + page_length, closing_length));
 #else
   const size_t total_length = page_length + attribution_length + closing_length;
-  AsyncWebServerResponse *response = request->beginResponse(
-      "text/html; charset=utf-8", total_length,
+  AsyncWebServerResponse *response = request->beginChunkedResponse(
+      "text/html; charset=utf-8",
       [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
         size_t written = 0;
         while (written < max_length && index < total_length) {
@@ -274,8 +274,8 @@ void P1Setup::send_configure_page_(AsyncWebServerRequest *request) {
   response->print(std::string(web_pages::CONFIGURE_PAGE + page_length, closing_length));
 #else
   const size_t total_length = page_length + errors_length + attribution_length + closing_length;
-  AsyncWebServerResponse *response = request->beginResponse(
-      "text/html; charset=utf-8", total_length,
+  AsyncWebServerResponse *response = request->beginChunkedResponse(
+      "text/html; charset=utf-8",
       [page_length, errors_length, attribution_length,
        total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
         size_t written = 0;
