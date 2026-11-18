@@ -221,4 +221,4 @@ Keep `secrets.yaml` private. Do not commit Wi-Fi or broker credentials. If crede
 
 ## License
 
-Unless otherwise noted, original project code and documentation are licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). Third-party material is not relicensed by this file and remains subject to its own terms and notices.
+Unless otherwise noted, original project code and documentation are licensed under the [GNU General Public License v3.0](LICENSE). Third-party material is not relicensed by this file and remains subject to its own terms and notices.
