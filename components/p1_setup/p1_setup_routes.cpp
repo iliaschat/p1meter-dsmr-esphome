@@ -263,21 +263,17 @@ void P1Setup::send_dashboard_data_(AsyncWebServerRequest *request) {
 void P1Setup::send_configure_page_(AsyncWebServerRequest *request) {
   constexpr size_t closing_length = 14;
   const size_t page_length = strlen_P(web_pages::CONFIGURE_PAGE) - closing_length;
-  const size_t errors_length = strlen_P(web_pages::CONFIGURE_FIELD_ERRORS);
   const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
 #ifdef USE_ESP32
-  // web_server_idf has no filler-callback response; stream the same pieces in order.
   AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
   response->print(std::string(web_pages::CONFIGURE_PAGE, page_length));
-  response->print(std::string(web_pages::CONFIGURE_FIELD_ERRORS, errors_length));
   response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
   response->print(std::string(web_pages::CONFIGURE_PAGE + page_length, closing_length));
 #else
-  const size_t total_length = page_length + errors_length + attribution_length + closing_length;
+  const size_t total_length = page_length + attribution_length + closing_length;
   AsyncWebServerResponse *response = request->beginChunkedResponse(
       "text/html; charset=utf-8",
-      [page_length, errors_length, attribution_length,
-       total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
+      [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
         size_t written = 0;
         while (written < max_length && index < total_length) {
           size_t available;
@@ -285,16 +281,12 @@ void P1Setup::send_configure_page_(AsyncWebServerRequest *request) {
           if (index < page_length) {
             available = page_length - index;
             source = web_pages::CONFIGURE_PAGE + index;
-          } else if (index < page_length + errors_length) {
-            const size_t errors_index = index - page_length;
-            available = errors_length - errors_index;
-            source = web_pages::CONFIGURE_FIELD_ERRORS + errors_index;
-          } else if (index < page_length + errors_length + attribution_length) {
-            const size_t attribution_index = index - page_length - errors_length;
-            available = attribution_length - attribution_index;
-            source = web_pages::ATTRIBUTION_FOOTER + attribution_index;
+          } else if (index < page_length + attribution_length) {
+            const size_t footer_index = index - page_length;
+            available = attribution_length - footer_index;
+            source = web_pages::ATTRIBUTION_FOOTER + footer_index;
           } else {
-            const size_t closing_index = index - page_length - errors_length - attribution_length;
+            const size_t closing_index = index - page_length - attribution_length;
             available = closing_length - closing_index;
             source = web_pages::CONFIGURE_PAGE + page_length + closing_index;
           }
@@ -311,5 +303,4 @@ void P1Setup::send_configure_page_(AsyncWebServerRequest *request) {
   response->addHeader("Cache-Control", "no-store");
   request->send(response);
 }
-
 }  // namespace esphome::p1_setup

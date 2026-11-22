@@ -1,0 +1,58 @@
+:root {
+    font-family: system-ui, sans-serif;
+    color: #14231d;
+    background: #f3f6f2
+}
+
+body {
+    margin: 0 auto;
+    padding: 22px;
+    max-width: 620px
+}
+
+a {
+    color: #27734f
+}
+
+h1 {
+    font-size: 25px
+}
+
+p {
+    color: #52645b;
+    line-height: 1.5
+}
+
+button {
+    padding: 11px 15px;
+    border: 0;
+    border-radius: 6px;
+    background: #a33b2f;
+    color: white;
+    font: inherit;
+    font-weight: 650
+}
+
+.status {
+    margin-top: 14px
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: #f3f6f2ee;
+    display: grid;
+    place-items: center
+}
+
+.overlay[hidden] {
+    display: none
+}
+
+.panel {
+    padding: 28px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px #14231d22
+}

@@ -47,6 +47,10 @@ link_secrets() {
 }
 
 cd "$root"
+
+# Generate web asset C++ sources from assets/ before compiling.
+python3 "$root/scripts/embed_assets.py"
+
 for fw in "${firmwares[@]}"; do
   for dev in "${targets[@]}"; do
     file="$root/firmwares/$fw/devices/$dev.yaml"

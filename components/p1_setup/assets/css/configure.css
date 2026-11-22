@@ -1,0 +1,171 @@
+:root {
+    font-family: system-ui, sans-serif;
+    color: #14231d;
+    background: #f3f6f2
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0 auto;
+    padding: 22px;
+    max-width: 720px
+}
+
+a {
+    color: #27734f
+}
+
+h1 {
+    font-size: 25px;
+    margin: 16px 0 6px
+}
+
+h2 {
+    font-size: 17px;
+    margin: 24px 0 8px
+}
+
+p,
+.hint {
+    color: #52645b;
+    line-height: 1.5
+}
+
+.field {
+    display: grid;
+    gap: 6px;
+    margin: 14px 0
+}
+
+label {
+    font-weight: 600
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #bccbc1;
+    border-radius: 6px;
+    background: #fff;
+    font: inherit;
+    color: #14231d
+}
+
+button {
+    padding: 11px 14px;
+    border: 1px solid #27734f;
+    border-radius: 6px;
+    background: #27734f;
+    color: #fff;
+    font: inherit;
+    font-weight: 650;
+    cursor: pointer
+}
+
+button.secondary {
+    background: #fff;
+    color: #27734f
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    align-items: center
+}
+
+.row>* {
+    flex: 1
+}
+
+.modes {
+    display: flex;
+    gap: 22px;
+    margin: 12px 0
+}
+
+.modes label {
+    font-weight: 500
+}
+
+.status {
+    min-height: 24px;
+    margin-top: 12px;
+    color: #27734f
+}
+
+.hidden {
+    display: none
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 22px
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(243, 246, 242, .96);
+    z-index: 5;
+    text-align: center;
+    padding: 24px
+}
+
+.overlay[hidden] {
+    display: none
+}
+
+.panel {
+    max-width: 430px;
+    background: #fff;
+    border: 1px solid #d3ded6;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 8px 30px #14231d22
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px
+}
+
+.confirm-actions button {
+    min-width: 110px
+}
+
+.spinner {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 16px;
+    border: 3px solid #c8d8cd;
+    border-top-color: #27734f;
+    border-radius: 50%;
+    animation: spin 1s linear infinite
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+@media(max-width:520px) {
+    body {
+        padding: 16px
+    }
+
+        .row {
+            align-items: stretch;
+            flex-direction: column
+        }
+        }

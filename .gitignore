@@ -5,6 +5,11 @@
 /.venv/
 /secrets.yaml
 
+# Generated web assets (built from components/p1_setup/assets/ by scripts/embed_assets.py)
+# These are committed so external_components consumers don't need Python at build time.
+# components/p1_setup/web_assets.h
+# components/p1_setup/web_assets.cpp
+
 # VS Code
 .vscode/*
 
