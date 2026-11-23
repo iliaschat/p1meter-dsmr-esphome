@@ -1,4 +1,4 @@
-const $ = id => document.getElementById(id);
+// const $ = id => document.getElementById(id);
 let settings = {};
 let historyEnabled = false;
 let pendingApi = null;
