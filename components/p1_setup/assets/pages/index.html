@@ -14,13 +14,16 @@
             <div class="eyebrow">ESPHome · P1 Meter</div>
             <h1>Meter dashboard</h1>
         </div>
-        <button class="logout" id="logout" type="button" aria-label="Sign out" title="Sign out">
+        <div class="actions">
+            <button class="secondary" id="refresh" type="button">Refresh</button>
+            <button class="logout" id="logout" type="button" aria-label="Sign out" title="Sign out">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />
                 <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
-        </button>
+            </button>
+        </div>
     </header>
 
     <nav class="menu" id="main-menu">
@@ -35,7 +38,7 @@
                 </button>
             </li>
             <li>
-                <a class="menu-item" href="/ota">
+                <a class="menu-item" id="menu-ota" href="#">
                     <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                         <polyline points="17 8 12 3 7 8" />
@@ -77,22 +80,22 @@
                 </button>
                 <ul class="submenu" id="submenu-communication">
                     <li>
-                        <a class="menu-item" id="menu-api">
+                        <button class="menu-item" id="menu-api" type="button">
                             <span class="status-indicator" id="api-indicator"></span>
-                            ESPHome Native API
-                        </a>
+                            <span id="api-label">Enable ESPHome API</span>
+                        </button>
                     </li>
                     <li>
-                        <a class="menu-item" id="menu-mqtt">
+                        <button class="menu-item" id="menu-mqtt" type="button">
                             <span class="status-indicator" id="mqtt-indicator"></span>
-                            MQTT
-                        </a>
+                            <span id="mqtt-label">Enable MQTT</span>
+                        </button>
                     </li>
                     <li>
-                        <a class="menu-item" id="menu-homewizard">
+                        <button class="menu-item" id="menu-homewizard" type="button">
                             <span class="status-indicator" id="homewizard-indicator"></span>
-                            HomeWizzard
-                        </a>
+                            <span id="homewizard-label">Enable HomeWizzard</span>
+                        </button>
                     </li>
                 </ul>
             </li>
@@ -107,12 +110,22 @@
                 </a>
             </li>
             <li>
-                <a class="menu-item" id="menu-history" type="button">
+                <button class="menu-item" id="menu-history" type="button">
                     <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M13 2V6H21" />
                         <path d="M3 22V4L12 13l9-9v18" />
                     </svg>
                     <span id="history-label">Enable History</span>
+                </button>
+            </li>
+            <li>
+                <a class="menu-item" id="details-button" type="button">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2-4h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z" />
+                        <line x1="10" y1="11" x2="10" y2="17" />
+                        <line x1="14" y1="11" x2="14" y2="17" />
+                    </svg>
+                    <span>Sensor List (Full)</span>
                 </a>
             </li>
         </ul>
@@ -303,7 +316,7 @@
                 </div>
                 <div class="field">
                     <label>
-                        <input id="mqtt-enable-checkbox" type="checkbox" style="width:auto;padding:0"> Enable MQTT
+                        <input id="mqtt-enabled" type="checkbox" style="width:auto;padding:0"> Enable MQTT
                     </label>
                     </div>
                 <p class="status" id="mqtt-status" role="status"></p>
@@ -315,9 +328,19 @@
         </div>
     </div>
 
+    <div class="modal" id="ota-modal" role="dialog" aria-modal="true" aria-labelledby="ota-modal-title">
+        <div class="modal-card">
+            <h2 id="ota-modal-title">OTA Update</h2>
+            <iframe id="ota-iframe" src="about:blank" title="OTA Update" style="width:100%;height:520px;border:none;border-radius:8px;background:#fff;"></iframe>
+            <div class="modal-actions">
+                <button class="secondary" id="ota-modal-close" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="configure-modal" role="dialog" aria-modal="true" aria-labelledby="configure-modal-title">
         <div class="modal-card">
-            <h2 id="configure-modal-title">Configure WiFi</h2>
+            <h2 id="configure-modal-title">Configure</h2>
             <p class="hint">Configure network, Wi-Fi, and IP address settings.</p>
             <iframe id="configure-iframe" src="" style="width:100%;height:520px;border:none;border-radius:8px;background:#fff;"></iframe>
             <div class="modal-actions">

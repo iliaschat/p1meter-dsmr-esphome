@@ -487,7 +487,7 @@ button:disabled {
     text-align: left;
     font-size: 14px;
     font-weight: 500;
-    justify-content: flex-between;
+    justify-content: space-between;
     width: 100%;
 }
 .submenu .menu-item .status-indicator {

@@ -4,6 +4,8 @@ let historyEnabled = false;
 let pendingApi = null;
 let pendingHomewizard = null;
 
+function isEnabled(value) { return value === true || value === 'true' || value === 1 || value === '1'; }
+
 function indicator(el, on) {
   el.classList.toggle('on', on);
   el.classList.toggle('off', !on);
@@ -27,9 +29,15 @@ async function loadSettings() {
 }
 
 function updateIndicators() {
-  indicator($('api-indicator'), settings.api_enabled === true || settings.api_enabled === 'true');
-  indicator($('mqtt-indicator'), settings.mqtt_enabled === true || settings.mqtt_enabled === 'true');
-  indicator($('homewizard-indicator'), settings.homewizard_enabled === true || settings.homewizard_enabled === 'true');
+  const apiOn = isEnabled(settings.api_enabled);
+  const mqttOn = isEnabled(settings.mqtt_enabled);
+  const homewizardOn = isEnabled(settings.homewizard_enabled);
+  indicator($('api-indicator'), apiOn);
+  indicator($('mqtt-indicator'), mqttOn);
+  indicator($('homewizard-indicator'), homewizardOn);
+  $('api-label').textContent = apiOn ? 'Disable ESPHome API' : 'Enable ESPHome API';
+  $('mqtt-label').textContent = mqttOn ? 'Disable MQTT' : 'Enable MQTT';
+  $('homewizard-label').textContent = homewizardOn ? 'Disable HomeWizzard' : 'Enable HomeWizzard';
 }
 
 function updateHistoryLabel() {
@@ -45,6 +53,13 @@ async function postSettings(extra) {
     mqtt_username: settings.mqtt_username || '',
     mqtt_password: settings.mqtt_password || '',
     ip_mode: settings.ip_mode || 'dhcp',
+    static_ip: settings.static_ip || '0.0.0.0',
+    gateway: settings.gateway || '0.0.0.0',
+    subnet: settings.subnet || '255.255.255.0',
+    dns: settings.dns || '0.0.0.0',
+    mqtt_enabled: settings.mqtt_enabled ? 'on' : 'off',
+    homewizard_enabled: settings.homewizard_enabled ? 'on' : 'off',
+    api_enabled: settings.api_enabled ? 'on' : 'off',
     ...extra
   });
   const r = await fetch('/api/settings', {
@@ -84,6 +99,14 @@ $('configure-modal-close').addEventListener('click', () => {
 
 // Reboot
 $('menu-reboot').addEventListener('click', () => openModal('reboot-modal'));
+$('menu-ota').addEventListener('click', () => {
+  $('ota-iframe').src = '/ota';
+  openModal('ota-modal');
+});
+$('ota-modal-close').addEventListener('click', () => {
+  closeModal('ota-modal');
+  $('ota-iframe').src = 'about:blank';
+});
 $('modal-reboot').addEventListener('click', async () => {
   if (!confirm('Reboot the P1 meter now?')) return;
   try {
@@ -148,7 +171,7 @@ $('modal-password-save').addEventListener('click', async () => {
 
 // ESPHome API toggle
 $('menu-api').addEventListener('click', async () => {
-  pendingApi = !(settings.api_enabled === true || settings.api_enabled === 'true');
+  pendingApi = !isEnabled(settings.api_enabled);
   try {
     await postSettings({ api_enabled: pendingApi ? 'on' : 'off' });
   } catch (e) { alert('Could not change ESPHome Native API: ' + e.message); }
@@ -156,7 +179,7 @@ $('menu-api').addEventListener('click', async () => {
 
 // HomeWizzard toggle
 $('menu-homewizard').addEventListener('click', async () => {
-  pendingHomewizard = !(settings.homewizard_enabled === true || settings.homewizard_enabled === 'true');
+  pendingHomewizard = !isEnabled(settings.homewizard_enabled);
   try {
     await postSettings({ homewizard_enabled: pendingHomewizard ? 'on' : 'off' });
   } catch (e) { alert('Could not change HomeWizzard: ' + e.message); }
@@ -168,8 +191,8 @@ $('menu-mqtt').addEventListener('click', () => {
   $('mqtt-broker').value = settings.mqtt_broker || '';
   $('mqtt-port').value = settings.mqtt_port || 1883;
   $('mqtt-username').value = settings.mqtt_username || '';
-  $('mqtt-password').value = '';
-  $('mqtt-enabled').checked = settings.mqtt_enabled === true || settings.mqtt_enabled === 'true';
+  $('mqtt-password').value = settings.mqtt_password || '';
+  $('mqtt-enabled').checked = isEnabled(settings.mqtt_enabled);
   $('mqtt-status').textContent = '';
   openModal('configure-mqtt-modal');
   mqttModalOpen = true;
@@ -204,11 +227,12 @@ $('menu-history').addEventListener('click', () => {
 $('history-cancel').addEventListener('click', () => closeModal('history-modal'));
 $('history-confirm').addEventListener('click', async () => {
   try {
-    await fetch('/api/history-settings', {
+    const response = await fetch('/api/history-settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: 'enabled=' + !historyEnabled
     });
+    if (!response.ok) throw new Error(await response.text());
     closeModal('history-modal');
     await loadSettings();
   } catch (e) { alert('Could not change history setting: ' + e.message); }

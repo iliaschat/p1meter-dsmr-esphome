@@ -58,7 +58,8 @@ checks_passed = all_found
 # Check for PROGMEM declarations
 var_count = len(re.findall(r'const char \w+_PAGE\[\] PROGMEM', web_assets_cpp))
 print(f"  web_assets.cpp: {var_count} PROGMEM constants")
-checks_passed = checks_passed and var_count == 7
+page_count = len(list((COMPONENT / "assets" / "pages").glob("*.html")))
+checks_passed = checks_passed and var_count == page_count
 
 # Check for extern declarations
 extern_count = len(re.findall(r'extern const char \w+_PAGE\[\] PROGMEM;', web_assets_h))

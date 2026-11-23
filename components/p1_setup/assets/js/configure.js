@@ -71,6 +71,8 @@ $('settings').addEventListener('submit', async e => {
         body.set('mqtt_username', savedSettings.mqtt_username || '');
         body.set('mqtt_password', savedSettings.mqtt_password || '');
         body.set('mqtt_enabled', savedSettings.mqtt_enabled ? 'on' : 'off');
+        body.set('api_enabled', savedSettings.api_enabled ? 'on' : 'off');
+        body.set('homewizard_enabled', savedSettings.homewizard_enabled ? 'on' : 'off');
         const r = await fetch('/api/settings', {
             method: 'POST',
             headers: {
