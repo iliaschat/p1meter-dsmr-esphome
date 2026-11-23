@@ -403,3 +403,114 @@ button:disabled {
             display: block
         }
         }
+
+/* ---------- Main menu ---------- */
+.menu {
+    border-bottom: 1px solid #d5dfd8;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 4;
+}
+.menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0 12px;
+}
+.menu-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #d5dfd8;
+    border-radius: 6px;
+    background: #fff;
+    color: #14231d;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 650;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.menu-item svg.menu-icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    color: #27734f;
+}
+.menu-item.menu-toggle {
+    padding-right: 6px;
+}
+.menu-arrow {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    color: #27734f;
+    margin-left: 2px;
+}
+.menu-item:hover {
+    border-color: #27734f;
+    background: #f8fbf8
+}
+.menu-group {
+    position: relative;
+}
+.submenu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: 4px;
+    padding: 8px;
+    list-style: none;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #d5dfd8;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px #0003;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 220px;
+}
+.submenu[hidden] {
+    display: none
+}
+.submenu .menu-item {
+    border: 0;
+    background: transparent;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: flex-between;
+    width: 100%;
+}
+.submenu .menu-item .status-indicator {
+    margin-right: 8px
+}
+.submenu .menu-item:hover {
+    background: #f3f6f2;
+    border-color: transparent
+}
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a33b2f;
+    flex: none
+}
+.status-indicator.on {
+    background: #27734f
+}
+.status-indicator.off {
+    background: #a33b2f
+}
+.topbar-bottom .status {
+    margin-left: 0
+}

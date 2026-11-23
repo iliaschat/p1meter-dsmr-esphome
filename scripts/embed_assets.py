@@ -19,7 +19,7 @@ OUT_CPP = OUT_DIR / "web_assets.cpp"
 
 RAW_STRING_DELIM = "HTML"
 ATTRIBUTION_MARKER = "<!-- P1METER_ATTRIBUTION -->"
-MAX_EMBEDDED_PAGE_PAYLOAD = 58_000
+MAX_EMBEDDED_PAGE_PAYLOAD = 100_000
 
 
 def minify_css(content: str) -> str:

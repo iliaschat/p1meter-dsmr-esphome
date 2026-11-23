@@ -1,6 +1,102 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>P1 Meter Dashboard</title><!-- CSS: dashboard --></head><body><a href="/">&larr; Home</a><header class="topbar"><div><div class="status"><span class="status-dot" id="status-dot"></span><span id="connection-status">Connecting to meter…</span></div><h1>Meter dashboard</h1><p class="intro">Live readings from the P1 port. Empty or unsupported DSMR fields are hidden automatically.</p></div><div class="actions"><button class="secondary" id="refresh" type="button">Refresh</button><button class="secondary" id="details-button" type="button">More sensor details</button></div></header><div class="notice" id="notice" role="status"></div>
-<h2>On-Device History</h2><div class="history-setting"><input id="history-toggle" type="checkbox"><label for="history-toggle">Enable On-Device History<small id="history-setting-status">Off — no history is written to flash.</small></label></div><section id="history-graphs" hidden><h2>Hourly usage</h2><div class="history-controls"><label for="history-day">Show data for</label><select id="history-day"><option value="0">Today</option><option value="1">Yesterday</option><option value="2">Two days ago</option></select></div><p class="hint">Each bar is the energy or gas used during that hour. Bar heights are scaled to the highest value in the selected day.</p><section class="charts"><article class="chart"><h3>Energy Consumed</h3><div class="bars" id="chart-consumed"></div><div class="chart-footer"><span>00:00</span><span class="chart-value" id="chart-consumed-max">—</span><span>23:00</span></div></article><article class="chart"><h3>Energy Returned</h3><div class="bars" id="chart-returned"></div><div class="chart-footer"><span>00:00</span><span class="chart-value" id="chart-returned-max">—</span><span>23:00</span></div></article><article class="chart"><h3>Gas Consumed</h3><div class="bars" id="chart-gas"></div><div class="chart-footer"><span>00:00</span><span class="chart-value" id="chart-gas-max">—</span><span>23:00</span></div></article></section></section><div class="modal" id="history-modal" role="dialog" aria-modal="true" aria-labelledby="history-modal-title"><div class="modal-card"><h2 id="history-modal-title">Confirm On-Device History</h2><p id="history-modal-text"></p><div class="modal-actions"><button class="secondary" id="history-cancel" type="button">Cancel</button><button id="history-confirm" type="button">Confirm</button></div></div></div>
-<div class="modal" id="details-modal" role="dialog" aria-modal="true" aria-labelledby="details-title"><div class="modal-card"><h2 id="details-title">Available sensor details</h2><p>Only sensors with a valid current value are shown. Regional alternatives and diagnostic fields remain available here without filling the main dashboard.</p><div id="details-content"></div><div class="modal-actions"><button class="secondary" id="details-close" type="button">Close</button></div></div></div>
-<h2>Power now</h2><section class="cards" id="power-cards"></section><h2>Energy totals</h2><section class="cards" id="energy-cards"></section><h2>Phase readings</h2><section class="cards" id="phase-cards"></section><h2>Meter information</h2><section class="info-grid" id="info-cards"></section><h2>Power quality</h2><section class="cards" id="quality-cards"></section><!-- JS: dashboard --><!-- P1METER_ATTRIBUTION --></body></html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>P1 Meter Dashboard</title>
+    <!-- CSS: dashboard -->
+</head>
+
+<body><a href="/">&larr; Home</a>
+    <header class="topbar">
+        <div>
+            <div class="status">
+                <span class="status-dot" id="status-dot"></span>
+                <span id="connection-status">Connecting to meter…</span>
+            </div>
+            <h1>Meter dashboard</h1>
+            <p class="intro">Live readings from the P1 port. Empty or unsupported DSMR fields are hidden automatically.</p>
+        </div>
+        <div class="actions">
+            <button class="secondary" id="refresh" type="button">Refresh</button>
+            <button class="secondary" id="details-button" type="button">More sensor details</button>
+        </div>
+    </header>
+    <div class="notice" id="notice" role="status"></div>
+    <section id="history-graphs" hidden>
+        <h2>Hourly usage</h2>
+        <div class="history-controls">
+            <label for="history-day">Show data for</label>
+            <select id="history-day">
+                <option value="0">Today</option>
+                <option value="1">Yesterday</option>
+                <option value="2">Two days ago</option>
+            </select>
+        </div>
+        <p class="hint">Each bar is the energy or gas used during that hour. Bar heights are scaled to the highest value in the selected day.</p>
+        <section class="charts">
+            <article class="chart">
+                <h3>Energy Consumed</h3>
+                <div class="bars" id="chart-consumed"></div>
+                <div class="chart-footer">
+                    <span>00:00</span>
+                    <span class="chart-value" id="chart-consumed-max">—</span>
+                    <span>23:00</span>
+                </div>
+            </article>
+            <article class="chart">
+                <h3>Energy Returned</h3>
+                <div class="bars" id="chart-returned"></div>
+                <div class="chart-footer">
+                    <span>00:00</span>
+                    <span class="chart-value" id="chart-returned-max">—</span>
+                    <span>23:00</span>
+                </div>
+            </article>
+            <article class="chart">
+                <h3>Gas Consumed</h3>
+                <div class="bars" id="chart-gas"></div>
+                <div class="chart-footer">
+                    <span>00:00</span>
+                    <span class="chart-value" id="chart-gas-max">—</span>
+                    <span>23:00</span>
+                </div>
+            </article>
+        </section>
+    </section>
+    <div class="modal" id="history-modal" role="dialog" aria-modal="true" aria-labelledby="history-modal-title">
+        <div class="modal-card">
+            <h2 id="history-modal-title">Confirm On-Device History</h2>
+            <p id="history-modal-text"></p>
+            <div class="modal-actions">
+                <button class="secondary" id="history-cancel" type="button">Cancel</button>
+                <button id="history-confirm" type="button">Confirm</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="details-modal" role="dialog" aria-modal="true" aria-labelledby="details-title">
+        <div class="modal-card">
+            <h2 id="details-title">Available sensor details</h2>
+            <p>Only sensors with a valid current value are shown. Regional alternatives and diagnostic fields remain available here without filling the main dashboard.</p>
+            <div id="details-content"></div>
+            <div class="modal-actions">
+                <button class="secondary" id="details-close" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+    <h2>Power now</h2>
+    <section class="cards" id="power-cards"></section>
+    <h2>Energy totals</h2>
+    <section class="cards" id="energy-cards"></section>
+    <h2>Phase readings</h2>
+    <section class="cards" id="phase-cards"></section>
+    <h2>Meter information</h2>
+    <section class="info-grid" id="info-cards"></section>
+    <h2>Power quality</h2>
+    <section class="cards" id="quality-cards"></section>
+    <!-- JS: dashboard -->
+    <!-- P1METER_ATTRIBUTION -->
+</body>
+
+</html>

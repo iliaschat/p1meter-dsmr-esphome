@@ -160,6 +160,8 @@ class P1Setup final : public Component, public AsyncWebHandler {
   bool save_history_storage_();
   void append_history_json_(String &json, uint8_t day_offset) const;
   void send_configure_page_(AsyncWebServerRequest *request);
+  void send_configure_mqtt_page_(AsyncWebServerRequest *request);
+  void send_index_page_(AsyncWebServerRequest *request);
   void send_settings_(AsyncWebServerRequest *request);
   void send_scan_(AsyncWebServerRequest *request);
   void save_settings_(AsyncWebServerRequest *request);

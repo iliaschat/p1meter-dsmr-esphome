@@ -77,7 +77,7 @@ bool P1Setup::canHandle(AsyncWebServerRequest *request) const {
   if (this->homewizard_enabled_ && this->is_homewizard_route_(url))
     return true;
   if (request->method() == HTTP_GET) {
-      return url == "/" || url == "/dashboard" || url == "/configure" || url == "/ota" || url == "/factory-reset" || url == "/reboot" ||
+      return url == "/" || url == "/dashboard" || url == "/configure" || url == "/configure-mqtt" || url == "/ota" || url == "/factory-reset" || url == "/reboot" ||
         url == "/setup-password" || url == "/api/dashboard" || url == "/api/settings" || url == "/api/scan";
   }
   return request->method() == HTTP_POST &&
@@ -110,14 +110,15 @@ void P1Setup::handleRequest(AsyncWebServerRequest *request) {
 
   if (request->method() == HTTP_GET) {
     if (url == "/") {
-      String page = web_pages::render(web_pages::INDEX_PAGE, this->device_name_.c_str());
-      this->send_html_(request, page);
+      this->send_index_page_(request);
     } else if (url == "/dashboard") {
       this->send_dashboard_page_(request);
     } else if (url == "/api/dashboard") {
       this->send_dashboard_data_(request);
     } else if (url == "/configure") {
       this->send_configure_page_(request);
+    } else if (url == "/configure-mqtt") {
+      this->send_configure_mqtt_page_(request);
     } else if (url == "/ota") {
       String page = web_pages::render(web_pages::OTA_PAGE, this->device_name_.c_str());
       this->send_html_(request, page);
@@ -289,6 +290,94 @@ void P1Setup::send_configure_page_(AsyncWebServerRequest *request) {
             const size_t closing_index = index - page_length - attribution_length;
             available = closing_length - closing_index;
             source = web_pages::CONFIGURE_PAGE + page_length + closing_index;
+          }
+          size_t count = max_length - written;
+          if (count > available)
+            count = available;
+          memcpy_P(buffer + written, source, count);
+          written += count;
+          index += count;
+        }
+        return written;
+      });
+#endif
+  response->addHeader("Cache-Control", "no-store");
+  request->send(response);
+}
+
+void P1Setup::send_configure_mqtt_page_(AsyncWebServerRequest *request) {
+  constexpr size_t closing_length = 14;
+  const size_t page_length = strlen_P(web_pages::CONFIGURE_MQTT_PAGE) - closing_length;
+  const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
+  const size_t total_length = page_length + attribution_length + closing_length;
+#if defined(USE_ESP32)
+  AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
+  response->print(std::string(web_pages::CONFIGURE_MQTT_PAGE, page_length));
+  response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
+  response->print(std::string(web_pages::CONFIGURE_MQTT_PAGE + page_length, closing_length));
+#else
+  AsyncWebServerResponse *response = request->beginChunkedResponse(
+      "text/html; charset=utf-8",
+      [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
+        size_t written = 0;
+        while (written < max_length && index < total_length) {
+          size_t available;
+          const char *source;
+          if (index < page_length) {
+            available = page_length - index;
+            source = web_pages::CONFIGURE_MQTT_PAGE + index;
+          } else if (index < page_length + attribution_length) {
+            const size_t footer_index = index - page_length;
+            available = attribution_length - footer_index;
+            source = web_pages::ATTRIBUTION_FOOTER + footer_index;
+          } else {
+            const size_t closing_index = index - page_length - attribution_length;
+            available = closing_length - closing_index;
+            source = web_pages::CONFIGURE_MQTT_PAGE + page_length + closing_index;
+          }
+          size_t count = max_length - written;
+          if (count > available)
+            count = available;
+          memcpy_P(buffer + written, source, count);
+          written += count;
+          index += count;
+        }
+        return written;
+      });
+#endif
+  response->addHeader("Cache-Control", "no-store");
+  request->send(response);
+}
+
+void P1Setup::send_index_page_(AsyncWebServerRequest *request) {
+  constexpr size_t closing_length = 14;
+  const size_t page_length = strlen_P(web_pages::INDEX_PAGE) - closing_length;
+  const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
+#ifdef USE_ESP32
+  AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
+  response->print(std::string(web_pages::INDEX_PAGE, page_length));
+  response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
+  response->print(std::string(web_pages::INDEX_PAGE + page_length, closing_length));
+#else
+  const size_t total_length = page_length + attribution_length + closing_length;
+  AsyncWebServerResponse *response = request->beginChunkedResponse(
+      "text/html; charset=utf-8",
+      [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
+        size_t written = 0;
+        while (written < max_length && index < total_length) {
+          size_t available;
+          const char *source;
+          if (index < page_length) {
+            available = page_length - index;
+            source = web_pages::INDEX_PAGE + index;
+          } else if (index < page_length + attribution_length) {
+            const size_t footer_index = index - page_length;
+            available = attribution_length - footer_index;
+            source = web_pages::ATTRIBUTION_FOOTER + footer_index;
+          } else {
+            const size_t closing_index = index - page_length - attribution_length;
+            available = closing_length - closing_index;
+            source = web_pages::INDEX_PAGE + page_length + closing_index;
           }
           size_t count = max_length - written;
           if (count > available)
