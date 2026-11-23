@@ -20,7 +20,6 @@ ASSETS_DIR = ROOT / "components" / "p1_setup" / "assets"
 PAGES = {
     "p1_setup_page_index.cpp": ("index", "HTML"),
     "p1_setup_page_configure.cpp": ("configure", "HTML"),
-    "p1_setup_page_dashboard.cpp": ("dashboard", "HTML"),
     "p1_setup_page_ota.cpp": ("ota", "HTML"),
     "p1_setup_page_password.cpp": ("password", "HTML"),
     "p1_setup_page_reboot.cpp": ("reboot", "HTML"),
@@ -33,7 +32,7 @@ EXTRA_JS = {
 }
 
 SPLIT_PAGES = {
-    "dashboard": ("DASHBOARD_PAGE_HEAD", "DASHBOARD_PAGE_TAIL"),
+    "index": ("INDEX_PAGE_HEAD", "INDEX_PAGE_TAIL"),
 }
 
 
@@ -76,7 +75,7 @@ def split_html_css_js(html: str, page_name: str):
 
 
 def merge_split_page(cpp_content: str, page_name: str):
-    """Merge HEAD and TAIL raw strings for split pages like dashboard."""
+    """Merge HEAD and TAIL raw strings for split pages like index."""
     head_var, tail_var = SPLIT_PAGES[page_name]
     parts = {}
     for var_name, content, delim in extract_raw_strings(cpp_content):

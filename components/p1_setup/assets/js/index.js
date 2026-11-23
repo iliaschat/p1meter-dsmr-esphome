@@ -13,3 +13,34 @@ document.getElementById('logout').addEventListener('click', async () => {
         window.alert(error.message)
     }
 });
+
+// ==== Hamburger‑menu toggle (added for the new UI) ==================================================
+const hamburger = document.getElementById('hamburger-btn');
+const dropdown  = document.getElementById('mobile-dropdown');
+
+if (hamburger && dropdown) {
+  hamburger.addEventListener('click', () => {
+    dropdown.hidden = dropdown.hidden ? false : true;
+    hamburger.setAttribute('aria-expanded', dropdown.hidden ? 'false' : 'true');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    const insideHamburger = hamburger.contains(e.target);
+    const insideDropdown  = dropdown.contains(e.target);
+    if (insideHamburger === false && insideDropdown === false) {
+      dropdown.hidden = true;
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Dropdown item → trigger the original menu element
+  dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = item.getAttribute('data-target');
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) { targetEl.click(); }
+    });
+  });
+}

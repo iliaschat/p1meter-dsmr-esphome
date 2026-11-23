@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>P1 Meter</title>
-    <!-- CSS: dashboard -->
+    <!-- CSS: index -->
 </head>
 
 <body>
@@ -23,10 +23,29 @@
                 <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
             </button>
+            <!-- Hamburger button -->
+            <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+              <span></span><span></span><span></span>
+            </button>
+
+            <!-- Mobile dropdown menu -->
+            <div id="mobile-dropdown" class="mobile-dropdown" hidden>
+              <ul>
+                <li><a class="dropdown-item" href="#" data-target="details-button">Sensor List (Full)</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-history">Enable History</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-communication">Communication</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-configure-wifi">Configure WiFi</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-password">Change Password</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-ota">OTA Update</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-factory-reset">Factory Reset</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-reboot">Reboot</a></li>
+              </ul>
+            </div>
+
         </div>
     </header>
 
-    <nav class="menu" id="main-menu">
+    <nav class="menu" id="main-menu" hidden>
         <ul class="menu-list">
             <li>
                 <button class="menu-item" id="menu-configure-wifi" type="button">
@@ -140,19 +159,8 @@
         </div>
     </div>
 
-    <h2>Power now</h2>
-    <section class="cards" id="power-cards">
-
-    </section>
-    <h2>Energy totals</h2>
-    <section class="cards" id="energy-cards"></section>
-    <h2>Phase readings</h2>
-    <section class="cards" id="phase-cards"></section>
     <h2>Meter information</h2>
     <section class="info-grid" id="info-cards"></section>
-    <h2>Power quality</h2>
-    <section class="cards" id="quality-cards"></section>
-
     <section id="history-graphs" hidden>
         <h2>Hourly usage</h2>
         <div class="history-controls">
@@ -194,6 +202,15 @@
             </article>
         </section>
     </section>
+    <h2>Power now</h2>
+    <section class="cards" id="power-cards"></section>
+    <h2>Energy totals</h2>
+    <section class="cards" id="energy-cards"></section>
+    <h2>Phase readings</h2>
+    <section class="cards" id="phase-cards"></section>
+    <h2>Power quality</h2>
+    <section class="cards" id="quality-cards"></section>
+
 
     <div class="modal" id="reboot-modal" role="dialog" aria-modal="true" aria-labelledby="reboot-modal-title">
         <div class="modal-card">
@@ -371,6 +388,7 @@
         </div>
     </div>
 
+    <!-- JS: index -->
     <!-- JS: dashboard -->
     <!-- JS: menu -->
     <!-- P1METER_ATTRIBUTION -->

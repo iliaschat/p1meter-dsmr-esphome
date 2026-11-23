@@ -140,232 +140,6 @@ const char CONFIGURE_PAGE[] PROGMEM = R"HTML(<!doctype html>
     
 </body></html>)HTML";
 
-const char DASHBOARD_PAGE[] PROGMEM = R"HTML(<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>P1 Meter Dashboard</title>
-    <style>:root{font-family:system-ui,sans-serif;color:#14231d;background:#f3f6f2}*{box-sizing:border-box}body{margin:0 auto;padding:22px;max-width:980px}a{color:#27734f}h1{font-size:26px;margin:16px 0 6px}h2{font-size:18px;margin:28px 0 10px}.intro,.hint{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.status{display:flex;align-items:center;gap:8px;color:#52645b;font-size:14px}.status-dot{width:10px;height:10px;border-radius:50%;background:#d08a22}.status-dot.live{background:#27734f}.status-dot.error{background:#a33b2f}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{padding:16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px;min-height:100px}.card h3{font-size:14px;font-weight:600;color:#52645b;margin:0 0 12px}.value{font-size:25px;font-weight:700;letter-spacing:-.02em;overflow-wrap:anywhere}.value.unavailable{font-size:18px;color:#8a9890;font-weight:500}.meta{margin-top:7px;color:#62736a;font-size:13px}.info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.info{padding:14px 16px;background:#e9f0ea;border-radius:8px}.info strong{display:block;font-size:13px;color:#52645b;margin-bottom:6px}.info span{font-weight:650;overflow-wrap:anywhere}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}button,select{padding:10px 14px;border:1px solid #27734f;border-radius:6px;background:#27734f;color:#fff;font:inherit;font-weight:650;cursor:pointer}select{background:#fff;color:#27734f}button:disabled{opacity:.6;cursor:wait}.notice{display:none;margin-top:14px;padding:12px 14px;border-radius:6px;background:#fff4df;color:#74551f}.notice.visible{display:block}.history-setting{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.history-setting input{width:20px;height:20px;accent-color:#27734f}.history-setting label{font-weight:700}.history-setting small{display:block;color:#52645b;font-weight:400;margin-top:3px}.history-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.history-controls label{font-size:14px;color:#52645b;font-weight:650}.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.chart{padding:14px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.chart h3{font-size:14px;color:#52645b;margin:0 0 12px}.bars{height:155px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #cbd7ce;padding:0 2px}.bar-wrap{height:100%;flex:1;display:flex;align-items:flex-end;justify-content:center;position:relative}.bar{width:100%;min-height:2px;border-radius:3px 3px 0 0;background:#27734f}.bar.empty{background:#dce5df}.bar-wrap:hover .bar{background:#d08a22}.bar-wrap::after{content:attr(data-hour);position:absolute;bottom:-18px;font-size:9px;color:#718178}.chart-footer{display:flex;justify-content:space-between;margin-top:25px;color:#718178;font-size:12px}.chart-value{font-weight:650;color:#52645b}.history-empty{color:#718178;font-size:13px;margin-top:8px}.modal{display:none;position:fixed;inset:0;background:#14231dcc;align-items:center;justify-content:center;padding:18px;z-index:5}.modal.open{display:flex}.modal-card{width:min(760px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#fff;border-radius:10px;padding:22px;box-shadow:0 12px 40px #0005}.modal-card h2{margin:0 0 10px}.modal-card p{color:#52645b;line-height:1.5}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.secondary{background:#fff;color:#27734f}.details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.details-group{margin-top:18px}.details-group h3{font-size:15px;color:#27734f;border-bottom:1px solid #d5dfd8;padding-bottom:7px}.details-card{padding:12px;background:#f3f6f2;border-radius:7px}.details-card strong{display:block;font-size:13px;color:#52645b}.details-card span{font-weight:650;display:block;margin-top:5px;overflow-wrap:anywhere}.details-card small{color:#718178}@media(max-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid,.charts,.details-grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){body{padding:16px}.cards,.info-grid,.charts,.details-grid{grid-template-columns:1fr}.topbar{display:block}}.menu{border-bottom:1px solid #d5dfd8;background:#fff;position:sticky;top:0;z-index:4}.menu-list{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:0;padding:0 12px}.menu-item{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #d5dfd8;border-radius:6px;background:#fff;color:#14231d;text-decoration:none;font-size:14px;font-weight:650;cursor:pointer;white-space:nowrap}.menu-item svg.menu-icon{width:16px;height:16px;flex:none;color:#27734f}.menu-item.menu-toggle{padding-right:6px}.menu-arrow{width:14px;height:14px;flex:none;color:#27734f;margin-left:2px}.menu-item:hover{border-color:#27734f;background:#f8fbf8}.menu-group{position:relative}.submenu{position:absolute;left:0;right:0;top:100%;margin-top:4px;padding:8px;list-style:none;margin:0;background:#fff;border:1px solid #d5dfd8;border-radius:6px;box-shadow:0 8px 24px #0003;z-index:5;display:flex;flex-direction:column;gap:2px;min-width:220px}.submenu[hidden]{display:none}.submenu .menu-item{border:0;background:transparent;padding:8px 10px;text-align:left;font-size:14px;font-weight:500;justify-content:space-between;width:100%}.submenu .menu-item .status-indicator{margin-right:8px}.submenu .menu-item:hover{background:#f3f6f2;border-color:transparent}.status-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a33b2f;flex:none}.status-indicator.on{background:#27734f}.status-indicator.off{background:#a33b2f}.topbar-bottom .status{margin-left:0}</style>
-</head>
-
-<body><a href="/">&larr; Home</a>
-    <header class="topbar">
-        <div>
-            <div class="status">
-                <span class="status-dot" id="status-dot"></span>
-                <span id="connection-status">Connecting to meter…</span>
-            </div>
-            <h1>Meter dashboard</h1>
-            <p class="intro">Live readings from the P1 port. Empty or unsupported DSMR fields are hidden automatically.</p>
-        </div>
-        <div class="actions">
-            <button class="secondary" id="refresh" type="button">Refresh</button>
-            <button class="secondary" id="details-button" type="button">More sensor details</button>
-        </div>
-    </header>
-    <div class="notice" id="notice" role="status"></div>
-    <section id="history-graphs" hidden>
-        <h2>Hourly usage</h2>
-        <div class="history-controls">
-            <label for="history-day">Show data for</label>
-            <select id="history-day">
-                <option value="0">Today</option>
-                <option value="1">Yesterday</option>
-                <option value="2">Two days ago</option>
-            </select>
-        </div>
-        <p class="hint">Each bar is the energy or gas used during that hour. Bar heights are scaled to the highest value in the selected day.</p>
-        <section class="charts">
-            <article class="chart">
-                <h3>Energy Consumed</h3>
-                <div class="bars" id="chart-consumed"></div>
-                <div class="chart-footer">
-                    <span>00:00</span>
-                    <span class="chart-value" id="chart-consumed-max">—</span>
-                    <span>23:00</span>
-                </div>
-            </article>
-            <article class="chart">
-                <h3>Energy Returned</h3>
-                <div class="bars" id="chart-returned"></div>
-                <div class="chart-footer">
-                    <span>00:00</span>
-                    <span class="chart-value" id="chart-returned-max">—</span>
-                    <span>23:00</span>
-                </div>
-            </article>
-            <article class="chart">
-                <h3>Gas Consumed</h3>
-                <div class="bars" id="chart-gas"></div>
-                <div class="chart-footer">
-                    <span>00:00</span>
-                    <span class="chart-value" id="chart-gas-max">—</span>
-                    <span>23:00</span>
-                </div>
-            </article>
-        </section>
-    </section>
-    <div class="modal" id="history-modal" role="dialog" aria-modal="true" aria-labelledby="history-modal-title">
-        <div class="modal-card">
-            <h2 id="history-modal-title">Confirm On-Device History</h2>
-            <p id="history-modal-text"></p>
-            <div class="modal-actions">
-                <button class="secondary" id="history-cancel" type="button">Cancel</button>
-                <button id="history-confirm" type="button">Confirm</button>
-            </div>
-        </div>
-    </div>
-    <div class="modal" id="details-modal" role="dialog" aria-modal="true" aria-labelledby="details-title">
-        <div class="modal-card">
-            <h2 id="details-title">Available sensor details</h2>
-            <p>Only sensors with a valid current value are shown. Regional alternatives and diagnostic fields remain available here without filling the main dashboard.</p>
-            <div id="details-content"></div>
-            <div class="modal-actions">
-                <button class="secondary" id="details-close" type="button">Close</button>
-            </div>
-        </div>
-    </div>
-    <h2>Power now</h2>
-    <section class="cards" id="power-cards"></section>
-    <h2>Energy totals</h2>
-    <section class="cards" id="energy-cards"></section>
-    <h2>Phase readings</h2>
-    <section class="cards" id="phase-cards"></section>
-    <h2>Meter information</h2>
-    <section class="info-grid" id="info-cards"></section>
-    <h2>Power quality</h2>
-    <section class="cards" id="quality-cards"></section>
-    <script>const groups ={power:[['Power Consumed','W'],['Power Returned','W']],energy:[],phase:[],quality:[['Short Power Outages','Counter'],['Long Power Outages','Counter'],['Short Power Drops Phase 1','Counter'],['Short Power Peaks Phase 1','Counter']]};const texts =['P1 Meter ID','P1 Version','Actual Tariff Group'];const values ={};let sensorData =[],textData =[];const $ =id =>document.getElementById(id);const safe =s =>String(s).replace(/[&<>"']/g, c => ({'&': '&amp;',
- '<': '&lt;',
- '>': '&gt;',
- '"': '&quot;',
- "'": '&#39;'} [c]));
-
-function idFor(prefix, name) {return prefix + '-' + String(name).replace(/[^a-z0-9]+/gi, '-').toLowerCase()}
-
-function available(name) {const item = sensorData.find(x => x.name===name);
- return item&&item.has_state&&Number.isFinite(Number(item.value))}
-
-function firstAvailable(names) {return names.find(available)}
-
-function addIfAvailable(list, name, unit, title) {if (available(name)) list.push([name, unit, title||name])}
-
-function unitFor(name) {if (/^Power (Consumed|Returned)/.test(name)) return 'W';
- if (/Reactive Power/.test(name)) return 'kVAr';
- if (/Apparent Power/.test(name)) return 'kVA';
- if (/Demand/.test(name)) return 'kW';
- if (/Power Factor/.test(name)) return '';
- if (/Energy/.test(name)) return 'kWh';
- if (/Gas Consumed/.test(name)) return name.includes('GJ') ? 'GJ' : 'm³';
- if (/Water|Sub-meter/.test(name)) return 'm³';
- if (/Current/.test(name)) return 'A';
- if (/Voltage/.test(name)) return 'V';
- if (/Frequency/.test(name)) return 'Hz';
- if (/Factor/.test(name)) return '';
- if (/Time|Period/.test(name)) return 's';
- return 'value'}
-
-function displayValue(name, raw) {const n = Number(raw);
- if (!Number.isFinite(n)) return String(raw);
- if (name==='Power Consumed'||name==='Power Returned'||/^Power (Consumed|Returned) Phase/.test(name)) return String((n * 1000).toFixed(1));
- return String(n)}
-
-function card(item) {const name = item[0], unit = item[1], title = item[2]||name;
- return `<article class="card"><h3>${safe(title)}</h3><div class="value">${safe(displayValue(name, itemValue(name)))} </div><div class="meta">${safe(unit||'Counter')}</div></article>`}
-
-function itemValue(name) {const item = sensorData.find(x => x.name===name);
- return item ? item.value : ''}
-
-function info(name, value) {return `<div class="info"><strong>${safe(name)}</strong><span>${safe(value||'Unavailable')}</span></div>`}
-
-function buildMainGroups() {groups.energy = [];
- groups.phase = [];
- addIfAvailable(groups.energy, 'Energy Consumed Tariff 1', 'kWh');
- addIfAvailable(groups.energy, 'Energy Consumed Tariff 2', 'kWh');
- addIfAvailable(groups.energy, 'Energy Consumed Tariff 3', 'kWh');
- addIfAvailable(groups.energy, 'Energy Consumed Tariff 4', 'kWh');
- addIfAvailable(groups.energy, 'Energy Returned Tariff 1', 'kWh');
- addIfAvailable(groups.energy, 'Energy Returned Tariff 2', 'kWh');
- addIfAvailable(groups.energy, 'Energy Returned Tariff 3', 'kWh');
- addIfAvailable(groups.energy, 'Energy Returned Tariff 4', 'kWh');
- const gas = firstAvailable(['Gas Consumed', 'Gas Consumed BE', 'Gas Consumed GJ']);
- if (gas) addIfAvailable(groups.energy, gas, unitFor(gas), 'Gas Consumed');
- for (let phase = 1; phase<=3; phase++) {[['Power Consumed Phase ' + phase, 'W'],
- ['Power Returned Phase ' + phase, 'W'],
- ['Current Phase ' + phase, 'A'],
- ['Voltage Phase ' + phase, 'V']].forEach(x => addIfAvailable(groups.phase, x[0], x[1]));}}
-
-function renderMain() {buildMainGroups();
- Object.entries(groups).forEach(([group, items]) => $(group + '-cards').innerHTML = items.length ? items.map(card).join('') : '<p class="hint">No current values available.</p>');
- const infoNames = texts.filter(name => {const x = textData.find(i => i.name===name);
- return x&&x.state});
- $('info-cards').innerHTML = infoNames.length ? infoNames.map(name => {const x = textData.find(i => i.name===name);
- return info(name, x.state)}).join('') : '<p class="hint">No meter metadata available.</p>'}
-
-function category(name) {if (/Tariff|Energy/.test(name)) return 'Energy and tariffs';
- if (/Phase|Current|Voltage|Power Factor|Frequency|Power /.test(name)) return 'Electricity and phases';
- if (/Gas|Water|Thermal|Sub-meter/.test(name)) return 'External meters';
- if (/Failure|Outage|Drop|Peak|Sag|Swell/.test(name)) return 'Power quality and diagnostics';
- return 'Other DSMR values'}
-
-function renderDetails() {const rows = [];
- sensorData.filter(x => x.has_state).forEach(x => rows.push({name: x.name,
- value: displayValue(x.name, x.value),
- unit: unitFor(x.name)}));
- textData.filter(x => x.state).forEach(x => rows.push({name: x.name,
- value: x.state,
- unit: 'text'}));
- const grouped = {};
- rows.forEach(x => (grouped[category(x.name)] ??= []).push(x));
- $('details-content').innerHTML = Object.entries(grouped).sort().map(([group, items]) => `<section class="details-group"><h3>${safe(group)}</h3><div class="details-grid">${items.sort((a, b) => a.name.localeCompare(b.name)).map(x => `<div class="details-card"><strong>${safe(x.name)}</strong><span>${safe(x.value)}</span><small>${safe(x.unit)}</small></div>`).join('')}</div></section>`).join('')||'<p class="hint">No sensor currently has a valid value.</p>'}
-
-function renderChart(id, maxId, data, unit) {const el = $(id), maxEl = $(maxId),
- numbers = (data||[]).map(v => typeof v==='number'&&Number.isFinite(v) ? v : null),
- dailyMax = Math.max(0, ...numbers.filter(v => v!=null));
- el.innerHTML = numbers.map((value, hour) => {const height = value==null||dailyMax===0 ? 0 : Math.max(3, value / dailyMax * 100);
- const label = value==null ? 'No data' : value.toFixed(3) + ' ' + unit;
- return `<div class="bar-wrap" data-hour="${String(hour).padStart(2,'0')}" title="${String(hour).padStart(2,'0')}:00 — ${label}"><div class="bar${value==null ?' empty' :''}" style="height:${height}%"></div></div>`}).join('');
- maxEl.textContent = dailyMax ? dailyMax.toFixed(3) + ' ' + unit : 'No data'}
-
-function renderHistory(history) {const enabled = !!(history&&history.enabled);
- $('history-graphs').hidden = !enabled;
- if (!enabled) return;
- renderChart('chart-consumed', 'chart-consumed-max', history.energy_consumed, 'kWh');
- renderChart('chart-returned', 'chart-returned-max', history.energy_returned, 'kWh');
- renderChart('chart-gas', 'chart-gas-max', history.gas_consumed, 'm³');
- $('history-day').value = String(history.day_offset!=null ? history.day_offset : 0)}
-async function load() {try {const day = $('history-day').value;
- const response = await fetch('/api/dashboard?day=' + encodeURIComponent(day), {cache: 'no-store'});
- if (!response.ok) throw new Error('Dashboard data unavailable');
- const data = await response.json();
- sensorData = data.sensors||[];
- textData = data.text_sensors||[];
- renderMain();
- renderDetails();
- window.lastHistory = data.history||{};
- renderHistory(data.history);
- const any = sensorData.some(x => x.has_state)||textData.some(x => x.state);
- $('connection-status').textContent = any ? 'Live readings' : 'Waiting for P1 data';
- $('status-dot').className = 'status-dot ' + (any ? 'live' : '');
- $('notice').classList.remove('visible')} catch (error) {$('connection-status').textContent = 'Dashboard data unavailable';
- $('status-dot').className = 'status-dot error';
- $('notice').textContent = 'Could not read meter values. The device may be restarting or the P1 telegram is not available.';
- $('notice').classList.add('visible')}}
-$('details-button').addEventListener('click', () => {$('details-modal').classList.add('open')});
-$('details-close').addEventListener('click', () => {$('details-modal').classList.remove('open')});
-$('details-modal').addEventListener('click', event => {if (event.target===$('details-modal')) $('details-modal').classList.remove('open')});
-$('refresh').addEventListener('click', async () => {const button = $('refresh');
- button.disabled = true;
- await load();
- button.disabled = false});
-$('history-day').addEventListener('change', load);
-load();
-setInterval(load, 10000);</script>
-    
-</body></html>)HTML";
-
 const char FACTORY_RESET_PAGE[] PROGMEM = R"HTML(<!doctype html>
 <html lang="en">
 <head>
@@ -397,7 +171,7 @@ const char INDEX_PAGE[] PROGMEM = R"HTML(<!doctype html>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>P1 Meter</title>
-    <style>:root{font-family:system-ui,sans-serif;color:#14231d;background:#f3f6f2}*{box-sizing:border-box}body{margin:0 auto;padding:22px;max-width:980px}a{color:#27734f}h1{font-size:26px;margin:16px 0 6px}h2{font-size:18px;margin:28px 0 10px}.intro,.hint{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.status{display:flex;align-items:center;gap:8px;color:#52645b;font-size:14px}.status-dot{width:10px;height:10px;border-radius:50%;background:#d08a22}.status-dot.live{background:#27734f}.status-dot.error{background:#a33b2f}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{padding:16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px;min-height:100px}.card h3{font-size:14px;font-weight:600;color:#52645b;margin:0 0 12px}.value{font-size:25px;font-weight:700;letter-spacing:-.02em;overflow-wrap:anywhere}.value.unavailable{font-size:18px;color:#8a9890;font-weight:500}.meta{margin-top:7px;color:#62736a;font-size:13px}.info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.info{padding:14px 16px;background:#e9f0ea;border-radius:8px}.info strong{display:block;font-size:13px;color:#52645b;margin-bottom:6px}.info span{font-weight:650;overflow-wrap:anywhere}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}button,select{padding:10px 14px;border:1px solid #27734f;border-radius:6px;background:#27734f;color:#fff;font:inherit;font-weight:650;cursor:pointer}select{background:#fff;color:#27734f}button:disabled{opacity:.6;cursor:wait}.notice{display:none;margin-top:14px;padding:12px 14px;border-radius:6px;background:#fff4df;color:#74551f}.notice.visible{display:block}.history-setting{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.history-setting input{width:20px;height:20px;accent-color:#27734f}.history-setting label{font-weight:700}.history-setting small{display:block;color:#52645b;font-weight:400;margin-top:3px}.history-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.history-controls label{font-size:14px;color:#52645b;font-weight:650}.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.chart{padding:14px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.chart h3{font-size:14px;color:#52645b;margin:0 0 12px}.bars{height:155px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #cbd7ce;padding:0 2px}.bar-wrap{height:100%;flex:1;display:flex;align-items:flex-end;justify-content:center;position:relative}.bar{width:100%;min-height:2px;border-radius:3px 3px 0 0;background:#27734f}.bar.empty{background:#dce5df}.bar-wrap:hover .bar{background:#d08a22}.bar-wrap::after{content:attr(data-hour);position:absolute;bottom:-18px;font-size:9px;color:#718178}.chart-footer{display:flex;justify-content:space-between;margin-top:25px;color:#718178;font-size:12px}.chart-value{font-weight:650;color:#52645b}.history-empty{color:#718178;font-size:13px;margin-top:8px}.modal{display:none;position:fixed;inset:0;background:#14231dcc;align-items:center;justify-content:center;padding:18px;z-index:5}.modal.open{display:flex}.modal-card{width:min(760px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#fff;border-radius:10px;padding:22px;box-shadow:0 12px 40px #0005}.modal-card h2{margin:0 0 10px}.modal-card p{color:#52645b;line-height:1.5}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.secondary{background:#fff;color:#27734f}.details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.details-group{margin-top:18px}.details-group h3{font-size:15px;color:#27734f;border-bottom:1px solid #d5dfd8;padding-bottom:7px}.details-card{padding:12px;background:#f3f6f2;border-radius:7px}.details-card strong{display:block;font-size:13px;color:#52645b}.details-card span{font-weight:650;display:block;margin-top:5px;overflow-wrap:anywhere}.details-card small{color:#718178}@media(max-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid,.charts,.details-grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){body{padding:16px}.cards,.info-grid,.charts,.details-grid{grid-template-columns:1fr}.topbar{display:block}}.menu{border-bottom:1px solid #d5dfd8;background:#fff;position:sticky;top:0;z-index:4}.menu-list{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:0;padding:0 12px}.menu-item{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #d5dfd8;border-radius:6px;background:#fff;color:#14231d;text-decoration:none;font-size:14px;font-weight:650;cursor:pointer;white-space:nowrap}.menu-item svg.menu-icon{width:16px;height:16px;flex:none;color:#27734f}.menu-item.menu-toggle{padding-right:6px}.menu-arrow{width:14px;height:14px;flex:none;color:#27734f;margin-left:2px}.menu-item:hover{border-color:#27734f;background:#f8fbf8}.menu-group{position:relative}.submenu{position:absolute;left:0;right:0;top:100%;margin-top:4px;padding:8px;list-style:none;margin:0;background:#fff;border:1px solid #d5dfd8;border-radius:6px;box-shadow:0 8px 24px #0003;z-index:5;display:flex;flex-direction:column;gap:2px;min-width:220px}.submenu[hidden]{display:none}.submenu .menu-item{border:0;background:transparent;padding:8px 10px;text-align:left;font-size:14px;font-weight:500;justify-content:space-between;width:100%}.submenu .menu-item .status-indicator{margin-right:8px}.submenu .menu-item:hover{background:#f3f6f2;border-color:transparent}.status-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a33b2f;flex:none}.status-indicator.on{background:#27734f}.status-indicator.off{background:#a33b2f}.topbar-bottom .status{margin-left:0}</style>
+    <style>:root{font-family:system-ui,sans-serif;color:#14231d;background:#f3f6f2}*{box-sizing:border-box}body{margin:0 auto;padding:22px;max-width:980px}h1{font-size:26px;margin:12px 0 6px}p{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px}.logout{width:42px;height:42px;padding:8px;display:grid;place-items:center;border:1px solid #d5dfd8;border-radius:6px;background:#fff;color:#27734f;cursor:pointer}.logout:hover{border-color:#27734f;background:#f8fbf8}.logout:focus-visible{outline:2px solid #27734f;outline-offset:2px}.logout svg{width:20px;height:20px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px}.tile{min-height:110px;padding:20px;text-align:left;background:#fff;border:1px solid #d5dfd8;border-radius:8px;color:#14231d;text-decoration:none;font-size:18px;font-weight:650;display:flex;align-items:center;justify-content:center;gap:12px}.tile svg{width:24px;height:24px;flex:none;color:#27734f}.tile:hover{border-color:#27734f;background:#f8fbf8}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#27734f;font-weight:700}footer{margin-top:24px;color:#62736a;font-size:13px}@media(max-width:520px){body{padding:18px}.grid{grid-template-columns:1fr}.tile{min-height:78px}}.hamburger{display:block;position:relative;width:30px;height:24px;cursor:pointer;background:transparent;border:none}.hamburger span{display:block;position:absolute;left:0;width:100%;height:3px;background-color:currentColor;transition:transform 0.3s,opacity 0.3s}.hamburger span:nth-child(1){top:0}.hamburger span:nth-child(2){top:50%;transform:translateY(-50%)}.hamburger span:nth-child(3){bottom:0}.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.hamburger.open span:nth-child(2){opacity:0}.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}.mobile-dropdown{position:absolute;top:100px;background:#fff;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:.5rem;border-radius:4px;list-style:none;margin:0}.mobile-dropdown.open{display:block}a{color:#27734f}h1{font-size:26px;margin:16px 0 6px}h2{font-size:18px;margin:28px 0 10px}.intro,.hint{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.status{display:flex;align-items:center;gap:8px;color:#52645b;font-size:14px}.status-dot{width:10px;height:10px;border-radius:50%;background:#d08a22}.status-dot.live{background:#27734f}.status-dot.error{background:#a33b2f}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{padding:16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px;min-height:100px}.card h3{font-size:14px;font-weight:600;color:#52645b;margin:0 0 12px}.value{font-size:25px;font-weight:700;letter-spacing:-.02em;overflow-wrap:anywhere}.value.unavailable{font-size:18px;color:#8a9890;font-weight:500}.meta{margin-top:7px;color:#62736a;font-size:13px}.info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.info{padding:14px 16px;background:#e9f0ea;border-radius:8px}.info strong{display:block;font-size:13px;color:#52645b;margin-bottom:6px}.info span{font-weight:650;overflow-wrap:anywhere}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}button,select{padding:10px 14px;border:1px solid #27734f;border-radius:6px;background:#27734f;color:#fff;font:inherit;font-weight:650;cursor:pointer}select{background:#fff;color:#27734f}button:disabled{opacity:.6;cursor:wait}.notice{display:none;margin-top:14px;padding:12px 14px;border-radius:6px;background:#fff4df;color:#74551f}.notice.visible{display:block}.history-setting{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.history-setting input{width:20px;height:20px;accent-color:#27734f}.history-setting label{font-weight:700}.history-setting small{display:block;color:#52645b;font-weight:400;margin-top:3px}.history-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.history-controls label{font-size:14px;color:#52645b;font-weight:650}.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.chart{padding:14px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.chart h3{font-size:14px;color:#52645b;margin:0 0 12px}.bars{height:155px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #cbd7ce;padding:0 2px}.bar-wrap{height:100%;flex:1;display:flex;align-items:flex-end;justify-content:center;position:relative}.bar{width:100%;min-height:2px;border-radius:3px 3px 0 0;background:#27734f}.bar.empty{background:#dce5df}.bar-wrap:hover .bar{background:#d08a22}.bar-wrap::after{content:attr(data-hour);position:absolute;bottom:-18px;font-size:9px;color:#718178}.chart-footer{display:flex;justify-content:space-between;margin-top:25px;color:#718178;font-size:12px}.chart-value{font-weight:650;color:#52645b}.history-empty{color:#718178;font-size:13px;margin-top:8px}.modal{display:none;position:fixed;inset:0;background:#14231dcc;align-items:center;justify-content:center;padding:18px;z-index:5}.modal.open{display:flex}.modal-card{width:min(760px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#fff;border-radius:10px;padding:22px;box-shadow:0 12px 40px #0005}.modal-card h2{margin:0 0 10px}.modal-card p{color:#52645b;line-height:1.5}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.secondary{background:#fff;color:#27734f}.details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.details-group{margin-top:18px}.details-group h3{font-size:15px;color:#27734f;border-bottom:1px solid #d5dfd8;padding-bottom:7px}.details-card{padding:12px;background:#f3f6f2;border-radius:7px}.details-card strong{display:block;font-size:13px;color:#52645b}.details-card span{font-weight:650;display:block;margin-top:5px;overflow-wrap:anywhere}.details-card small{color:#718178}@media(max-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid,.charts,.details-grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){body{padding:16px}.cards,.info-grid,.charts,.details-grid{grid-template-columns:1fr}.topbar{display:block}}.menu{border-bottom:1px solid #d5dfd8;background:#fff;position:sticky;top:0;z-index:4}.menu-list{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:0;padding:0 12px}.menu-item{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #d5dfd8;border-radius:6px;background:#fff;color:#14231d;text-decoration:none;font-size:14px;font-weight:650;cursor:pointer;white-space:nowrap}.menu-item svg.menu-icon{width:16px;height:16px;flex:none;color:#27734f}.menu-item.menu-toggle{padding-right:6px}.menu-arrow{width:14px;height:14px;flex:none;color:#27734f;margin-left:2px}.menu-item:hover{border-color:#27734f;background:#f8fbf8}.menu-group{position:relative}.submenu{position:absolute;left:0;right:0;top:100%;margin-top:4px;padding:8px;list-style:none;margin:0;background:#fff;border:1px solid #d5dfd8;border-radius:6px;box-shadow:0 8px 24px #0003;z-index:5;display:flex;flex-direction:column;gap:2px;min-width:220px}.submenu[hidden]{display:none}.submenu .menu-item{border:0;background:transparent;padding:8px 10px;text-align:left;font-size:14px;font-weight:500;justify-content:space-between;width:100%}.submenu .menu-item .status-indicator{margin-right:8px}.submenu .menu-item:hover{background:#f3f6f2;border-color:transparent}.status-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a33b2f;flex:none}.status-indicator.on{background:#27734f}.status-indicator.off{background:#a33b2f}.topbar-bottom .status{margin-left:0}</style>
 </head>
 
 <body>
@@ -415,10 +189,29 @@ const char INDEX_PAGE[] PROGMEM = R"HTML(<!doctype html>
                 <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
             </button>
+            <!-- Hamburger button -->
+            <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+              <span></span><span></span><span></span>
+            </button>
+
+            <!-- Mobile dropdown menu -->
+            <div id="mobile-dropdown" class="mobile-dropdown" hidden>
+              <ul>
+                <li><a class="dropdown-item" href="#" data-target="details-button">Sensor List (Full)</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-history">Enable History</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-communication">Communication</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-configure-wifi">Configure WiFi</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-password">Change Password</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-ota">OTA Update</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-factory-reset">Factory Reset</a></li>
+                <li><a class="dropdown-item" href="#" data-target="menu-reboot">Reboot</a></li>
+              </ul>
+            </div>
+
         </div>
     </header>
 
-    <nav class="menu" id="main-menu">
+    <nav class="menu" id="main-menu" hidden>
         <ul class="menu-list">
             <li>
                 <button class="menu-item" id="menu-configure-wifi" type="button">
@@ -532,19 +325,8 @@ const char INDEX_PAGE[] PROGMEM = R"HTML(<!doctype html>
         </div>
     </div>
 
-    <h2>Power now</h2>
-    <section class="cards" id="power-cards">
-
-    </section>
-    <h2>Energy totals</h2>
-    <section class="cards" id="energy-cards"></section>
-    <h2>Phase readings</h2>
-    <section class="cards" id="phase-cards"></section>
     <h2>Meter information</h2>
     <section class="info-grid" id="info-cards"></section>
-    <h2>Power quality</h2>
-    <section class="cards" id="quality-cards"></section>
-
     <section id="history-graphs" hidden>
         <h2>Hourly usage</h2>
         <div class="history-controls">
@@ -586,6 +368,15 @@ const char INDEX_PAGE[] PROGMEM = R"HTML(<!doctype html>
             </article>
         </section>
     </section>
+    <h2>Power now</h2>
+    <section class="cards" id="power-cards"></section>
+    <h2>Energy totals</h2>
+    <section class="cards" id="energy-cards"></section>
+    <h2>Phase readings</h2>
+    <section class="cards" id="phase-cards"></section>
+    <h2>Power quality</h2>
+    <section class="cards" id="quality-cards"></section>
+
 
     <div class="modal" id="reboot-modal" role="dialog" aria-modal="true" aria-labelledby="reboot-modal-title">
         <div class="modal-card">
@@ -763,6 +554,7 @@ const char INDEX_PAGE[] PROGMEM = R"HTML(<!doctype html>
         </div>
     </div>
 
+    <script>document.getElementById('logout').addEventListener('click',async () =>{const button =document.getElementById('logout');button.disabled =true;try {const response =await fetch('/api/logout',{method:'POST'});if (!response.ok) throw new Error('Could not sign out.');window.close();if (!window.closed) document.body.innerHTML ='<main style="margin:48px auto;padding:24px;max-width:520px;font-family:system-ui,sans-serif;color:#14231d"><h1>Signed out</h1><p>Your setup session has ended. You can close this tab.</p></main>'} catch (error) {button.disabled =false;window.alert(error.message)}});const hamburger =document.getElementById('hamburger-btn');const dropdown =document.getElementById('mobile-dropdown');if (hamburger&&dropdown) {hamburger.addEventListener('click',() =>{dropdown.hidden =dropdown.hidden ?false :true;hamburger.setAttribute('aria-expanded',dropdown.hidden ?'false' :'true');});document.addEventListener('click',(e) =>{const insideHamburger =hamburger.contains(e.target);const insideDropdown =dropdown.contains(e.target);if (insideHamburger===false&&insideDropdown===false) {dropdown.hidden =true;hamburger.setAttribute('aria-expanded','false');}});dropdown.querySelectorAll('.dropdown-item').forEach(item =>{item.addEventListener('click',(e) =>{e.preventDefault();const targetId =item.getAttribute('data-target');const targetEl =document.getElementById(targetId);if (targetEl) {targetEl.click();}});});}</script>
     <script>const groups ={power:[['Power Consumed','W'],['Power Returned','W']],energy:[],phase:[],quality:[['Short Power Outages','Counter'],['Long Power Outages','Counter'],['Short Power Drops Phase 1','Counter'],['Short Power Peaks Phase 1','Counter']]};const texts =['P1 Meter ID','P1 Version','Actual Tariff Group'];const values ={};let sensorData =[],textData =[];const $ =id =>document.getElementById(id);const safe =s =>String(s).replace(/[&<>"']/g, c => ({'&': '&amp;',
  '<': '&lt;',
  '>': '&gt;',

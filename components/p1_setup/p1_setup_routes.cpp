@@ -77,7 +77,7 @@ bool P1Setup::canHandle(AsyncWebServerRequest *request) const {
   if (this->homewizard_enabled_ && this->is_homewizard_route_(url))
     return true;
   if (request->method() == HTTP_GET) {
-      return url == "/" || url == "/dashboard" || url == "/configure" || url == "/configure-mqtt" || url == "/ota" || url == "/factory-reset" || url == "/reboot" ||
+      return url == "/" || url == "/configure" || url == "/configure-mqtt" || url == "/ota" || url == "/factory-reset" || url == "/reboot" ||
         url == "/setup-password" || url == "/api/dashboard" || url == "/api/settings" || url == "/api/scan";
   }
   return request->method() == HTTP_POST &&
@@ -111,8 +111,6 @@ void P1Setup::handleRequest(AsyncWebServerRequest *request) {
   if (request->method() == HTTP_GET) {
     if (url == "/") {
       this->send_index_page_(request);
-    } else if (url == "/dashboard") {
-      this->send_dashboard_page_(request);
     } else if (url == "/api/dashboard") {
       this->send_dashboard_data_(request);
     } else if (url == "/configure") {
@@ -166,51 +164,6 @@ void P1Setup::handleRequest(AsyncWebServerRequest *request) {
     request->send(200, "text/plain", "Factory reset complete; rebooting");
     this->schedule_reboot_();
   }
-}
-
-void P1Setup::send_dashboard_page_(AsyncWebServerRequest *request) {
-  constexpr size_t closing_length = 14;
-  const size_t page_length = strlen_P(web_pages::DASHBOARD_PAGE) - closing_length;
-  const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
-#ifdef USE_ESP32
-  // Stream the page so the complete dashboard does not need to exist as a heap String.
-  AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
-  response->print(std::string(web_pages::DASHBOARD_PAGE, page_length));
-  response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
-  response->print(std::string(web_pages::DASHBOARD_PAGE + page_length, closing_length));
-#else
-  const size_t total_length = page_length + attribution_length + closing_length;
-  AsyncWebServerResponse *response = request->beginChunkedResponse(
-      "text/html; charset=utf-8",
-      [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
-        size_t written = 0;
-        while (written < max_length && index < total_length) {
-          size_t available;
-          const char *source;
-          if (index < page_length) {
-            available = page_length - index;
-            source = web_pages::DASHBOARD_PAGE + index;
-          } else if (index < page_length + attribution_length) {
-            const size_t footer_index = index - page_length;
-            available = attribution_length - footer_index;
-            source = web_pages::ATTRIBUTION_FOOTER + footer_index;
-          } else {
-            const size_t closing_index = index - page_length - attribution_length;
-            available = closing_length - closing_index;
-            source = web_pages::DASHBOARD_PAGE + page_length + closing_index;
-          }
-          size_t count = max_length - written;
-          if (count > available)
-            count = available;
-          memcpy_P(buffer + written, source, count);
-          written += count;
-          index += count;
-        }
-        return written;
-      });
-#endif
-  response->addHeader("Cache-Control", "no-store");
-  request->send(response);
 }
 
 void P1Setup::send_dashboard_data_(AsyncWebServerRequest *request) {
