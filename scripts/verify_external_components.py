@@ -18,6 +18,7 @@ required = [
     "p1_setup_http.cpp",
     "p1_setup_internal.h",
     "p1_setup_pages.cpp",
+    "p1_setup_attribution.h",
     "p1_setup_pages.h",
     "p1_setup_render.cpp",
     "p1_setup_routes.cpp",
@@ -72,16 +73,23 @@ source_marker_count = sum(
 )
 generated_marker_count = web_assets_cpp.count(ATTRIBUTION_MARKER)
 generated_pages = re.findall(r'R"HTML\((.*?)\)HTML"', web_assets_cpp, re.DOTALL)
+# INDEX_PAGE is deliberately assembled from two raw-string fragments around
+# the compile-time attribution footer. The other pages remain single literals.
 compact_closing_count = sum(page.endswith("</body></html>") for page in generated_pages)
+index_footer_expression = (
+    "P1_SETUP_ATTRIBUTION_FOOTER_HEAD ESPHOME_PROJECT_VERSION" in web_assets_cpp
+    and "P1_SETUP_ATTRIBUTION_FOOTER_TAIL" in web_assets_cpp
+)
 print(f"  Attribution markers in source pages: {source_marker_count}")
 print(f"  Attribution markers in generated pages: {generated_marker_count}")
-print(f"  Generated pages with compact closing: {compact_closing_count}/{len(generated_pages)}")
+print(f"  Generated raw-string fragments ending with compact closing: {compact_closing_count}")
+print(f"  Dashboard compile-time attribution footer: {index_footer_expression}")
 checks_passed = checks_passed and source_marker_count == var_count and generated_marker_count == 0
-checks_passed = checks_passed and compact_closing_count == var_count
+checks_passed = checks_passed and compact_closing_count == var_count and index_footer_expression
 
 # Verify script order in configure page (configure.js before configure_field_errors.js)
 css_start = web_assets_cpp.find('CONFIGURE_PAGE[]')
-css_end = web_assets_cpp.find('DASHBOARD_PAGE')
+css_end = web_assets_cpp.find('FACTORY_RESET_PAGE')
 section = web_assets_cpp[css_start:css_end]
 i1 = section.find('<script>')
 i2 = section.find('<script>', i1 + 1)

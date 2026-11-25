@@ -19,6 +19,7 @@ OUT_CPP = OUT_DIR / "web_assets.cpp"
 
 RAW_STRING_DELIM = "HTML"
 ATTRIBUTION_MARKER = "<!-- P1METER_ATTRIBUTION -->"
+ATTRIBUTION_CPP_MARKER = "__P1METER_ATTRIBUTION_CPP__"
 MAX_EMBEDDED_PAGE_PAYLOAD = 100_000
 
 
@@ -149,7 +150,8 @@ def bundle_html(page_name: str) -> str:
     html = html.strip()
     if ATTRIBUTION_MARKER not in html:
         raise ValueError(f"{html_path} is missing {ATTRIBUTION_MARKER}")
-    html = html.replace(ATTRIBUTION_MARKER, "")
+    replacement = ATTRIBUTION_CPP_MARKER if page_name == "index" else ""
+    html = html.replace(ATTRIBUTION_MARKER, replacement)
     html = re.sub(r"</body>\s*</html>$", "</body></html>", html)
     return html
 
@@ -201,14 +203,25 @@ def main():
     # Write implementation
     cpp_lines = [
         '#include "web_assets.h"',
+        '#include "p1_setup_attribution.h"',
         "",
         "namespace esphome::p1_setup::web_pages {",
         "",
     ]
     for var_name in sorted_vars:
         content = pages[var_name]
-        raw = cpp_raw_string(content)
-        cpp_lines.append(f"const char {var_name}[] PROGMEM = {raw};")
+        if var_name == "INDEX_PAGE":
+            if content.count(ATTRIBUTION_CPP_MARKER) != 1:
+                raise ValueError("index.html must contain exactly one attribution marker")
+            before, after = content.split(ATTRIBUTION_CPP_MARKER)
+            cpp_lines.append(
+                f"const char {var_name}[] PROGMEM = {cpp_raw_string(before)}\n"
+                "    P1_SETUP_ATTRIBUTION_FOOTER_HEAD ESPHOME_PROJECT_VERSION\n"
+                f"    P1_SETUP_ATTRIBUTION_FOOTER_TAIL {cpp_raw_string(after)};"
+            )
+        else:
+            raw = cpp_raw_string(content)
+            cpp_lines.append(f"const char {var_name}[] PROGMEM = {raw};")
         cpp_lines.append("")
     cpp_lines += [
         "}  // namespace esphome::p1_setup::web_pages",

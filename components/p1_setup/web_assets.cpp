@@ -1,4 +1,5 @@
 #include "web_assets.h"
+#include "p1_setup_attribution.h"
 
 namespace esphome::p1_setup::web_pages {
 
@@ -171,7 +172,7 @@ const char INDEX_PAGE[] PROGMEM = R"HTML(<!doctype html>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>P1 Meter</title>
-    <style>:root{font-family:system-ui,sans-serif;color:#14231d;background:#f3f6f2}*{box-sizing:border-box}body{margin:0 auto;padding:22px;max-width:980px}h1{font-size:26px;margin:12px 0 6px}p{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px}.logout{width:42px;height:42px;padding:8px;display:grid;place-items:center;border:1px solid #d5dfd8;border-radius:6px;background:#fff;color:#27734f;cursor:pointer}.logout:hover{border-color:#27734f;background:#f8fbf8}.logout:focus-visible{outline:2px solid #27734f;outline-offset:2px}.logout svg{width:20px;height:20px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px}.tile{min-height:110px;padding:20px;text-align:left;background:#fff;border:1px solid #d5dfd8;border-radius:8px;color:#14231d;text-decoration:none;font-size:18px;font-weight:650;display:flex;align-items:center;justify-content:center;gap:12px}.tile svg{width:24px;height:24px;flex:none;color:#27734f}.tile:hover{border-color:#27734f;background:#f8fbf8}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#27734f;font-weight:700}footer{margin-top:24px;color:#62736a;font-size:13px}@media(max-width:520px){body{padding:18px}.grid{grid-template-columns:1fr}.tile{min-height:78px}}.hamburger{display:block;position:relative;width:30px;height:24px;cursor:pointer;background:transparent;border:none}.hamburger span{display:block;position:absolute;left:0;width:100%;height:3px;background-color:currentColor;transition:transform 0.3s,opacity 0.3s}.hamburger span:nth-child(1){top:0}.hamburger span:nth-child(2){top:50%;transform:translateY(-50%)}.hamburger span:nth-child(3){bottom:0}.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.hamburger.open span:nth-child(2){opacity:0}.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}.mobile-dropdown{position:absolute;top:100px;background:#fff;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:.5rem;border-radius:4px;list-style:none;margin:0}.mobile-dropdown.open{display:block}a{color:#27734f}h1{font-size:26px;margin:16px 0 6px}h2{font-size:18px;margin:28px 0 10px}.intro,.hint{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.status{display:flex;align-items:center;gap:8px;color:#52645b;font-size:14px}.status-dot{width:10px;height:10px;border-radius:50%;background:#d08a22}.status-dot.live{background:#27734f}.status-dot.error{background:#a33b2f}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{padding:16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px;min-height:100px}.card h3{font-size:14px;font-weight:600;color:#52645b;margin:0 0 12px}.value{font-size:25px;font-weight:700;letter-spacing:-.02em;overflow-wrap:anywhere}.value.unavailable{font-size:18px;color:#8a9890;font-weight:500}.meta{margin-top:7px;color:#62736a;font-size:13px}.info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.info{padding:14px 16px;background:#e9f0ea;border-radius:8px}.info strong{display:block;font-size:13px;color:#52645b;margin-bottom:6px}.info span{font-weight:650;overflow-wrap:anywhere}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}button,select{padding:10px 14px;border:1px solid #27734f;border-radius:6px;background:#27734f;color:#fff;font:inherit;font-weight:650;cursor:pointer}select{background:#fff;color:#27734f}button:disabled{opacity:.6;cursor:wait}.notice{display:none;margin-top:14px;padding:12px 14px;border-radius:6px;background:#fff4df;color:#74551f}.notice.visible{display:block}.history-setting{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.history-setting input{width:20px;height:20px;accent-color:#27734f}.history-setting label{font-weight:700}.history-setting small{display:block;color:#52645b;font-weight:400;margin-top:3px}.history-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.history-controls label{font-size:14px;color:#52645b;font-weight:650}.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.chart{padding:14px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.chart h3{font-size:14px;color:#52645b;margin:0 0 12px}.bars{height:155px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #cbd7ce;padding:0 2px}.bar-wrap{height:100%;flex:1;display:flex;align-items:flex-end;justify-content:center;position:relative}.bar{width:100%;min-height:2px;border-radius:3px 3px 0 0;background:#27734f}.bar.empty{background:#dce5df}.bar-wrap:hover .bar{background:#d08a22}.bar-wrap::after{content:attr(data-hour);position:absolute;bottom:-18px;font-size:9px;color:#718178}.chart-footer{display:flex;justify-content:space-between;margin-top:25px;color:#718178;font-size:12px}.chart-value{font-weight:650;color:#52645b}.history-empty{color:#718178;font-size:13px;margin-top:8px}.modal{display:none;position:fixed;inset:0;background:#14231dcc;align-items:center;justify-content:center;padding:18px;z-index:5}.modal.open{display:flex}.modal-card{width:min(760px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#fff;border-radius:10px;padding:22px;box-shadow:0 12px 40px #0005}.modal-card h2{margin:0 0 10px}.modal-card p{color:#52645b;line-height:1.5}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.secondary{background:#fff;color:#27734f}.details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.details-group{margin-top:18px}.details-group h3{font-size:15px;color:#27734f;border-bottom:1px solid #d5dfd8;padding-bottom:7px}.details-card{padding:12px;background:#f3f6f2;border-radius:7px}.details-card strong{display:block;font-size:13px;color:#52645b}.details-card span{font-weight:650;display:block;margin-top:5px;overflow-wrap:anywhere}.details-card small{color:#718178}@media(max-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid,.charts,.details-grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){body{padding:16px}.cards,.info-grid,.charts,.details-grid{grid-template-columns:1fr}.topbar{display:block}}.menu{border-bottom:1px solid #d5dfd8;background:#fff;position:sticky;top:0;z-index:4}.menu-list{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:0;padding:0 12px}.menu-item{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #d5dfd8;border-radius:6px;background:#fff;color:#14231d;text-decoration:none;font-size:14px;font-weight:650;cursor:pointer;white-space:nowrap}.menu-item svg.menu-icon{width:16px;height:16px;flex:none;color:#27734f}.menu-item.menu-toggle{padding-right:6px}.menu-arrow{width:14px;height:14px;flex:none;color:#27734f;margin-left:2px}.menu-item:hover{border-color:#27734f;background:#f8fbf8}.menu-group{position:relative}.submenu{position:absolute;left:0;right:0;top:100%;margin-top:4px;padding:8px;list-style:none;margin:0;background:#fff;border:1px solid #d5dfd8;border-radius:6px;box-shadow:0 8px 24px #0003;z-index:5;display:flex;flex-direction:column;gap:2px;min-width:220px}.submenu[hidden]{display:none}.submenu .menu-item{border:0;background:transparent;padding:8px 10px;text-align:left;font-size:14px;font-weight:500;justify-content:space-between;width:100%}.submenu .menu-item .status-indicator{margin-right:8px}.submenu .menu-item:hover{background:#f3f6f2;border-color:transparent}.status-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a33b2f;flex:none}.status-indicator.on{background:#27734f}.status-indicator.off{background:#a33b2f}.topbar-bottom .status{margin-left:0}</style>
+    <style>:root{font-family:system-ui,sans-serif;color:#14231d;background:#f3f6f2}*{box-sizing:border-box}body{margin:0 auto;padding:22px;max-width:980px}h1{font-size:26px;margin:12px 0 6px}p{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px}.logout{width:42px;height:42px;padding:8px;display:grid;place-items:center;border:1px solid #d5dfd8;border-radius:6px;background:#fff;color:#27734f;cursor:pointer}.logout:hover{border-color:#27734f;background:#f8fbf8}.logout:focus-visible{outline:2px solid #27734f;outline-offset:2px}.logout svg{width:20px;height:20px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px}.tile{min-height:110px;padding:20px;text-align:left;background:#fff;border:1px solid #d5dfd8;border-radius:8px;color:#14231d;text-decoration:none;font-size:18px;font-weight:650;display:flex;align-items:center;justify-content:center;gap:12px}.tile svg{width:24px;height:24px;flex:none;color:#27734f}.tile:hover{border-color:#27734f;background:#f8fbf8}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#27734f;font-weight:700}footer{margin-top:24px;color:#62736a;font-size:13px}@media(max-width:520px){body{padding:18px}.grid{grid-template-columns:1fr}.tile{min-height:78px}}.hamburger{display:block;position:relative;width:30px;height:24px;cursor:pointer;background:transparent;border:none}.hamburger span{display:block;position:absolute;left:0;width:100%;height:3px;background-color:currentColor;transition:transform 0.3s,opacity 0.3s}.hamburger span:nth-child(1){top:0}.hamburger span:nth-child(2){top:50%;transform:translateY(-50%)}.hamburger span:nth-child(3){bottom:0}.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.hamburger.open span:nth-child(2){opacity:0}.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}.mobile-dropdown{position:absolute;top:100px;background:#fff;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:.5rem;border-radius:4px;list-style:none;margin:0}.mobile-dropdown.open{display:block}a{color:#27734f}h1{font-size:26px;margin:16px 0 6px}h2{font-size:18px;margin:28px 0 10px}.intro,.hint{color:#52645b;line-height:1.5}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.status{display:flex;align-items:center;gap:8px;color:#52645b;font-size:14px}.status-dot{width:10px;height:10px;border-radius:50%;background:#d08a22}.status-dot.live{background:#27734f}.status-dot.error{background:#a33b2f}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{padding:16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px;min-height:100px}.card h3{font-size:14px;font-weight:600;color:#52645b;margin:0 0 12px}.value{font-size:25px;font-weight:700;letter-spacing:-.02em;overflow-wrap:anywhere}.value.unavailable{font-size:18px;color:#8a9890;font-weight:500}.meta{margin-top:7px;color:#62736a;font-size:13px}.info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.info{padding:14px 16px;background:#e9f0ea;border-radius:8px}.info strong{display:block;font-size:13px;color:#52645b;margin-bottom:6px}.info span{font-weight:650;overflow-wrap:anywhere}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}button,select{padding:10px 14px;border:1px solid #27734f;border-radius:6px;background:#27734f;color:#fff;font:inherit;font-weight:650;cursor:pointer}select{background:#fff;color:#27734f}button:disabled{opacity:.6;cursor:wait}.notice{display:none;margin-top:14px;padding:12px 14px;border-radius:6px;background:#fff4df;color:#74551f}.notice.visible{display:block}.history-setting{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.history-setting input{width:20px;height:20px;accent-color:#27734f}.history-setting label{font-weight:700}.history-setting small{display:block;color:#52645b;font-weight:400;margin-top:3px}.history-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.history-controls label{font-size:14px;color:#52645b;font-weight:650}.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.chart{padding:14px;background:#fff;border:1px solid #d5dfd8;border-radius:8px}.chart h3{font-size:14px;color:#52645b;margin:0 0 12px}.bars{height:155px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #cbd7ce;padding:0 2px}.bar-wrap{height:100%;flex:1;display:flex;align-items:flex-end;justify-content:center;position:relative}.bar{width:100%;min-height:2px;border-radius:3px 3px 0 0;background:#27734f}.bar.empty{background:#dce5df}.bar-wrap:hover .bar{background:#d08a22}.bar-wrap::after{content:attr(data-hour);position:absolute;bottom:-18px;font-size:9px;color:#718178}.chart-footer{display:flex;justify-content:space-between;margin-top:25px;color:#718178;font-size:12px}.chart-value{font-weight:650;color:#52645b}.history-empty{color:#718178;font-size:13px;margin-top:8px}.modal{display:none;position:fixed;inset:0;background:#14231dcc;align-items:center;justify-content:center;padding:18px;z-index:5}.modal.open{display:flex}.modal-card{width:min(760px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#fff;border-radius:10px;padding:22px;box-shadow:0 12px 40px #0005}.modal-card h2{margin:0 0 10px}.modal-card p{color:#52645b;line-height:1.5}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.secondary{background:#fff;color:#27734f}.details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.details-group{margin-top:18px}.details-group h3{font-size:15px;color:#27734f;border-bottom:1px solid #d5dfd8;padding-bottom:7px}.details-card{padding:12px;background:#f3f6f2;border-radius:7px}.details-card strong{display:block;font-size:13px;color:#52645b}.details-card span{font-weight:650;display:block;margin-top:5px;overflow-wrap:anywhere}.details-card small{color:#718178}@media(max-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid,.charts,.details-grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){body{padding:16px}.cards,.info-grid,.charts,.details-grid{grid-template-columns:1fr}.topbar{display:block}}.menu{border-bottom:1px solid #d5dfd8;background:#fff;position:sticky;top:0;z-index:4}.menu-list{gap:4px;list-style:none;margin:0;padding:0}.menu-item{display:inline-flex;align-items:center;width:100%;gap:8px;padding:8px 12px;border-bottom:1px solid #d5dfd8;background:#fff;color:#14231d;text-decoration:none;font-size:14px;font-weight:650;cursor:pointer;white-space:nowrap}.menu-item svg.menu-icon{width:16px;height:16px;flex:none;color:#27734f}.menu-item.menu-toggle{padding-right:6px}.menu-arrow{width:14px;height:14px;flex:none;color:#27734f;margin-left:2px}.menu-item:hover{border-color:#27734f;background:#f8fbf8}.menu-group{position:relative}.submenu{position:absolute;left:0;right:0;top:100%;margin-top:4px;padding:8px;list-style:none;margin:0;background:#fff;border:1px solid #d5dfd8;border-radius:6px;box-shadow:0 8px 24px #0003;z-index:5;display:flex;flex-direction:column;gap:2px;min-width:220px}.submenu[hidden]{display:none}.submenu .menu-item{border:0;background:transparent;padding:8px 10px;text-align:left;font-size:14px;font-weight:500;justify-content:space-between;width:100%}.submenu .menu-item .status-indicator{margin-right:8px}.submenu .menu-item:hover{background:#f3f6f2;border-color:transparent}.status-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a33b2f;flex:none}.status-indicator.on{background:#27734f}.status-indicator.off{background:#a33b2f}.topbar-bottom .status{margin-left:0}</style>
 </head>
 
 <body>
@@ -196,125 +197,112 @@ const char INDEX_PAGE[] PROGMEM = R"HTML(<!doctype html>
 
             <!-- Mobile dropdown menu -->
             <div id="mobile-dropdown" class="mobile-dropdown" hidden>
-              <ul>
-                <li><a class="dropdown-item" href="#" data-target="details-button">Sensor List (Full)</a></li>
-                <li><a class="dropdown-item" href="#" data-target="menu-history">Enable History</a></li>
-                <li><a class="dropdown-item" href="#" data-target="menu-communication">Communication</a></li>
-                <li><a class="dropdown-item" href="#" data-target="menu-configure-wifi">Configure WiFi</a></li>
-                <li><a class="dropdown-item" href="#" data-target="menu-password">Change Password</a></li>
-                <li><a class="dropdown-item" href="#" data-target="menu-ota">OTA Update</a></li>
-                <li><a class="dropdown-item" href="#" data-target="menu-factory-reset">Factory Reset</a></li>
-                <li><a class="dropdown-item" href="#" data-target="menu-reboot">Reboot</a></li>
+              <ul class="menu-list">
+                <li>
+                    <a class="menu-item" id="details-button" type="button">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2-4h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z" />
+                            <line x1="10" y1="11" x2="10" y2="17" />
+                            <line x1="14" y1="11" x2="14" y2="17" />
+                        </svg>
+                        <span>Sensor List (Full)</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-item" id="menu-configure-wifi" type="button">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 14a1.65 1.65 0 0 0-1.82-.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h0.09A1.65 1.65 0 0 0 3 10a1.65 1.65 0 0 0 1.82.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0 1.82.33h.09A1.65 1.65 0 0 0 10 10a1.65 1.65 0 0 0 1-1.51l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l.06.06a1.65 1.65 0 0 0 1.82-.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v0.09A1.65 1.65 0 0 0 21 10a1.65 1.65 0 0 0-1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-0.09A1.65 1.65 0 0 0 19 14a1.65 1.65 0 0 0-1.51-1v.09A1.65 1.65 0 0 0 19.4 15Z" />
+                        </svg>
+                        <span>Configure WiFi</span>
+                    </a>
+                </li>
+                <li class="menu-group">
+                    <a class="menu-item menu-toggle" id="menu-communication" type="button" aria-expanded="false">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1 21h22L12 1 1 21" />
+                            <polyline points="22 12 18 12 15 21 9 21 6 12 2 12" />
+                        </svg>
+                        <span>Communication</span>
+                        <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </a>
+                    <ul class="submenu" id="submenu-communication" hidden>
+                        <li>
+                            <a class="menu-item" id="menu-api" type="button">
+                                <span class="status-indicator" id="api-indicator"></span>
+                                <span id="api-label">Enable ESPHome API</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" id="menu-mqtt" type="button">
+                                <span class="status-indicator" id="mqtt-indicator"></span>
+                                <span id="mqtt-label">Enable MQTT</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" id="menu-homewizard" type="button">
+                                <span class="status-indicator" id="homewizard-indicator"></span>
+                                <span id="homewizard-label">Enable HomeWizzard</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="menu-item" id="menu-password" type="button">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 8a8 8 0 0 0-8-8H5a8 8 0 0 0-8 8v20a8 8 0 0 0 8 8h8a8 8 0 0 0 8-8v-2" />
+                            <line x1="17" y1="11" x2="17" y2="13" />
+                            <line x1="12" y1="6.5" x2="17" y2="11.5" />
+                        </svg>
+                        <span>Change Password</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-item" id="menu-ota" href="#">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <span>OTA Update</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-item" id="menu-history" type="button">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M13 2V6H21" />
+                            <path d="M3 22V4L12 13l9-9v18" />
+                        </svg>
+                        <span id="history-label">Enable History</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-item" id="menu-reboot" type="button">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="1 4 1 10 7 10" />
+                            <polyline points="23 20 23 14 17 14" />
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+                        </svg>
+                        <span>Reboot</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-item" id="menu-factory-reset" type="button">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2-4h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z" />
+                            <line x1="10" y1="11" x2="10" y2="17" />
+                            <line x1="14" y1="11" x2="14" y2="17" />
+                        </svg>
+                        <span>Factory Reset</span>
+                    </a>
+                </li>
               </ul>
             </div>
 
         </div>
     </header>
-
-    <nav class="menu" id="main-menu" hidden>
-        <ul class="menu-list">
-            <li>
-                <button class="menu-item" id="menu-configure-wifi" type="button">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 14a1.65 1.65 0 0 0-1.82-.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h0.09A1.65 1.65 0 0 0 3 10a1.65 1.65 0 0 0 1.82.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0 1.82.33h.09A1.65 1.65 0 0 0 10 10a1.65 1.65 0 0 0 1-1.51l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l.06.06a1.65 1.65 0 0 0 1.82-.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v0.09A1.65 1.65 0 0 0 21 10a1.65 1.65 0 0 0-1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-0.09A1.65 1.65 0 0 0 19 14a1.65 1.65 0 0 0-1.51-1v.09A1.65 1.65 0 0 0 19.4 15Z" />
-                    </svg>
-                    <span>Configure WiFi</span>
-                </button>
-            </li>
-            <li>
-                <a class="menu-item" id="menu-ota" href="#">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="17 8 12 3 7 8" />
-                        <line x1="12" y1="3" x2="12" y2="15" />
-                    </svg>
-                    <span>OTA Update</span>
-                </a>
-            </li>
-            <li>
-                <a class="menu-item" id="menu-reboot" type="button">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="1 4 1 10 7 10" />
-                        <polyline points="23 20 23 14 17 14" />
-                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
-                    </svg>
-                    <span>Reboot</span>
-                </a>
-            </li>
-            <li>
-                <a class="menu-item" id="menu-factory-reset" type="button">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2-4h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z" />
-                        <line x1="10" y1="11" x2="10" y2="17" />
-                        <line x1="14" y1="11" x2="14" y2="17" />
-                    </svg>
-                    <span>Factory Reset</span>
-                </a>
-            </li>
-            <li class="menu-group">
-                <button class="menu-item menu-toggle" id="menu-communication" type="button" aria-expanded="false">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M1 21h22L12 1 1 21" />
-                        <polyline points="22 12 18 12 15 21 9 21 6 12 2 12" />
-                    </svg>
-                    <span>Communication</span>
-                    <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                </button>
-                <ul class="submenu" id="submenu-communication" hidden>
-                    <li>
-                        <button class="menu-item" id="menu-api" type="button">
-                            <span class="status-indicator" id="api-indicator"></span>
-                            <span id="api-label">Enable ESPHome API</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="menu-item" id="menu-mqtt" type="button">
-                            <span class="status-indicator" id="mqtt-indicator"></span>
-                            <span id="mqtt-label">Enable MQTT</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="menu-item" id="menu-homewizard" type="button">
-                            <span class="status-indicator" id="homewizard-indicator"></span>
-                            <span id="homewizard-label">Enable HomeWizzard</span>
-                        </button>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a class="menu-item" id="menu-password" type="button">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M21 8a8 8 0 0 0-8-8H5a8 8 0 0 0-8 8v20a8 8 0 0 0 8 8h8a8 8 0 0 0 8-8v-2" />
-                        <line x1="17" y1="11" x2="17" y2="13" />
-                        <line x1="12" y1="6.5" x2="17" y2="11.5" />
-                    </svg>
-                    <span>Change Password</span>
-                </a>
-            </li>
-            <li>
-                <button class="menu-item" id="menu-history" type="button">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M13 2V6H21" />
-                        <path d="M3 22V4L12 13l9-9v18" />
-                    </svg>
-                    <span id="history-label">Enable History</span>
-                </button>
-            </li>
-            <li>
-                <a class="menu-item" id="details-button" type="button">
-                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2-4h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z" />
-                        <line x1="10" y1="11" x2="10" y2="17" />
-                        <line x1="14" y1="11" x2="14" y2="17" />
-                    </svg>
-                    <span>Sensor List (Full)</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
 
     <div class="notice" id="notice" role="status"></div>
 
@@ -682,7 +670,9 @@ $('history-day').addEventListener('change', load);
 load();
 setInterval(load, 10000);</script>
     <script>let settings ={};let historyEnabled =false;let pendingApi =null;let pendingHomewizard =null;function isEnabled(value) {return value===true||value==='true'||value===1||value==='1';} function indicator(el,on) {el.classList.toggle('on',on);el.classList.toggle('off',!on);} async function loadSettings() {try {const r =await fetch('/api/settings',{cache:'no-store'});if (!r.ok) throw new Error('Could not load settings');settings =await r.json();} catch (e) {console.warn(e);} try {const d =await fetch('/api/dashboard',{cache:'no-store'});const j =await d.json();historyEnabled =!!(j.history&&j.history.enabled);} catch (e) {} updateIndicators();updateHistoryLabel();} function updateIndicators() {const apiOn =isEnabled(settings.api_enabled);const mqttOn =isEnabled(settings.mqtt_enabled);const homewizardOn =isEnabled(settings.homewizard_enabled);indicator($('api-indicator'),apiOn);indicator($('mqtt-indicator'),mqttOn);indicator($('homewizard-indicator'),homewizardOn);$('api-label').textContent =apiOn ?'Disable ESPHome API' :'Enable ESPHome API';$('mqtt-label').textContent =mqttOn ?'Disable MQTT' :'Enable MQTT';$('homewizard-label').textContent =homewizardOn ?'Disable HomeWizzard' :'Enable HomeWizzard';} function updateHistoryLabel() {$('history-label').textContent =historyEnabled ?'Disable History' :'Enable History';} async function postSettings(extra) {const body =new URLSearchParams({wifi_ssid:settings.wifi_ssid||'',wifi_password:settings.wifi_password||'',mqtt_broker:settings.mqtt_broker||'',mqtt_port:String(settings.mqtt_port||1883),mqtt_username:settings.mqtt_username||'',mqtt_password:settings.mqtt_password||'',ip_mode:settings.ip_mode||'dhcp',static_ip:settings.static_ip||'0.0.0.0',gateway:settings.gateway||'0.0.0.0',subnet:settings.subnet||'255.255.255.0',dns:settings.dns||'0.0.0.0',mqtt_enabled:settings.mqtt_enabled ?'on' :'off',homewizard_enabled:settings.homewizard_enabled ?'on' :'off',api_enabled:settings.api_enabled ?'on' :'off',...extra});const r =await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});if (!r.ok) throw new Error(await r.text());await loadSettings();} function openModal(id) {$(id).classList.add('open');} function closeModal(id) {$(id).classList.remove('open');} document.querySelectorAll('.modal').forEach(modal =>{modal.addEventListener('click',ev =>{if (ev.target===modal) closeModal(modal.id);});});const commToggle =$('menu-communication');const submenu =$('submenu-communication');commToggle.addEventListener('click',ev =>{if (submenu.contains(ev.target)) return;const expanded =commToggle.getAttribute('aria-expanded')==='true';commToggle.setAttribute('aria-expanded',String(!expanded));submenu.hidden =expanded;});$('menu-configure-wifi').addEventListener('click',() =>{$('configure-iframe').src ='/configure';openModal('configure-modal');});$('configure-modal-close').addEventListener('click',() =>{closeModal('configure-modal');$('configure-iframe').src ='about:blank';});$('menu-reboot').addEventListener('click',() =>openModal('reboot-modal'));$('menu-ota').addEventListener('click',() =>{$('ota-iframe').src ='/ota';openModal('ota-modal');});$('ota-modal-close').addEventListener('click',() =>{closeModal('ota-modal');$('ota-iframe').src ='about:blank';});$('modal-reboot').addEventListener('click',async () =>{if (!confirm('Reboot the P1 meter now?')) return;try {await fetch('/api/reboot',{method:'POST'});const overlay =$('modal-reboot-overlay');overlay.hidden =false;const retry =async () =>{try {const q =await fetch('/',{cache:'no-store'});if (q.ok) {location.reload();return}} catch (e) {} setTimeout(retry,2000);};setTimeout(retry,10000);} catch (e) {$('modal-reboot-status').textContent =e.message;}});$('menu-factory-reset').addEventListener('click',() =>openModal('factory-reset-modal'));$('modal-factory-reset').addEventListener('click',async () =>{if (!confirm('Erase all saved settings and restart?')) return;try {await fetch('/api/factory-reset',{method:'POST'});const overlay =$('modal-factory-reset-overlay');overlay.hidden =false;const retry =async () =>{try {const q =await fetch('/',{cache:'no-store'});if (q.ok) {location.reload();return}} catch (e) {} setTimeout(retry,2000);};setTimeout(retry,10000);} catch (e) {$('modal-factory-reset-status').textContent =e.message;}});$('menu-password').addEventListener('click',() =>openModal('password-modal'));$('modal-password-cancel').addEventListener('click',() =>closeModal('password-modal'));$('modal-password-save').addEventListener('click',async () =>{const p =$('modal-password-input').value;const c =$('modal-confirm').value;const s =$('modal-password-status');s.className ='status';if (p!==c) {s.className ='status error';s.textContent ='The passwords do not match.';return} if (!/^[\x20-\x7e]{8,63}$/.test(p)) {s.className ='status error';s.textContent ='Use 8 to 63 printable ASCII characters.';return} s.textContent ='Saving…';try {await fetch('/api/setup-password',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({password:p})});const overlay =$('modal-password-overlay');overlay.hidden =false;const retry =async () =>{try {const q =await fetch('/',{cache:'no-store'});if (q.ok) {location.reload();return}} catch (e) {} setTimeout(retry,2000);};setTimeout(retry,10000);} catch (e) {s.className ='status error';s.textContent =e.message;}});$('menu-api').addEventListener('click',async () =>{pendingApi =!isEnabled(settings.api_enabled);try {await postSettings({api_enabled:pendingApi ?'on' :'off'});} catch (e) {alert('Could not change ESPHome Native API: ' +e.message);}});$('menu-homewizard').addEventListener('click',async () =>{pendingHomewizard =!isEnabled(settings.homewizard_enabled);try {await postSettings({homewizard_enabled:pendingHomewizard ?'on' :'off'});} catch (e) {alert('Could not change HomeWizzard: ' +e.message);}});let mqttModalOpen =false;$('menu-mqtt').addEventListener('click',() =>{$('mqtt-broker').value =settings.mqtt_broker||'';$('mqtt-port').value =settings.mqtt_port||1883;$('mqtt-username').value =settings.mqtt_username||'';$('mqtt-password').value =settings.mqtt_password||'';$('mqtt-enabled').checked =isEnabled(settings.mqtt_enabled);$('mqtt-status').textContent ='';openModal('configure-mqtt-modal');mqttModalOpen =true;});$('mqtt-cancel').addEventListener('click',() =>{closeModal('configure-mqtt-modal');mqttModalOpen =false;});$('mqtt-save').addEventListener('click',async () =>{const s =$('mqtt-status');const enabled =$('mqtt-enabled').checked;const broker =$('mqtt-broker').value.trim();if (enabled&&!broker) {s.textContent ='Enter an MQTT broker host when enabling MQTT.';return} try {await postSettings({mqtt_enabled:enabled ?'on' :'off',mqtt_broker:broker,mqtt_port:$('mqtt-port').value||1883,mqtt_username:$('mqtt-username').value,mqtt_password:$('mqtt-password').value});closeModal('configure-mqtt-modal');mqttModalOpen =false;} catch (e) {s.textContent =e.message;}});$('menu-history').addEventListener('click',() =>{$('history-modal-title').textContent =historyEnabled ?'Disable On-Device History?' :'Enable On-Device History?';$('history-modal-text').textContent =historyEnabled ?'This increases the device lifespan by stopping history writes. All already saved on-device history data will be deleted permanently. Confirm only if you no longer need the graphs.' :'This writes history to flash every 30 minutes using alternating files. This can reduce the device flash lifespan over time.';openModal('history-modal');});$('history-cancel').addEventListener('click',() =>closeModal('history-modal'));$('history-confirm').addEventListener('click',async () =>{try {const response =await fetch('/api/history-settings',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'enabled=' +!historyEnabled});if (!response.ok) throw new Error(await response.text());closeModal('history-modal');await loadSettings();} catch (e) {alert('Could not change history setting: ' +e.message);}});$('logout').addEventListener('click',async () =>{const b =$('logout');b.disabled =true;try {const r =await fetch('/api/logout',{method:'POST'});if (!r.ok) throw new Error('Could not sign out.');window.close();if (!window.closed) document.body.innerHTML ='<main style="margin:48px auto;padding:24px;max-width:520px;font-family:system-ui,sans-serif;color:#14231d"><h1>Signed out</h1><p>Your setup session has ended. You can close this tab.</p></main>';} catch (e) {b.disabled =false;window.alert(e.message);}});loadSettings();</script>
-    
+    )HTML"
+    P1_SETUP_ATTRIBUTION_FOOTER_HEAD ESPHOME_PROJECT_VERSION
+    P1_SETUP_ATTRIBUTION_FOOTER_TAIL R"HTML(
 </body></html>)HTML";
 
 const char OTA_PAGE[] PROGMEM = R"HTML(<!doctype html>
