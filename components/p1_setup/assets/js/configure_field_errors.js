@@ -56,7 +56,7 @@ function setRequired(id, required) {
     const input = document.getElementById(id);
     input.required = required;
     const marker = document.getElementById(`required-${id}`);
-    marker.hidden = !required
+    if (marker) marker.hidden = !required
 }
 ['ssid', 'wifi_password'].forEach(id => setRequired(id, true));
 const staticMode = () => document.querySelector('[name=ip_mode]:checked').value === 'static';

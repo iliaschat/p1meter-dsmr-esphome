@@ -1,3 +1,5 @@
+#include <string>
+
 #include "p1_setup_internal.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
@@ -27,49 +29,28 @@ void P1Setup::send_html_(AsyncWebServerRequest *request, const String &page) {
   request->send(response);
 }
 
-void P1Setup::send_password_page_(AsyncWebServerRequest *request) {
-  constexpr size_t closing_length = 14;
-  const size_t page_length = strlen_P(web_pages::PASSWORD_PAGE) - closing_length;
-  const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
-  const size_t total_length = page_length + attribution_length + closing_length;
+void P1Setup::send_progmem_page_(AsyncWebServerRequest *request, const char *page) {
+  const size_t page_length = strlen_P(page);
 #ifdef USE_ESP32
-  // web_server_idf has no filler-callback response; stream the same pieces in order.
-  AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
-  response->print(std::string(web_pages::PASSWORD_PAGE, page_length));
-  response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
-  response->print(std::string(web_pages::PASSWORD_PAGE + page_length, closing_length));
+  // web_server_idf has no PROGMEM response helper; copy the page to a string and
+  // send it as a regular response. beginResponseStream() uses a small internal
+  // buffer (default 1460 bytes) and Print::print() silently drops data that
+  // doesn't fit, truncating pages larger than the buffer.
+  std::string body(page, page_length);
+  AsyncWebServerResponse *response = request->beginResponse(200, "text/html; charset=utf-8", body);
 #else
-  AsyncWebServerResponse *response = request->beginChunkedResponse(
-      "text/html; charset=utf-8",
-      [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
-        size_t written = 0;
-        while (written < max_length && index < total_length) {
-          size_t available;
-          const char *source;
-          if (index < page_length) {
-            available = page_length - index;
-            source = web_pages::PASSWORD_PAGE + index;
-          } else if (index < page_length + attribution_length) {
-            const size_t footer_index = index - page_length;
-            available = attribution_length - footer_index;
-            source = web_pages::ATTRIBUTION_FOOTER + footer_index;
-          } else {
-            const size_t closing_index = index - page_length - attribution_length;
-            available = closing_length - closing_index;
-            source = web_pages::PASSWORD_PAGE + page_length + closing_index;
-          }
-          size_t count = max_length - written;
-          if (count > available)
-            count = available;
-          memcpy_P(buffer + written, source, count);
-          written += count;
-          index += count;
-        }
-        return written;
-      });
+  // Serve the whole page straight out of PROGMEM without copying it to the heap.
+  // ESPAsyncWebServer reads from PROGMEM in small chunks as the TCP stack accepts
+  // data — no heap allocation, no String, no fragmentation, works for any page size.
+  AsyncWebServerResponse *response = request->beginResponse(
+      200, "text/html; charset=utf-8", reinterpret_cast<const uint8_t *>(page), page_length);
 #endif
   response->addHeader("Cache-Control", "no-store");
   request->send(response);
+}
+
+void P1Setup::send_password_page_(AsyncWebServerRequest *request) {
+  this->send_progmem_page_(request, web_pages::PASSWORD_PAGE);
 }
 
 bool P1Setup::canHandle(AsyncWebServerRequest *request) const {
@@ -215,108 +196,16 @@ void P1Setup::send_dashboard_data_(AsyncWebServerRequest *request) {
 }
 
 void P1Setup::send_configure_page_(AsyncWebServerRequest *request) {
-  constexpr size_t closing_length = 14;
-  const size_t page_length = strlen_P(web_pages::CONFIGURE_PAGE) - closing_length;
-  const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
-#ifdef USE_ESP32
-  AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
-  response->print(std::string(web_pages::CONFIGURE_PAGE, page_length));
-  response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
-  response->print(std::string(web_pages::CONFIGURE_PAGE + page_length, closing_length));
-#else
-  const size_t total_length = page_length + attribution_length + closing_length;
-  AsyncWebServerResponse *response = request->beginChunkedResponse(
-      "text/html; charset=utf-8",
-      [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
-        size_t written = 0;
-        while (written < max_length && index < total_length) {
-          size_t available;
-          const char *source;
-          if (index < page_length) {
-            available = page_length - index;
-            source = web_pages::CONFIGURE_PAGE + index;
-          } else if (index < page_length + attribution_length) {
-            const size_t footer_index = index - page_length;
-            available = attribution_length - footer_index;
-            source = web_pages::ATTRIBUTION_FOOTER + footer_index;
-          } else {
-            const size_t closing_index = index - page_length - attribution_length;
-            available = closing_length - closing_index;
-            source = web_pages::CONFIGURE_PAGE + page_length + closing_index;
-          }
-          size_t count = max_length - written;
-          if (count > available)
-            count = available;
-          memcpy_P(buffer + written, source, count);
-          written += count;
-          index += count;
-        }
-        return written;
-      });
-#endif
-  response->addHeader("Cache-Control", "no-store");
-  request->send(response);
+  this->send_progmem_page_(request, web_pages::CONFIGURE_PAGE);
 }
 
 void P1Setup::send_configure_mqtt_page_(AsyncWebServerRequest *request) {
-  constexpr size_t closing_length = 14;
-  const size_t page_length = strlen_P(web_pages::CONFIGURE_MQTT_PAGE) - closing_length;
-  const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
-  const size_t total_length = page_length + attribution_length + closing_length;
-#if defined(USE_ESP32)
-  AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
-  response->print(std::string(web_pages::CONFIGURE_MQTT_PAGE, page_length));
-  response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
-  response->print(std::string(web_pages::CONFIGURE_MQTT_PAGE + page_length, closing_length));
-#else
-  AsyncWebServerResponse *response = request->beginChunkedResponse(
-      "text/html; charset=utf-8",
-      [page_length, attribution_length, total_length](uint8_t *buffer, size_t max_length, size_t index) -> size_t {
-        size_t written = 0;
-        while (written < max_length && index < total_length) {
-          size_t available;
-          const char *source;
-          if (index < page_length) {
-            available = page_length - index;
-            source = web_pages::CONFIGURE_MQTT_PAGE + index;
-          } else if (index < page_length + attribution_length) {
-            const size_t footer_index = index - page_length;
-            available = attribution_length - footer_index;
-            source = web_pages::ATTRIBUTION_FOOTER + footer_index;
-          } else {
-            const size_t closing_index = index - page_length - attribution_length;
-            available = closing_length - closing_index;
-            source = web_pages::CONFIGURE_MQTT_PAGE + page_length + closing_index;
-          }
-          size_t count = max_length - written;
-          if (count > available)
-            count = available;
-          memcpy_P(buffer + written, source, count);
-          written += count;
-          index += count;
-        }
-        return written;
-      });
-#endif
-  response->addHeader("Cache-Control", "no-store");
-  request->send(response);
+  this->send_progmem_page_(request, web_pages::CONFIGURE_MQTT_PAGE);
 }
 
 void P1Setup::send_index_page_(AsyncWebServerRequest *request) {
-  const size_t page_length = strlen_P(web_pages::INDEX_PAGE);
-#ifdef USE_ESP32
-  // ESPHome's ESP32 HTTP server does not expose ESPAsyncWebServer's
-  // PROGMEM response helper. The page is already a single contiguous asset.
-  AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
-  response->print(std::string(web_pages::INDEX_PAGE, page_length));
-#else
-  // Send the complete dashboard as a fixed-length PROGMEM response. This
-  // avoids chunked transfer encoding for the large (approximately 48 KB)
-  // page and does not allocate a second copy of the HTML on the ESP8266 heap.
-  AsyncWebServerResponse *response = request->beginResponse(
-      200, "text/html; charset=utf-8", reinterpret_cast<const uint8_t *>(web_pages::INDEX_PAGE), page_length);
-#endif
-  response->addHeader("Cache-Control", "no-store");
-  request->send(response);
+  // The dashboard is the only page that carries the compiled-in attribution
+  // footer; every other page is served without it.
+  this->send_progmem_page_(request, web_pages::INDEX_PAGE);
 }
 }  // namespace esphome::p1_setup

@@ -147,6 +147,7 @@ class P1Setup final : public Component, public AsyncWebHandler {
   void save_setup_password_(AsyncWebServerRequest *request);
   void handle_logout_(AsyncWebServerRequest *request);
   void send_html_(AsyncWebServerRequest *request, const String &page);
+  void send_progmem_page_(AsyncWebServerRequest *request, const char *page);
   void send_password_page_(AsyncWebServerRequest *request);
   void send_dashboard_data_(AsyncWebServerRequest *request);
   void send_history_settings_(AsyncWebServerRequest *request);

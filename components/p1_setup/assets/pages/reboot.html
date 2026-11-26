@@ -1,12 +1,20 @@
-<!-- CSS: reboot -->
-<button id="reboot">Reboot</button>
-<p class="status" id="status" role="status"></p>
-<div class="overlay" id="restart_overlay" hidden>
-    <div class="panel">
-        <div class="spinner" aria-hidden="true"></div>
-        <h2>Device is restarting</h2>
-        <p>The meter is temporarily unavailable while it restarts. This page will refresh automatically in about 10 seconds.</p>
-        <p id="retry_status">Waiting for the device…</p>
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- CSS: reboot -->
+</head>
+<body>
+    <p>Restart the meter without changing any saved setting.</p>
+    <button id="reboot">Reboot</button>
+    <p class="status" id="status" role="status"></p>
+    <div class="overlay" id="restart_overlay" hidden>
+        <div class="panel">
+            <div class="spinner" aria-hidden="true"></div>
+            <h2>Device is restarting</h2>
+            <p>The meter is temporarily unavailable while it restarts. This page will refresh automatically in about 10 seconds.</p>
+            <p id="retry_status">Waiting for the device…</p>
+        </div>
     </div>
-</div>
-<!-- JS: reboot -->
+    <!-- JS: reboot -->
+</body>
+</html>

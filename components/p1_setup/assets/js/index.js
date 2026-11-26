@@ -70,11 +70,23 @@ menuItemsWithModal.forEach(function(item) {
 });
 
 function showGenericModal(content, title, subtitle) {
-    $('modal-content').innerHTML = content;
     $('modal-title').innerHTML = title;
     $('modal-subtitle').innerHTML = subtitle;
     $('generic-modal').classList.add('open');
-    executeScripts($('modal-content'), content);
+
+    // The fetched HTML is a complete document. Only its <body> content belongs
+    // inside #modal-content; <head> (styles) is extracted and re-injected so
+    // page-specific CSS is applied within the modal.
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    $('modal-content').innerHTML = doc.body.innerHTML;
+    Array.from(doc.querySelectorAll('style')).forEach(styleEl => {
+        const clone = document.createElement('style');
+        clone.textContent = styleEl.textContent;
+        $('modal-content').appendChild(clone);
+    });
+
+    executeScripts($('modal-content'));
 }
 
 $('modal-close').addEventListener('click', () => {
@@ -86,35 +98,25 @@ $('generic-modal').addEventListener('click', event => {
 
 // ==== Scripts ==================================================
 function executeScripts(container) {
-    container.querySelectorAll('footer').forEach(s=> s.remove());
-    // merge inline scripts
+    // Re-create inline <script> elements so they execute in the main document.
+    // Scripts injected via innerHTML are inert by design.
     const inlineScripts = Array.from(container.querySelectorAll('script:not([src])'));
-    const merged = document.createElement('script');
-    // Concatenate all inline script contents
-    const combined = inlineScripts.map(s => s.textContent).join('\n;\n');
-    console.log(combined);
-    debugger;
-    // Create a single script element
-    merged.textContent = combined;
-    inlineScripts.forEach(s => s.remove());
-    const d = document.createElement('div');
-    d.innerHTML = merged;
-    // execute scripts
-    container.appendChild(merged);
+    inlineScripts.forEach(oldScript => {
+        const script = document.createElement('script');
+        Array.from(oldScript.attributes).forEach(attr => {
+            if (attr.name !== 'src') script.setAttribute(attr.name, attr.value);
+        });
+        script.textContent = oldScript.textContent;
+        oldScript.parentNode.replaceChild(script, oldScript);
+    });
 
-    // Extenal scripts
-    // const scripts = Array.from(container.querySelectorAll('script[src]'));
-    // scripts.forEach(oldScript => {
-    //     const newScript = document.createElement('script');
-    //     // Copy all attributes (src, type, async, data-*, etc.)
-    //     Array.from(oldScript.attributes).forEach(attr => {
-    //         newScript.setAttribute(attr.name, attr.value);
-    //     });
-    //     // Copy inline content
-    //     newScript.textContent = oldScript.textContent;
-    //     // Replace the inert script with a live one
-    //     oldScript.parentNode.replaceChild(newScript, oldScript);
-    // });
+    // Re-create external <script src> elements so they load and execute.
+    const externalScripts = Array.from(container.querySelectorAll('script[src]'));
+    externalScripts.forEach(oldScript => {
+        const script = document.createElement('script');
+        Array.from(oldScript.attributes).forEach(attr => script.setAttribute(attr.name, attr.value));
+        oldScript.parentNode.replaceChild(script, oldScript);
+    });
 }
 
 /*function executeScripts(container) {

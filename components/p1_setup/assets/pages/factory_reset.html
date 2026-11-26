@@ -1,11 +1,19 @@
-<!-- CSS: factory_reset -->
-<button id="reset">Factory Reset</button>
-<p class="status" id="status" role="status"></p>
-<div class="overlay" id="restart_overlay" hidden>
-    <div class="panel">
-        <h2>Device is restarting</h2>
-        <p>The meter is temporarily unavailable while it restarts. This page will retry automatically.</p>
-        <p id="retry_status">Waiting for the device…</p>
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- CSS: factory_reset -->
+</head>
+<body>
+    <p>Erase the saved Wi-Fi, MQTT, password and history settings, then reboot.</p>
+    <button id="reset">Factory Reset</button>
+    <p class="status" id="status" role="status"></p>
+    <div class="overlay" id="restart_overlay" hidden>
+        <div class="panel">
+            <h2>Device is restarting</h2>
+            <p>The meter is temporarily unavailable while it restarts. This page will retry automatically.</p>
+            <p id="retry_status">Waiting for the device…</p>
+        </div>
     </div>
-</div>
-<!-- JS: factory_reset -->
+    <!-- JS: factory_reset -->
+</body>
+</html>

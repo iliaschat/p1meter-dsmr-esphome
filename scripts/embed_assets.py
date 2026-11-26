@@ -9,6 +9,7 @@ Markers in HTML files:
   <!-- JS:  name -->   → <script>contents of assets/js/name.js</script>
 """
 
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -20,6 +21,9 @@ OUT_CPP = OUT_DIR / "web_assets.cpp"
 RAW_STRING_DELIM = "HTML"
 ATTRIBUTION_MARKER = "<!-- P1METER_ATTRIBUTION -->"
 ATTRIBUTION_CPP_MARKER = "__P1METER_ATTRIBUTION_CPP__"
+# Only the dashboard renders the firmware attribution footer.
+ATTRIBUTION_PAGE = "index"
+CLOSING_TAGS = "</body></html>"
 MAX_EMBEDDED_PAGE_PAYLOAD = 100_000
 
 
@@ -126,14 +130,28 @@ def load_asset(name: str, subdir: str) -> str:
     return minify_css(content) if subdir == "css" else minify_js(content)
 
 
+def minify_html(content: str) -> str:
+    """Minify HTML for embedded firmware: strip comments and collapse
+    whitespace between tags. Safe for these pages because CSS/JS blocks are
+    already inlined+minified and no <pre>/<textarea> content is present."""
+    import re
+
+    # Remove HTML comments (multi-line safe). This also strips the large
+    # commented-out legacy modal blocks from index.html.
+    content = re.sub(r"<!--.*?-->", "", content, flags=re.DOTALL)
+
+    # Collapse inter-tag whitespace: >\n    <  ->  ><
+    content = re.sub(r">\s+<", "><", content)
+
+    return content.strip()
+
+
 def bundle_html(page_name: str) -> str:
     """Read an HTML page and inline all CSS/JS markers."""
     html_path = ASSETS_DIR / "pages" / f"{page_name}.html"
     html = html_path.read_text(encoding="utf-8")
 
     # Replace CSS markers
-    import re
-
     def replace_css(m):
         name = m.group(1)
         css = load_asset(name, "css")
@@ -147,12 +165,40 @@ def bundle_html(page_name: str) -> str:
     html = re.sub(r"<!--\s*CSS:\s*(\w+)\s*-->", replace_css, html)
     html = re.sub(r"<!--\s*JS:\s*(\w+)\s*-->", replace_js, html)
 
+    # Handle the attribution marker before HTML minification: it is an HTML
+    # comment that minify_html would otherwise strip. Replace it with the
+    # C++ placeholder (non-comment text) so it survives minification.
+    if page_name == ATTRIBUTION_PAGE:
+        if html.count(ATTRIBUTION_MARKER) != 1:
+            raise ValueError(
+                f"{html_path} must contain exactly one {ATTRIBUTION_MARKER} (found {html.count(ATTRIBUTION_MARKER)})"
+            )
+        html = html.replace(ATTRIBUTION_MARKER, ATTRIBUTION_CPP_MARKER)
+    elif ATTRIBUTION_MARKER in html:
+        raise ValueError(
+            f"{html_path} must not contain {ATTRIBUTION_MARKER}; "
+            f"the attribution footer is reserved for {ATTRIBUTION_PAGE}.html"
+        )
+
+    # Minify the HTML itself (comments removed, inter-tag whitespace collapsed)
+    html = minify_html(html)
+
+    # Closing tags are re-appended from the parsed body/end so the order of the
+    # CSS/JS markers relative to </body> does not matter.
     html = html.strip()
-    if ATTRIBUTION_MARKER not in html:
-        raise ValueError(f"{html_path} is missing {ATTRIBUTION_MARKER}")
-    replacement = ATTRIBUTION_CPP_MARKER if page_name == "index" else ""
-    html = html.replace(ATTRIBUTION_MARKER, replacement)
-    html = re.sub(r"</body>\s*</html>$", "</body></html>", html)
+    if html.count("</body>") != 1 or html.count("</html>") != 1:
+        raise ValueError(f"{html_path} must contain exactly one </body> and one </html>")
+    html = html.replace("</body>", "").replace("</html>", "").strip() + CLOSING_TAGS
+
+    # For the dashboard page the C++ attribution placeholder is already in
+    # place; verify it survived minification.
+    if page_name == ATTRIBUTION_PAGE:
+        if html.count(ATTRIBUTION_CPP_MARKER) != 1:
+            raise ValueError(
+                f"{html_path} must contain exactly one {ATTRIBUTION_CPP_MARKER} after minification "
+                f"(found {html.count(ATTRIBUTION_CPP_MARKER)})"
+            )
+
     return html
 
 
@@ -210,9 +256,9 @@ def main():
     ]
     for var_name in sorted_vars:
         content = pages[var_name]
-        if var_name == "INDEX_PAGE":
+        if var_name == make_var_name(ATTRIBUTION_PAGE):
             if content.count(ATTRIBUTION_CPP_MARKER) != 1:
-                raise ValueError("index.html must contain exactly one attribution marker")
+                raise ValueError(f"{ATTRIBUTION_PAGE}.html must contain exactly one attribution marker")
             before, after = content.split(ATTRIBUTION_CPP_MARKER)
             cpp_lines.append(
                 f"const char {var_name}[] PROGMEM = {cpp_raw_string(before)}\n"

@@ -1,9 +1,8 @@
 #include "p1_setup_pages.h"
-#include "p1_setup_attribution.h"
 
-namespace esphome::p1_setup::web_pages {
+// The firmware attribution footer is not a standalone page asset: it is
+// assembled directly into INDEX_PAGE by scripts/embed_assets.py so the
+// dashboard stays a single contiguous PROGMEM response, and no other page
+// renders it.
 
-const char ATTRIBUTION_FOOTER[] PROGMEM = P1_SETUP_ATTRIBUTION_FOOTER_HEAD ESPHOME_PROJECT_VERSION
-    P1_SETUP_ATTRIBUTION_FOOTER_TAIL;
-
-}  // namespace esphome::p1_setup::web_pages
+namespace esphome::p1_setup::web_pages {}  // namespace esphome::p1_setup::web_pages

@@ -54,6 +54,8 @@ web_assets_cpp = (COMPONENT / "web_assets.cpp").read_text()
 import re
 
 ATTRIBUTION_MARKER = "<!-- P1METER_ATTRIBUTION -->"
+# The firmware attribution footer is rendered by the dashboard page only.
+ATTRIBUTION_PAGE = "index"
 checks_passed = all_found
 
 # Check for PROGMEM declarations
@@ -67,10 +69,16 @@ extern_count = len(re.findall(r'extern const char \w+_PAGE\[\] PROGMEM;', web_as
 print(f"  web_assets.h: {extern_count} extern declarations")
 checks_passed = checks_passed and extern_count == var_count
 
-source_marker_count = sum(
-    path.read_text(encoding="utf-8").count(ATTRIBUTION_MARKER)
-    for path in (COMPONENT / "assets" / "pages").glob("*.html")
-)
+# The attribution footer belongs to the dashboard only: index.html carries the
+# single marker, every other source page must stay free of it.
+page_marker_counts = {
+    path.name: path.read_text(encoding="utf-8").count(ATTRIBUTION_MARKER)
+    for path in sorted((COMPONENT / "assets" / "pages").glob("*.html"))
+}
+index_page = f"{ATTRIBUTION_PAGE}.html"
+source_marker_count = sum(page_marker_counts.values())
+pages_with_marker = sorted(name for name, count in page_marker_counts.items() if count)
+attribution_index_only = pages_with_marker == [index_page] and page_marker_counts[index_page] == 1
 generated_marker_count = web_assets_cpp.count(ATTRIBUTION_MARKER)
 generated_pages = re.findall(r'R"HTML\((.*?)\)HTML"', web_assets_cpp, re.DOTALL)
 # INDEX_PAGE is deliberately assembled from two raw-string fragments around
@@ -80,29 +88,31 @@ index_footer_expression = (
     "P1_SETUP_ATTRIBUTION_FOOTER_HEAD ESPHOME_PROJECT_VERSION" in web_assets_cpp
     and "P1_SETUP_ATTRIBUTION_FOOTER_TAIL" in web_assets_cpp
 )
-print(f"  Attribution markers in source pages: {source_marker_count}")
+standalone_footer_asset = "ATTRIBUTION_FOOTER[]" in web_assets_cpp
+print(f"  Attribution markers in source pages: {source_marker_count} (pages: {pages_with_marker})")
+print(f"  Attribution restricted to {index_page}: {attribution_index_only}")
 print(f"  Attribution markers in generated pages: {generated_marker_count}")
 print(f"  Generated raw-string fragments ending with compact closing: {compact_closing_count}")
 print(f"  Dashboard compile-time attribution footer: {index_footer_expression}")
-checks_passed = checks_passed and source_marker_count == var_count and generated_marker_count == 0
+print(f"  Standalone attribution asset compiled in: {standalone_footer_asset}")
+checks_passed = checks_passed and attribution_index_only and generated_marker_count == 0
 checks_passed = checks_passed and compact_closing_count == var_count and index_footer_expression
+checks_passed = checks_passed and not standalone_footer_asset
 
 # Verify script order in configure page (configure.js before configure_field_errors.js)
-css_start = web_assets_cpp.find('CONFIGURE_PAGE[]')
-css_end = web_assets_cpp.find('FACTORY_RESET_PAGE')
-section = web_assets_cpp[css_start:css_end]
-i1 = section.find('<script>')
-i2 = section.find('<script>', i1 + 1)
-block1 = section[i1:i1 + 80]
-block2 = section[i2:i2 + 80]
-correct = re.search(r'const\s+\$\s*=', block1) is not None and 'document.querySelectorAll' in block2
+configure_start = web_assets_cpp.find('CONFIGURE_PAGE[]')
+configure_end = web_assets_cpp.find('FACTORY_RESET_PAGE')
+section = web_assets_cpp[configure_start:configure_end]
+configure_js_index = section.find('let savedSettings')
+field_errors_js_index = section.find("document.querySelectorAll('.password-toggle')")
+correct = 0 <= configure_js_index < field_errors_js_index
 print(f"  Configure JS order correct: {correct}")
-print(f"    1: {block1}")
-print(f"    2: {block2}")
+print(f"    configure.js at: {configure_js_index}")
+print(f"    configure_field_errors.js at: {field_errors_js_index}")
 
 # Verify web_assets.cpp compiles standalone (syntax check)
 print("\n=== Final status ===")
-checks_passed = checks_passed and correct and css_start >= 0 and css_end > css_start
+checks_passed = checks_passed and correct and configure_start >= 0 and configure_end > configure_start
 if checks_passed:
     print("ALL CHECKS PASSED — external_components ready.")
 else:
