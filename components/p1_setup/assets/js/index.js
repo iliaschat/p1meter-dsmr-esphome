@@ -1,5 +1,6 @@
-document.getElementById('logout').addEventListener('click', async () => {
-    const button = document.getElementById('logout');
+const $ = id => document.getElementById(id);
+$('logout').addEventListener('click', async () => {
+    const button = $('logout');
     button.disabled = true;
     try {
         const response = await fetch('/api/logout', {
@@ -15,32 +16,157 @@ document.getElementById('logout').addEventListener('click', async () => {
 });
 
 // ==== Hamburger‑menu toggle (added for the new UI) ==================================================
-const hamburger = document.getElementById('hamburger-btn');
-const dropdown  = document.getElementById('mobile-dropdown');
+const hamburger = $('hamburger-btn');
+const dropdown = $('mobile-dropdown');
 
 if (hamburger && dropdown) {
-  hamburger.addEventListener('click', () => {
-    dropdown.hidden = dropdown.hidden ? false : true;
-    hamburger.setAttribute('aria-expanded', dropdown.hidden ? 'false' : 'true');
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    const insideHamburger = hamburger.contains(e.target);
-    const insideDropdown  = dropdown.contains(e.target);
-    if (insideHamburger === false && insideDropdown === false) {
-      dropdown.hidden = true;
-      hamburger.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  // Dropdown item → trigger the original menu element
-  dropdown.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = item.getAttribute('data-target');
-      const targetEl = document.getElementById(targetId);
-      if (targetEl) { targetEl.click(); }
+    hamburger.addEventListener('click', () => {
+        dropdown.hidden = dropdown.hidden ? false : true;
+        hamburger.setAttribute('aria-expanded', dropdown.hidden ? 'false' : 'true');
     });
-  });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const insideHamburger = hamburger.contains(e.target);
+        const insideDropdown = dropdown.contains(e.target);
+        if (insideHamburger === false && insideDropdown === false) {
+            dropdown.hidden = true;
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    });
 }
+
+// Communication submenu toggle
+const commToggle = $('menu-communication');
+const submenu = $('submenu-communication');
+commToggle.addEventListener('click', ev => {
+    if (submenu.contains(ev.target)) return; // clicking a submenu item must not toggle the submenu
+    const expanded = commToggle.getAttribute('aria-expanded') === 'true';
+    commToggle.setAttribute('aria-expanded', String(!expanded));
+    submenu.hidden = expanded;
+});
+
+// ==== Generic modal ==================================================
+const menuItemsWithModal = document.querySelectorAll('.menu-item[data-modal]');
+
+menuItemsWithModal.forEach(function(item) {
+    item.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const url = item.getAttribute('data-modal');
+        const title = item.getAttribute('data-modal-title') ?? '';
+        const subtitle = item.getAttribute('data-modal-subtitle') ?? '';
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.text();
+            })
+            .then(html => {
+                showGenericModal(html, title, subtitle);
+            })
+            .catch(err => console.error('Failed to load:', err));
+    });
+});
+
+function showGenericModal(content, title, subtitle) {
+    $('modal-content').innerHTML = content;
+    $('modal-title').innerHTML = title;
+    $('modal-subtitle').innerHTML = subtitle;
+    $('generic-modal').classList.add('open');
+    executeScripts($('modal-content'), content);
+}
+
+$('modal-close').addEventListener('click', () => {
+    $('generic-modal').classList.remove('open')
+});
+$('generic-modal').addEventListener('click', event => {
+    if (event.target === $('generic-modal')) $('generic-modal').classList.remove('open')
+});
+
+// ==== Scripts ==================================================
+function executeScripts(container) {
+    container.querySelectorAll('footer').forEach(s=> s.remove());
+    // merge inline scripts
+    const inlineScripts = Array.from(container.querySelectorAll('script:not([src])'));
+    const merged = document.createElement('script');
+    // Concatenate all inline script contents
+    const combined = inlineScripts.map(s => s.textContent).join('\n;\n');
+    console.log(combined);
+    debugger;
+    // Create a single script element
+    merged.textContent = combined;
+    inlineScripts.forEach(s => s.remove());
+    const d = document.createElement('div');
+    d.innerHTML = merged;
+    // execute scripts
+    container.appendChild(merged);
+
+    // Extenal scripts
+    // const scripts = Array.from(container.querySelectorAll('script[src]'));
+    // scripts.forEach(oldScript => {
+    //     const newScript = document.createElement('script');
+    //     // Copy all attributes (src, type, async, data-*, etc.)
+    //     Array.from(oldScript.attributes).forEach(attr => {
+    //         newScript.setAttribute(attr.name, attr.value);
+    //     });
+    //     // Copy inline content
+    //     newScript.textContent = oldScript.textContent;
+    //     // Replace the inert script with a live one
+    //     oldScript.parentNode.replaceChild(newScript, oldScript);
+    // });
+}
+
+/*function executeScripts(container) {
+    const scripts = Array.from(container.querySelectorAll('script'));
+
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement('script');
+
+        // Copy all attributes (src, type, async, data-*, etc.)
+        Array.from(oldScript.attributes).forEach(attr => {
+            newScript.setAttribute(attr.name, attr.value);
+        });
+        // Copy inline content
+        newScript.textContent = oldScript.textContent;
+        // Replace the inert script with a live one
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+}*/
+
+/*function aa (container, html){
+  const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    // Extract scripts
+    const scripts = Array.from(doc.querySelectorAll('script')).map(s => ({
+        src: s.src || null,
+        type: s.type || '',
+        text: s.textContent
+    }));
+    doc.querySelectorAll('script').forEach(s => s.remove());
+    // Extract styles
+    const styles = Array.from(doc.querySelectorAll('style')).map(s => s.textContent);
+    doc.querySelectorAll('style').forEach(s => s.remove());
+    // Insert content
+    const container = document.getElementById('modal-content');
+    container.innerHTML = doc.body.innerHTML;
+    // Inject styles
+    styles.forEach(css => {
+        const styleEl = document.createElement('style');
+        styleEl.textContent = css;
+        container.appendChild(styleEl);
+    });
+
+    // Execute scripts
+    scripts.forEach(s => {
+        const el = document.createElement('script');
+        if (s.type) el.type = s.type;
+        if (s.src) {
+            el.src = s.src;
+            document.body.appendChild(el);
+        } else {
+            el.textContent = s.text;
+            container.appendChild(el);
+        }
+    });
+}*/

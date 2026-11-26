@@ -1,4 +1,3 @@
-const $ = id => document.getElementById(id);
 let savedSettings = {};
 
 function setMode() {
@@ -40,7 +39,7 @@ async function scan() {
     }
 }
 $('scan').addEventListener('click', scan);
-async function load() {
+async function loadConfiguration() {
     try {
         const r = await fetch('/api/settings', {
             cache: 'no-store'
@@ -86,5 +85,5 @@ $('settings').addEventListener('submit', async e => {
         s.textContent = err.message
     }
 });
-load();
+loadConfiguration();
 // scan();

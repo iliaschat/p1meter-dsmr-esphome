@@ -8,17 +8,12 @@
     box-sizing: border-box
 }
 
-/* body {
-    margin: 0 auto;
-    padding: 24px;
-    max-width: 760px
-}
-
-*/ body {
+body {
     margin: 0 auto;
     padding: 22px;
     max-width: 980px
 }
+
 h1 {
     font-size: 26px;
     margin: 12px 0 6px
@@ -29,6 +24,23 @@ p {
     line-height: 1.5
 }
 
+footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    margin: 32px 0 0;
+    padding: 14px 0 0;
+    border-top: 1px solid #d5dfd8;
+    color: #62736a;
+    font-size: 12px;
+    line-height: 1.6
+}
+
+footer a {
+    color: #27734f;
+    text-decoration: underline;
+    text-underline-offset: 2px
+}
 .topbar {
     display: flex;
     justify-content: space-between;
@@ -127,6 +139,7 @@ footer {
             min-height: 78px
         }
         }
+
 /* Menu */
 .hamburger {
     display: block;
@@ -186,6 +199,7 @@ footer {
     margin: 0;
     /* display: none; */
 }
+
 .mobile-dropdown.open {
     display: block;
 }
@@ -474,7 +488,7 @@ button:disabled {
     align-items: center;
     justify-content: center;
     padding: 18px;
-    z-index: 5
+    z-index: 5;
 }
 
 .modal.open {
@@ -505,6 +519,11 @@ button:disabled {
     justify-content: flex-end;
     gap: 10px;
     margin-top: 18px
+}
+
+#modal-content {
+    max-height: 60vh;
+    overflow: auto;
 }
 
 .secondary {
@@ -604,7 +623,7 @@ button:disabled {
     gap: 8px;
     padding: 8px 12px;
     border-bottom: 1px solid #d5dfd8;
-        /* border-radius: 6px; */
+    /* border-radius: 6px; */
     background: #fff;
     color: #14231d;
     text-decoration: none;

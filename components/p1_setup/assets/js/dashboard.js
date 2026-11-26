@@ -15,7 +15,6 @@ const groups = {
 const texts = ['P1 Meter ID', 'P1 Version', 'Actual Tariff Group'];
 const values = {};
 let sensorData = [], textData = [];
-const $ = id => document.getElementById(id);
 const safe = s => String(s).replace(/[&<>"']/g, c => ({
     '&': '&amp;',
     '<': '&lt;',

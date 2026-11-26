@@ -1,4 +1,3 @@
-// const $ = id => document.getElementById(id);
 let settings = {};
 let historyEnabled = false;
 let pendingApi = null;
@@ -88,25 +87,25 @@ commToggle.addEventListener('click', ev => {
 });
 
 // Configure WiFi -> open configure page inside a modal
-$('menu-configure-wifi').addEventListener('click', () => {
-  $('configure-iframe').src = '/configure';
-  openModal('configure-modal');
-});
-$('configure-modal-close').addEventListener('click', () => {
-  closeModal('configure-modal');
-  $('configure-iframe').src = 'about:blank';
-});
+// $('menu-configure-wifi').addEventListener('click', () => {
+//   $('configure-iframe').src = '/configure';
+//   openModal('configure-modal');
+// });
+// $('configure-modal-close').addEventListener('click', () => {
+//   closeModal('configure-modal');
+//   $('configure-iframe').src = 'about:blank';
+// });
 
-// Reboot
-$('menu-reboot').addEventListener('click', () => openModal('reboot-modal'));
-$('menu-ota').addEventListener('click', () => {
-  $('ota-iframe').src = '/ota';
-  openModal('ota-modal');
-});
-$('ota-modal-close').addEventListener('click', () => {
-  closeModal('ota-modal');
-  $('ota-iframe').src = 'about:blank';
-});
+// // Reboot
+// $('menu-reboot').addEventListener('click', () => openModal('reboot-modal'));
+// $('menu-ota').addEventListener('click', () => {
+//   $('ota-iframe').src = '/ota';
+//   openModal('ota-modal');
+// });
+// $('ota-modal-close').addEventListener('click', () => {
+//   closeModal('ota-modal');
+//   $('ota-iframe').src = 'about:blank';
+// });
 $('modal-reboot').addEventListener('click', async () => {
   if (!confirm('Reboot the P1 meter now?')) return;
   try {
@@ -125,49 +124,49 @@ $('modal-reboot').addEventListener('click', async () => {
 });
 
 // Factory reset
-$('menu-factory-reset').addEventListener('click', () => openModal('factory-reset-modal'));
-$('modal-factory-reset').addEventListener('click', async () => {
-  if (!confirm('Erase all saved settings and restart?')) return;
-  try {
-    await fetch('/api/factory-reset', { method: 'POST' });
-    const overlay = $('modal-factory-reset-overlay');
-    overlay.hidden = false;
-    const retry = async () => {
-      try {
-        const q = await fetch('/', { cache: 'no-store' });
-        if (q.ok) { location.reload(); return }
-      } catch (e) {}
-      setTimeout(retry, 2000);
-    };
-    setTimeout(retry, 10000);
-  } catch (e) { $('modal-factory-reset-status').textContent = e.message; }
-});
+// $('menu-factory-reset').addEventListener('click', () => openModal('factory-reset-modal'));
+// $('modal-factory-reset').addEventListener('click', async () => {
+//   if (!confirm('Erase all saved settings and restart?')) return;
+//   try {
+//     await fetch('/api/factory-reset', { method: 'POST' });
+//     const overlay = $('modal-factory-reset-overlay');
+//     overlay.hidden = false;
+//     const retry = async () => {
+//       try {
+//         const q = await fetch('/', { cache: 'no-store' });
+//         if (q.ok) { location.reload(); return }
+//       } catch (e) {}
+//       setTimeout(retry, 2000);
+//     };
+//     setTimeout(retry, 10000);
+//   } catch (e) { $('modal-factory-reset-status').textContent = e.message; }
+// });
 
 // Change Password
-$('menu-password').addEventListener('click', () => openModal('password-modal'));
-$('modal-password-cancel').addEventListener('click', () => closeModal('password-modal'));
-$('modal-password-save').addEventListener('click', async () => {
-  const p = $('modal-password-input').value;
-  const c = $('modal-confirm').value;
-  const s = $('modal-password-status');
-  s.className = 'status';
-  if (p !== c) { s.className = 'status error'; s.textContent = 'The passwords do not match.'; return }
-  if (!/^[\x20-\x7e]{8,63}$/.test(p)) { s.className = 'status error'; s.textContent = 'Use 8 to 63 printable ASCII characters.'; return }
-  s.textContent = 'Saving…';
-  try {
-    await fetch('/api/setup-password', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ password: p }) });
-    const overlay = $('modal-password-overlay');
-    overlay.hidden = false;
-    const retry = async () => {
-      try {
-        const q = await fetch('/', { cache: 'no-store' });
-        if (q.ok) { location.reload(); return }
-      } catch (e) {}
-      setTimeout(retry, 2000);
-    };
-    setTimeout(retry, 10000);
-  } catch (e) { s.className = 'status error'; s.textContent = e.message; }
-});
+// $('menu-password').addEventListener('click', () => openModal('password-modal'));
+// $('modal-password-cancel').addEventListener('click', () => closeModal('password-modal'));
+// $('modal-password-save').addEventListener('click', async () => {
+//   const p = $('modal-password-input').value;
+//   const c = $('modal-confirm').value;
+//   const s = $('modal-password-status');
+//   s.className = 'status';
+//   if (p !== c) { s.className = 'status error'; s.textContent = 'The passwords do not match.'; return }
+//   if (!/^[\x20-\x7e]{8,63}$/.test(p)) { s.className = 'status error'; s.textContent = 'Use 8 to 63 printable ASCII characters.'; return }
+//   s.textContent = 'Saving…';
+//   try {
+//     await fetch('/api/setup-password', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ password: p }) });
+//     const overlay = $('modal-password-overlay');
+//     overlay.hidden = false;
+//     const retry = async () => {
+//       try {
+//         const q = await fetch('/', { cache: 'no-store' });
+//         if (q.ok) { location.reload(); return }
+//       } catch (e) {}
+//       setTimeout(retry, 2000);
+//     };
+//     setTimeout(retry, 10000);
+//   } catch (e) { s.className = 'status error'; s.textContent = e.message; }
+// });
 
 // ESPHome API toggle
 $('menu-api').addEventListener('click', async () => {
@@ -186,35 +185,35 @@ $('menu-homewizard').addEventListener('click', async () => {
 });
 
 // MQTT -> open configure-mqtt modal
-let mqttModalOpen = false;
-$('menu-mqtt').addEventListener('click', () => {
-  $('mqtt-broker').value = settings.mqtt_broker || '';
-  $('mqtt-port').value = settings.mqtt_port || 1883;
-  $('mqtt-username').value = settings.mqtt_username || '';
-  $('mqtt-password').value = settings.mqtt_password || '';
-  $('mqtt-enabled').checked = isEnabled(settings.mqtt_enabled);
-  $('mqtt-status').textContent = '';
-  openModal('configure-mqtt-modal');
-  mqttModalOpen = true;
-});
-$('mqtt-cancel').addEventListener('click', () => { closeModal('configure-mqtt-modal'); mqttModalOpen = false; });
-$('mqtt-save').addEventListener('click', async () => {
-  const s = $('mqtt-status');
-  const enabled = $('mqtt-enabled').checked;
-  const broker = $('mqtt-broker').value.trim();
-  if (enabled && !broker) { s.textContent = 'Enter an MQTT broker host when enabling MQTT.'; return }
-  try {
-    await postSettings({
-      mqtt_enabled: enabled ? 'on' : 'off',
-      mqtt_broker: broker,
-      mqtt_port: $('mqtt-port').value || 1883,
-      mqtt_username: $('mqtt-username').value,
-      mqtt_password: $('mqtt-password').value
-    });
-    closeModal('configure-mqtt-modal');
-    mqttModalOpen = false;
-  } catch (e) { s.textContent = e.message; }
-});
+// let mqttModalOpen = false;
+// $('menu-mqtt').addEventListener('click', () => {
+//   $('mqtt-broker').value = settings.mqtt_broker || '';
+//   $('mqtt-port').value = settings.mqtt_port || 1883;
+//   $('mqtt-username').value = settings.mqtt_username || '';
+//   $('mqtt-password').value = settings.mqtt_password || '';
+//   $('mqtt-enabled').checked = isEnabled(settings.mqtt_enabled);
+//   $('mqtt-status').textContent = '';
+//   openModal('configure-mqtt-modal');
+//   mqttModalOpen = true;
+// });
+// $('mqtt-cancel').addEventListener('click', () => { closeModal('configure-mqtt-modal'); mqttModalOpen = false; });
+// $('mqtt-save').addEventListener('click', async () => {
+//   const s = $('mqtt-status');
+//   const enabled = $('mqtt-enabled').checked;
+//   const broker = $('mqtt-broker').value.trim();
+//   if (enabled && !broker) { s.textContent = 'Enter an MQTT broker host when enabling MQTT.'; return }
+//   try {
+//     await postSettings({
+//       mqtt_enabled: enabled ? 'on' : 'off',
+//       mqtt_broker: broker,
+//       mqtt_port: $('mqtt-port').value || 1883,
+//       mqtt_username: $('mqtt-username').value,
+//       mqtt_password: $('mqtt-password').value
+//     });
+//     closeModal('configure-mqtt-modal');
+//     mqttModalOpen = false;
+//   } catch (e) { s.textContent = e.message; }
+// });
 
 // Enable / Disable History
 $('menu-history').addEventListener('click', () => {
