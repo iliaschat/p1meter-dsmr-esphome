@@ -4,8 +4,8 @@
 
 namespace esphome::p1_setup::web_pages {
 
+extern const char CONFIGURE_MQTT_PAGE[] PROGMEM;
 extern const char CONFIGURE_PAGE[] PROGMEM;
-extern const char DASHBOARD_PAGE[] PROGMEM;
 extern const char FACTORY_RESET_PAGE[] PROGMEM;
 extern const char INDEX_PAGE[] PROGMEM;
 extern const char OTA_PAGE[] PROGMEM;

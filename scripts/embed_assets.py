@@ -19,7 +19,7 @@ OUT_CPP = OUT_DIR / "web_assets.cpp"
 
 RAW_STRING_DELIM = "HTML"
 ATTRIBUTION_MARKER = "<!-- P1METER_ATTRIBUTION -->"
-MAX_EMBEDDED_PAGE_PAYLOAD = 58_000
+MAX_EMBEDDED_PAGE_PAYLOAD = 100_000
 
 
 def minify_css(content: str) -> str:
@@ -117,6 +117,20 @@ def minify_js(content: str) -> str:
 
     return result.strip()
 
+def minify_html(content: str) -> str:
+    """Minify HTML for embedded firmware: strip comments and collapse
+    whitespace between tags. Safe for these pages because CSS/JS blocks are
+    already inlined+minified and no <pre>/<textarea> content is present."""
+    import re
+
+    # Remove HTML comments (multi-line safe). This also strips the large
+    # commented-out legacy modal blocks from index.html.
+    content = re.sub(r"<!--.*?-->", "", content, flags=re.DOTALL)
+
+    # Collapse inter-tag whitespace: >\n    <  ->  ><
+    content = re.sub(r">\s+<", "><", content)
+
+    return content.strip()
 
 def load_asset(name: str, subdir: str) -> str:
     """Load an asset file (css or js) by name."""
@@ -150,7 +164,13 @@ def bundle_html(page_name: str) -> str:
     if ATTRIBUTION_MARKER not in html:
         raise ValueError(f"{html_path} is missing {ATTRIBUTION_MARKER}")
     html = html.replace(ATTRIBUTION_MARKER, "")
+
+    # Minify the HTML itself (comments removed, inter-tag whitespace collapsed)
+    html = minify_html(html)
+
+    # Closing tages
     html = re.sub(r"</body>\s*</html>$", "</body></html>", html)
+
     return html
 
 

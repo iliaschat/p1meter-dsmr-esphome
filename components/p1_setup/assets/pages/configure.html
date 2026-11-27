@@ -1,7 +1,75 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Configure P1 Meter</title><!-- CSS: configure --><!-- CSS: configure_password --></head><body><a href="/">&larr; Home</a><h1>Configure device</h1><p><a href="/setup-password">Change setup password</a></p><p>Select a nearby Wi-Fi network or enter its SSID, then optionally configure MQTT and choose an address mode.</p><form id="settings">
-<div class="field"><label for="networks">Nearby Wi-Fi networks</label><div class="row"><select id="networks"><option value="">Select a network</option></select><button class="secondary" type="button" id="scan">Refresh scan</button></div><div id="network_status" role="status"></div></div>
-<div class="field"><label for="ssid">Wi-Fi SSID</label><input id="ssid" name="wifi_ssid" maxlength="32" required></div><div class="field"><label for="wifi_password">Wi-Fi password</label><div class="password-field"><input id="wifi_password" name="wifi_password" type="password" maxlength="64" autocomplete="new-password"><button class="password-toggle" type="button" aria-controls="wifi_password" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><path d="M4 4l16 16"/></svg></button></div></div>
-<div class="field"><label><input id="mqtt_enabled" name="mqtt_enabled" type="checkbox" style="width:auto;padding:0"> Enable MQTT</label></div><section id="mqtt_fields" class="hidden"><h2>MQTT Settings</h2><div class="field"><label for="broker">Broker host</label><input id="broker" name="mqtt_broker" maxlength="64"></div><div class="field"><label for="port">Broker port</label><input id="port" name="mqtt_port" type="number" min="1" max="65535" value="1883"></div><div class="field"><label for="username">Username</label><input id="username" name="mqtt_username" maxlength="32" autocomplete="username"></div><div class="field"><label for="mqtt_password">Password</label><div class="password-field"><input id="mqtt_password" name="mqtt_password" type="password" maxlength="64" autocomplete="new-password"><button class="password-toggle" type="button" aria-controls="mqtt_password" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><path d="M4 4l16 16"/></svg></button></div></div></section><div class="field"><label><input id="homewizard_enabled" name="homewizard_enabled" type="checkbox" style="width:auto;padding:0"> Enable HomeWizard Local API v1</label></div><div class="field"><label><input id="api_enabled" name="api_enabled" type="checkbox" style="width:auto;padding:0" checked> Enable ESPHome Native API</label></div>
-<h2>IP address</h2><div class="modes"><label><input type="radio" name="ip_mode" value="dhcp" checked> DHCP</label><label><input type="radio" name="ip_mode" value="static"> Static</label></div><section id="static_fields" class="hidden"><div class="field"><label for="ip">Device IP address</label><input id="ip" name="static_ip" inputmode="decimal" placeholder="192.168.1.50"></div><div class="field"><label for="gateway">Gateway</label><input id="gateway" name="gateway" inputmode="decimal" placeholder="192.168.1.1"></div><div class="field"><label for="subnet">Subnet mask</label><input id="subnet" name="subnet" inputmode="decimal" value="255.255.255.0"></div><div class="field"><label for="dns">DNS server (optional)</label><input id="dns" name="dns" inputmode="decimal"></div></section>
-<div class="actions"><button type="submit">Save settings</button></div><div id="status" class="status" role="status"></div></form><div class="overlay" id="api_confirm" hidden><div class="panel"><h2>Restart required</h2><p>Changing the ESPHome Native API status requires the device to reboot. Do you want to save the configuration and reboot now?</p><div class="confirm-actions"><button type="button" class="secondary" id="api_cancel">Cancel</button><button type="button" id="api_reboot_now">Reboot now</button></div></div></div><!-- JS: configure --><!-- JS: configure_field_errors --><!-- P1METER_ATTRIBUTION --></body></html>
+<html lang="en">
+<head>
+    <!-- CSS: configure -->
+    <!-- CSS: configure_password -->
+</head>
+<body>
+    <form id="settings">
+        <div class="field">
+            <label for="networks">Nearby Wi-Fi networks</label>
+            <div class="row">
+                <select id="networks">
+                    <option value="">Select a network</option>
+                </select>
+                <button class="secondary" type="button" id="scan">Refresh scan</button>
+            </div>
+            <div id="network_status" role="status"></div>
+        </div>
+        <div class="field">
+            <label for="ssid">Wi-Fi SSID</label>
+            <input id="ssid" name="wifi_ssid" maxlength="32" required>
+        </div>
+        <div class="field">
+            <label for="wifi_password">Wi-Fi password</label>
+            <div class="password-field">
+                <input id="wifi_password" name="wifi_password" type="password" maxlength="64" autocomplete="new-password">
+                <button class="password-toggle" type="button" aria-controls="wifi_password" aria-label="Show password" aria-pressed="false" title="Show password">
+                    <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                        <path d="M4 4l16 16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <h2>IP address</h2>
+        <div class="modes">
+            <label>
+                <input type="radio" name="ip_mode" value="dhcp" checked> DHCP
+            </label>
+            <label>
+                <input type="radio" name="ip_mode" value="static"> Static
+            </label>
+        </div>
+        <section id="static_fields" class="hidden">
+            <div class="field">
+                <label for="ip">Device IP address</label>
+                <input id="ip" name="static_ip" inputmode="decimal" placeholder="192.168.1.50">
+            </div>
+            <div class="field">
+                <label for="gateway">Gateway</label>
+                <input id="gateway" name="gateway" inputmode="decimal" placeholder="192.168.1.1">
+            </div>
+            <div class="field">
+                <label for="subnet">Subnet mask</label>
+                <input id="subnet" name="subnet" inputmode="decimal" value="255.255.255.0">
+            </div>
+            <div class="field">
+                <label for="dns">DNS server (optional)</label>
+                <input id="dns" name="dns" inputmode="decimal">
+            </div>
+        </section>
+        <div class="actions">
+            <button type="submit">Save settings</button>
+        </div>
+        <div id="status" class="status" role="status"></div>
+    </form>
+    <!-- P1METER_ATTRIBUTION -->
+    <!-- JS: configure -->
+    <!-- JS: configure_field_errors -->
+</body>
+</html>

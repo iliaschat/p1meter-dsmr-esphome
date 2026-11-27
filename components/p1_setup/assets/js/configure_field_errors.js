@@ -6,19 +6,16 @@ document.querySelectorAll('.password-toggle').forEach(button => button.addEventL
     button.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
     button.title = visible ? 'Hide password' : 'Show password'
 }));
-const fieldIds = {
-    wifi_ssid: 'ssid',
-    wifi_password: 'wifi_password',
-    mqtt_broker: 'broker',
-    mqtt_port: 'port',
-    mqtt_username: 'username',
-    mqtt_password: 'mqtt_password',
-    static_ip: 'ip',
-    gateway: 'gateway',
-    subnet: 'subnet',
-    dns: 'dns'
-};
-
+if(typeof fieldIds === undefined){
+    var fieldIds = {
+        wifi_ssid: 'ssid',
+        wifi_password: 'wifi_password',
+        static_ip: 'ip',
+        gateway: 'gateway',
+        subnet: 'subnet',
+        dns: 'dns'
+    };
+}
 function clearFieldError(name) {
     const input = document.getElementById(fieldIds[name]);
     const error = document.getElementById(`error-${name}`);
@@ -28,11 +25,9 @@ function clearFieldError(name) {
     input.removeAttribute('aria-describedby');
     input.style.borderColor = ''
 }
-
 function clearFieldErrors() {
     Object.keys(fieldIds).forEach(clearFieldError)
 }
-
 function showFieldError(name, message) {
     const input = document.getElementById(fieldIds[name]);
     const error = document.getElementById(`error-${name}`);
@@ -59,14 +54,31 @@ Object.entries(fieldIds).forEach(([name, id]) => {
         showFieldError(name, input.validationMessage)
     })
 });
-
 function setRequired(id, required) {
     const input = document.getElementById(id);
     input.required = required;
     const marker = document.getElementById(`required-${id}`);
-    marker.hidden = !required
+    if (marker) marker.hidden = !required
 }
-['ssid', 'wifi_password', 'broker', 'port', 'mqtt_password', 'ip', 'gateway', 'subnet'].forEach(id => {
+['ssid', 'wifi_password'].forEach(id => setRequired(id, true));
+var staticMode = () => document.querySelector('[name=ip_mode]:checked').value === 'static';
+['ip', 'gateway', 'subnet'].forEach(id => setRequired(id, staticMode()));
+var password = document.getElementById('wifi_password');
+password.setCustomValidity(!password.value || /^(?:[ -~]{8,63}|[0-9a-fA-F]{64})$(?![\s\S])/.test(password.value) ? '' : 'Use 8 to 63 printable ASCII characters or 64 hexadecimal digits.');
+document.querySelectorAll('[name=ip_mode]').forEach(input => input.addEventListener('change', () => {
+    ['ip', 'gateway', 'subnet', 'dns'].forEach(clearFieldError);
+    ['ip', 'gateway', 'subnet'].forEach(id => setRequired(id, staticMode()));
+    updateRequirements();
+}));
+document.getElementById('wifi_password').addEventListener('input', () => {
+    password.setCustomValidity(!password.value || /^(?:[ -~]{8,63}|[0-9a-fA-F]{64})$(?![\s\S])/.test(password.value) ? '' : 'Use 8 to 63 printable ASCII characters or 64 hexadecimal digits.');
+});
+function updateRequirements() {
+    ['ssid', 'wifi_password'].forEach(id => setRequired(id, true));
+    ['ip', 'gateway', 'subnet'].forEach(id => setRequired(id, staticMode()));
+}
+const markers = ['ssid', 'wifi_password', 'ip', 'gateway', 'subnet'];
+markers.forEach(id => {
     const marker = document.createElement('span');
     marker.id = `required-${id}`;
     marker.textContent = ' *';
@@ -74,60 +86,5 @@ function setRequired(id, required) {
     marker.setAttribute('aria-hidden', 'true');
     document.querySelector(`label[for="${id}"]`).append(marker)
 });
-
-function updateMqttSettings() {
-    const enabled = document.getElementById('mqtt_enabled').checked;
-    document.getElementById('mqtt_fields').classList.toggle('hidden', !enabled);
-    setRequired('broker', enabled);
-    setRequired('port', enabled);
-    setRequired('mqtt_password', enabled && document.getElementById('username').value.length > 0)
-}
-
-function updateRequirements() {
-    ['ssid', 'wifi_password'].forEach(id => setRequired(id, true));
-    updateMqttSettings();
-    const staticMode = document.querySelector('[name=ip_mode]:checked').value === 'static';
-    ['ip', 'gateway', 'subnet'].forEach(id => setRequired(id, staticMode));
-    const password = document.getElementById('wifi_password');
-    password.setCustomValidity(!password.value || /^(?:[\x20-\x7e]{8,63}|[0-9a-fA-F]{64})$(?![\s\S])/.test(password.value) ? '' : 'Use 8 to 63 printable ASCII characters or 64 hexadecimal digits.')
-}
-document.getElementById('mqtt_enabled').addEventListener('change', () => {
-    updateMqttSettings();
-    ['mqtt_broker', 'mqtt_port', 'mqtt_username', 'mqtt_password'].forEach(clearFieldError)
-});
-document.getElementById('username').addEventListener('input', () => {
-    updateRequirements();
-    clearFieldError('mqtt_password')
-});
-document.getElementById('wifi_password').addEventListener('input', updateRequirements);
-document.querySelectorAll('[name=ip_mode]').forEach(input => input.addEventListener('change', () => {
-    updateRequirements();
-    ['static_ip', 'gateway', 'subnet', 'dns'].forEach(clearFieldError)
-}));
-const originalSetMode = setMode;
-setMode = function () {
-    originalSetMode();
-    updateRequirements()
-};
 updateRequirements();
-$('api_enabled').addEventListener('change', () => {
-    if (apiModalOpen) return;
-    apiPendingState = $('api_enabled').checked;
-    $('api_enabled').checked = apiPreviousState;
-    apiModalOpen = true;
-    $('api_confirm').hidden = false
-});
-$('api_cancel').addEventListener('click', () => {
-    apiPendingState = null;
-    apiModalOpen = false;
-    $('api_confirm').hidden = true;
-    $('api_enabled').checked = apiPreviousState
-});
-$('api_reboot_now').addEventListener('click', () => {
-    $('api_enabled').checked = apiPendingState;
-    apiPreviousState = apiPendingState;
-    apiPendingState = null;
-    apiModalOpen = false;
-    $('api_confirm').hidden = true;
-    $('settings').requestSubmit()
-});
+clearFieldErrors();

@@ -80,7 +80,7 @@ checks_passed = checks_passed and compact_closing_count == var_count
 
 # Verify script order in configure page (configure.js before configure_field_errors.js)
 css_start = web_assets_cpp.find('CONFIGURE_PAGE[]')
-css_end = web_assets_cpp.find('DASHBOARD_PAGE')
+css_end = web_assets_cpp.find('INDEX_PAGE')
 section = web_assets_cpp[css_start:css_end]
 i1 = section.find('<script>')
 i2 = section.find('<script>', i1 + 1)

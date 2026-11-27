@@ -1,22 +1,20 @@
 const groups = {
-    power: [
-        ['Power Consumed', 'W'],
-        ['Power Returned', 'W']
-    ],
-    energy: [],
-    phase: [],
-    quality: [
-        ['Short Power Outages', 'Counter'],
-        ['Long Power Outages', 'Counter'],
-        ['Short Power Drops Phase 1', 'Counter'],
-        ['Short Power Peaks Phase 1', 'Counter']
-    ]
+  power: [
+      ['Power Consumed', 'W'],
+      ['Power Returned', 'W']
+  ],
+  energy: [],
+  phase: [],
+  quality: [
+      ['Short Power Outages', 'Counter'],
+      ['Long Power Outages', 'Counter'],
+      ['Short Power Drops Phase 1', 'Counter'],
+      ['Short Power Peaks Phase 1', 'Counter']
+  ]
 };
 const texts = ['P1 Meter ID', 'P1 Version', 'Actual Tariff Group'];
 const values = {};
-let sensorData = [],
-    textData = [];
-const $ = id => document.getElementById(id);
+let sensorData = [], textData = [];
 const safe = s => String(s).replace(/[&<>"']/g, c => ({
     '&': '&amp;',
     '<': '&lt;',
@@ -67,9 +65,7 @@ function displayValue(name, raw) {
 }
 
 function card(item) {
-    const name = item[0],
-        unit = item[1],
-        title = item[2] || name;
+    const name = item[0], unit = item[1], title = item[2] || name;
     return `<article class="card"><h3>${safe(title)}</h3><div class="value">${safe(displayValue(name, itemValue(name)))} </div><div class="meta">${safe(unit || 'Counter')}</div></article>`
 }
 
@@ -144,8 +140,7 @@ function renderDetails() {
 }
 
 function renderChart(id, maxId, data, unit) {
-    const el = $(id),
-        maxEl = $(maxId),
+    const el = $(id), maxEl = $(maxId),
         numbers = (data || []).map(v => typeof v === 'number' && Number.isFinite(v) ? v : null),
         dailyMax = Math.max(0, ...numbers.filter(v => v != null));
     el.innerHTML = numbers.map((value, hour) => {
@@ -158,9 +153,7 @@ function renderChart(id, maxId, data, unit) {
 
 function renderHistory(history) {
     const enabled = !!(history && history.enabled);
-    $('history-toggle').checked = enabled;
     $('history-graphs').hidden = !enabled;
-    $('history-setting-status').textContent = enabled ? 'On — writes history to flash.' : 'Off — no history is written to flash.';
     if (!enabled) return;
     renderChart('chart-consumed', 'chart-consumed-max', history.energy_consumed, 'kWh');
     renderChart('chart-returned', 'chart-returned-max', history.energy_returned, 'kWh');
@@ -192,53 +185,6 @@ async function load() {
         $('notice').classList.add('visible')
     }
 }
-let pendingHistoryState = null;
-
-function openHistoryModal(enabled, history) {
-    pendingHistoryState = enabled;
-    $('history-modal-title').textContent = enabled ? 'Enable On-Device History?' : 'Disable On-Device History?';
-    $('history-modal-text').textContent = enabled ? 'This writes history to flash every 30 minutes using alternating files. For ' + (history.device_model || 'this device') + ', the estimated additional flash-wear lifetime is approximately ' + (history.wear_min || 'a few years') + ' to ' + (history.wear_max || 'several years') + '. This is an estimate, not a guarantee, and enabling history can wear the device faster than leaving it off.' : 'This increases the device lifespan by stopping history writes. All already saved on-device history data will be deleted permanently. Confirm only if you no longer need the graphs.';
-    $('history-modal').classList.add('open')
-}
-
-function closeHistoryModal() {
-    $('history-modal').classList.remove('open');
-    pendingHistoryState = null
-}
-async function saveHistoryState() {
-    const button = $('history-confirm');
-    button.disabled = true;
-    try {
-        const response = await fetch('/api/history-settings', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'enabled=' + (pendingHistoryState ? 'true' : 'false')
-        });
-        if (!response.ok) throw new Error('Could not save history setting');
-        closeHistoryModal();
-        await load()
-    } catch (error) {
-        $('notice').textContent = error.message;
-        $('notice').classList.add('visible')
-    }
-    button.disabled = false
-}
-$('history-toggle').addEventListener('change', () => {
-    const data = window.lastHistory || {
-        device_model: 'this device',
-        wear_min: 'a few years',
-        wear_max: 'several years'
-    };
-    openHistoryModal($('history-toggle').checked, data);
-    $('history-toggle').checked = !!(window.lastHistory && window.lastHistory.enabled)
-});
-$('history-cancel').addEventListener('click', closeHistoryModal);
-$('history-confirm').addEventListener('click', saveHistoryState);
-$('history-modal').addEventListener('click', event => {
-    if (event.target === $('history-modal')) closeHistoryModal()
-});
 $('details-button').addEventListener('click', () => {
     $('details-modal').classList.add('open')
 });

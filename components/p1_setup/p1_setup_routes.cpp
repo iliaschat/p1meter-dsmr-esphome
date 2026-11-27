@@ -77,7 +77,7 @@ bool P1Setup::canHandle(AsyncWebServerRequest *request) const {
   if (this->homewizard_enabled_ && this->is_homewizard_route_(url))
     return true;
   if (request->method() == HTTP_GET) {
-      return url == "/" || url == "/dashboard" || url == "/configure" || url == "/ota" || url == "/factory-reset" || url == "/reboot" ||
+      return url == "/" || url == "/configure" || url == "/ota" || url == "/factory-reset" || url == "/reboot" ||
         url == "/setup-password" || url == "/api/dashboard" || url == "/api/settings" || url == "/api/scan";
   }
   return request->method() == HTTP_POST &&
@@ -110,10 +110,9 @@ void P1Setup::handleRequest(AsyncWebServerRequest *request) {
 
   if (request->method() == HTTP_GET) {
     if (url == "/") {
-      String page = web_pages::render(web_pages::INDEX_PAGE, this->device_name_.c_str());
-      this->send_html_(request, page);
-    } else if (url == "/dashboard") {
-      this->send_dashboard_page_(request);
+      // String page = web_pages::render(web_pages::INDEX_PAGE, this->device_name_.c_str());
+      // this->send_html_(request, page);
+      this->send_index_page_(request);
     } else if (url == "/api/dashboard") {
       this->send_dashboard_data_(request);
     } else if (url == "/configure") {
@@ -167,16 +166,16 @@ void P1Setup::handleRequest(AsyncWebServerRequest *request) {
   }
 }
 
-void P1Setup::send_dashboard_page_(AsyncWebServerRequest *request) {
+void P1Setup::send_index_page_(AsyncWebServerRequest *request) {
   constexpr size_t closing_length = 14;
-  const size_t page_length = strlen_P(web_pages::DASHBOARD_PAGE) - closing_length;
+  const size_t page_length = strlen_P(web_pages::INDEX_PAGE) - closing_length;
   const size_t attribution_length = strlen_P(web_pages::ATTRIBUTION_FOOTER);
 #ifdef USE_ESP32
   // Stream the page so the complete dashboard does not need to exist as a heap String.
   AsyncResponseStream *response = request->beginResponseStream("text/html; charset=utf-8");
-  response->print(std::string(web_pages::DASHBOARD_PAGE, page_length));
+  response->print(std::string(web_pages::INDEX_PAGE, page_length));
   response->print(std::string(web_pages::ATTRIBUTION_FOOTER, attribution_length));
-  response->print(std::string(web_pages::DASHBOARD_PAGE + page_length, closing_length));
+  response->print(std::string(web_pages::INDEX_PAGE + page_length, closing_length));
 #else
   const size_t total_length = page_length + attribution_length + closing_length;
   AsyncWebServerResponse *response = request->beginChunkedResponse(
@@ -188,7 +187,7 @@ void P1Setup::send_dashboard_page_(AsyncWebServerRequest *request) {
           const char *source;
           if (index < page_length) {
             available = page_length - index;
-            source = web_pages::DASHBOARD_PAGE + index;
+            source = web_pages::INDEX_PAGE + index;
           } else if (index < page_length + attribution_length) {
             const size_t footer_index = index - page_length;
             available = attribution_length - footer_index;
@@ -196,7 +195,7 @@ void P1Setup::send_dashboard_page_(AsyncWebServerRequest *request) {
           } else {
             const size_t closing_index = index - page_length - attribution_length;
             available = closing_length - closing_index;
-            source = web_pages::DASHBOARD_PAGE + page_length + closing_index;
+            source = web_pages::INDEX_PAGE + page_length + closing_index;
           }
           size_t count = max_length - written;
           if (count > available)

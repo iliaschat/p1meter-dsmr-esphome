@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- CSS: configure-mqtt -->
+</head>
+<body>
+    <form id="mqtt">
+        <div class="field">
+            <label for="mqtt-broker">Broker host</label>
+            <input id="mqtt-broker" name="mqtt_broker" maxlength="64" placeholder="broker.example.com">
+        </div>
+        <div class="field">
+            <label for="mqtt-port">Broker port</label>
+            <input id="mqtt-port" name="mqtt_port" type="number" min="1" max="65535" value="1883">
+        </div>
+        <div class="field">
+            <label for="mqtt-username">Username</label>
+            <input id="mqtt-username" name="mqtt_username" maxlength="32" autocomplete="username">
+        </div>
+        <div class="field">
+            <label for="mqtt-password">Password</label>
+            <div class="password-field">
+                <input id="mqtt-password" name="mqtt_password" type="password" maxlength="64" autocomplete="new-password">
+                <button class="password-toggle" type="button" aria-controls="mqtt-password" aria-label="Show password" aria-pressed="false" title="Show password">
+                    <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                        <path d="M4 4l16 16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="field">
+            <label>
+                <input id="mqtt-enabled" type="checkbox" style="width:auto;padding:0"> Enable MQTT
+            </label>
+        </div>
+        <p class="status" id="mqtt-status" role="status"></p>
+        <div class="actions">
+            <button class="secondary" id="mqtt-cancel" type="button">Cancel</button>
+            <button id="mqtt-save" type="button">Save</button>
+        </div>
+    </form>
+    <!-- P1METER_ATTRIBUTION -->
+    <!-- JS: configure-mqtt -->
+</body>
+</html>
